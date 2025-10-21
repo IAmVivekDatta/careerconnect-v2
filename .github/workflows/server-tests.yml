@@ -1,0 +1,40 @@
+name: Server integration tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  integration-tests:
+    name: Run server integration tests
+    runs-on: ubuntu-latest
+    services:
+      mongo:
+        image: mongo:6.0
+        ports: ['27017:27017']
+        options: >-
+          --health-cmd="mongo --eval 'db.adminCommand({ ping: 1 })'" --health-interval=10s --health-timeout=5s --health-retries=5
+    env:
+      MONGO_URI: mongodb://localhost:27017/careerconnect_ci
+      CI: true
+      JWT_SECRET: testsecret
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install server dependencies
+        run: npm ci --prefix server
+
+      - name: Wait for MongoDB
+        run: |
+          for i in {1..30}; do nc -z localhost 27017 && echo "MongoDB is available" && break || sleep 1; done
+
+      - name: Run server integration tests
+        run: npm --prefix server run test:int

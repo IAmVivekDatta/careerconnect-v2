@@ -1,0 +1,110 @@
+CareerConnect — Project Overview (Beginner Friendly)
+
+Project Purpose
+---------------
+CareerConnect is a small web app that helps students, alumni, and administrators connect.
+People can create accounts, post short updates, and share job or internship opportunities.
+Students and alumni can apply for opportunities and message each other, while admins can
+manage posts and opportunities to keep the community safe and useful.
+
+How to Run the Project (step-by-step)
+-----------------------------------
+This project has two parts: the backend (server) and the frontend (what you see in the browser).
+You need to run both to use the app on your computer.
+
+1) Install Node.js
+   - Go to https://nodejs.org and download the LTS version for your computer, then install it.
+
+2) Open a terminal or PowerShell window and go to the project folder.
+   - Example (Windows PowerShell):
+     cd C:\Users\yourname\path\to\careerconnect-v2
+
+3) Install dependencies for both parts (run these commands in your terminal):
+   - Install server packages:
+     npm --prefix server install
+   - Install client packages:
+     npm --prefix client install
+
+4) Set up environment variables
+   - The backend (server) needs a MongoDB database and a secret key for login tokens.
+   - Create a file named `.env` in the `server/` folder or set these environment variables in your system:
+     MONGO_URI (or MONGODB_URI) — example: mongodb://localhost:27017/careerconnect
+     JWT_SECRET — a short secret string for development, e.g. mydevsecret
+   - The frontend can use an environment variable for the API base URL (optional):
+     VITE_API_URL — example: http://localhost:5000/api
+
+5) Start the backend server
+   - In the terminal run:
+     npm --prefix server run dev
+   - The server should say it is listening (usually on port 5000).
+
+6) Start the frontend (client)
+   - In a new terminal window, run:
+     npm --prefix client run dev
+   - Vite will start a local web server (usually at http://localhost:5173). Open that URL in your browser.
+
+Basic Technologies Used
+----------------------
+- MongoDB: a place to store data (users, posts, opportunities).
+- Express: code that runs on the server to handle requests from the browser.
+- React: the library used to build the frontend web pages you interact with.
+- Node.js: runs the server code and helps install packages.
+- Tailwind CSS: a tool that helps style the front-end with utility classes.
+- Zustand: a small tool that keeps track of who is logged in (saved in the browser).
+- React Query: a helper that fetches data from the server and keeps it fresh.
+- JWT (JSON Web Token): a way the server and client prove who is logged in.
+
+Features Overview
+-----------------
+- User registration and login — make an account and sign in.
+- Posts — users can write short posts and see a feed of community posts.
+- Opportunities — companies or admins can post jobs or internships.
+- Apply — students and alumni can apply to opportunities.
+- Admin dashboard — admins can manage users, posts, and opportunities.
+
+Different Logins / Roles (sample test accounts)
+----------------------------------------------
+Use these example credentials for testing in development. If the project seeds an admin user, use that email and password. Otherwise you can register new accounts.
+
+Admin:
+  Email: admin@example.com
+  Password: AdminPass123
+
+Alumni:
+  Email: alumni@example.com
+  Password: AlumniPass123
+
+Student:
+  Email: student@example.com
+  Password: StudentPass123
+
+(Note: These accounts are examples. If the project includes a seed script it may create a different admin email — check `server/scripts/seedAdmin.ts`.)
+
+Tips for Daily Users (what each role can do)
+-------------------------------------------
+- Students: create an account, browse and apply for opportunities, post updates, find alumni to connect with.
+- Alumni: share job leads, post advice, view and apply for opportunities, message students.
+- Admins: review and remove inappropriate posts, add or approve opportunities, manage user accounts.
+
+Next Steps / Small Improvements a Beginner Can Try
+-------------------------------------------------
+- UI tweaks: change colors, fonts, or spacing in the frontend (Tailwind classes) to make the site yours.
+- Add client-side checks: make forms show messages when required fields are empty before sending to the server.
+- Add profile pictures: allow users to upload avatars and show them next to posts.
+- Improve validation: limit post length or require certain fields on the opportunities form.
+- Add a tiny test: write one simple test in the `server` tests or a small component test in the `client`.
+
+Where to look in the code (simple pointers)
+------------------------------------------
+- Frontend (what you edit for UI): `client/src/` — pages and components are under `client/src/pages` and `client/src/components`.
+- Backend (APIs and data): `server/src/` — controllers are in `server/src/controllers`, routes in `server/src/routes`, and models in `server/src/models`.
+- To run tests for the backend: `npm --prefix server run test:int` (this runs integration tests).
+
+If you get stuck
+----------------
+- Make sure Node.js is installed.
+- If the server cannot connect to MongoDB, install and start MongoDB locally or use a cloud MongoDB connection string in `MONGO_URI`.
+- Read error messages in the terminal — they often say which file or line caused the problem.
+- Ask for help and include the exact terminal output you see.
+
+Enjoy exploring CareerConnect! Start by running the backend and frontend and try registering a basic account, then create a post or add an opportunity.
