@@ -1,6 +1,6 @@
 import { Schema, model, Document, Types } from 'mongoose';
 
-export type OpportunityType = 'Internship' | 'Full-time' | 'Part-time';
+export type OpportunityType = 'Internship' | 'Full-time' | 'Part-time' | 'Training';
 export type OpportunityStatus = 'pending' | 'approved' | 'rejected';
 
 export interface OpportunityDocument extends Document {
@@ -8,6 +8,9 @@ export interface OpportunityDocument extends Document {
   company: string;
   description: string;
   type: OpportunityType;
+  skills: string[];
+  location?: string;
+  salary?: string;
   applyUrl?: string;
   postedBy: Types.ObjectId;
   applicants: Types.ObjectId[];
@@ -19,7 +22,10 @@ const OpportunitySchema = new Schema<OpportunityDocument>({
   title: { type: String, required: true },
   company: { type: String, required: true },
   description: { type: String, required: true },
-  type: { type: String, enum: ['Internship', 'Full-time', 'Part-time'], required: true },
+  type: { type: String, enum: ['Internship', 'Full-time', 'Part-time', 'Training'], required: true },
+  skills: { type: [String], default: [] },
+  location: String,
+  salary: String,
   applyUrl: String,
   postedBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   applicants: [{ type: Schema.Types.ObjectId, ref: 'User' }],

@@ -63,6 +63,7 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
     children: [
+      { path: "", element: <AdminDashboardPage /> },
       { path: "dashboard", element: <AdminDashboardPage /> },
       { path: "users", element: <AdminUsersPage /> },
       { path: "posts", element: <AdminPostsPage /> },
