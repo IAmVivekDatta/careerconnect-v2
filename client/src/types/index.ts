@@ -16,11 +16,19 @@ export interface Opportunity {
   status: "pending" | "approved" | "rejected";
 }
 
+export interface PostComment {
+  _id: string;
+  user: AuthUser;
+  text: string;
+  createdAt: string;
+}
+
 export interface Post {
   _id: string;
   content: string;
   imageUrl?: string;
   author: AuthUser;
   createdAt: string;
-  likes: string[];
+  likes: string[] | any[];
+  comments: PostComment[];
 }
