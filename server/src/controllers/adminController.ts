@@ -5,14 +5,48 @@ import { Post } from '../models/Post';
 import { Opportunity } from '../models/Opportunity';
 
 export const getStats = async (_req: AuthRequest, res: Response) => {
-  const [userCount, activeUsers, postsCount, openJobs] = await Promise.all([
+  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+  const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+  
+  const [
+    totalUsers,
+    studentCount,
+    alumniCount,
+    activeUsers30d,
+    postsToday,
+    totalPosts,
+    opportunityPending,
+    opportunityApproved,
+    opportunityTotal
+  ] = await Promise.all([
     User.countDocuments(),
-    User.countDocuments({ updatedAt: { $gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) } }),
-    Post.countDocuments({ createdAt: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) } }),
-    Opportunity.countDocuments({ status: 'approved' })
+    User.countDocuments({ role: 'student' }),
+    User.countDocuments({ role: 'alumni' }),
+    User.countDocuments({ updatedAt: { $gte: thirtyDaysAgo } }),
+    Post.countDocuments({ createdAt: { $gte: oneDayAgo } }),
+    Post.countDocuments(),
+    Opportunity.countDocuments({ status: 'pending' }),
+    Opportunity.countDocuments({ status: 'approved' }),
+    Opportunity.countDocuments()
   ]);
 
-  res.json({ userCount, activeUsers, postsCount, openJobs });
+  res.json({
+    users: {
+      total: totalUsers,
+      students: studentCount,
+      alumni: alumniCount,
+      active30d: activeUsers30d
+    },
+    posts: {
+      total: totalPosts,
+      today: postsToday
+    },
+    opportunities: {
+      total: opportunityTotal,
+      pending: opportunityPending,
+      approved: opportunityApproved
+    }
+  });
 };
 
 export const updateUserRole = async (
