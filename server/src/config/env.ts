@@ -29,10 +29,16 @@ const resolvedEnv = {
   RATE_LIMIT_WINDOW: Number(process.env.RATE_LIMIT_WINDOW ?? 15 * 60 * 1000),
   RATE_LIMIT_MAX: Number(process.env.RATE_LIMIT_MAX ?? 100),
   CORS_ORIGINS: (
-    (process.env.CORS_ORIGINS ?? process.env.FRONTEND_URL ?? process.env.CLIENT_URL ?? '')
+    (process.env.CORS_ORIGINS || process.env.CLIENT_URL || process.env.FRONTEND_URL || '')
       .split(',')
       .map((s) => s.trim())
       .filter(Boolean)
+      .length > 0
+      ? (process.env.CORS_ORIGINS || process.env.CLIENT_URL || process.env.FRONTEND_URL || '')
+          .split(',')
+          .map((s) => s.trim())
+          .filter(Boolean)
+      : ['http://localhost:5173', 'http://localhost:3000']
   )
 };
 
