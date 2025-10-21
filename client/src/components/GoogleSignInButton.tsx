@@ -1,5 +1,6 @@
 import React, { useEffect, useCallback } from 'react';
 import useAuthStore from '../store/useAuthStore';
+import api from '../lib/axios';
 import { useToast } from './atoms/Toast';
 
 declare global {
@@ -17,21 +18,17 @@ declare global {
 
 export const GoogleSignInButton: React.FC = () => {
   const { push } = useToast();
+  const setAuth = useAuthStore((state) => state.setAuth);
 
   const handleCredentialResponse = useCallback(async (response: { credential: string }) => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/google`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id_token: response.credential }),
+      const { data } = await api.post('/auth/google', {
+        id_token: response.credential
       });
 
-      const data = await res.json();
-
-      if (!res.ok) throw new Error(data.message || 'Google sign-in failed');
-
-      useAuthStore.setState({ token: data.token, user: data.user });
+      setAuth({ token: data.token, user: data.user });
       push({ message: 'Logged in with Google!', type: 'success' });
+      window.location.assign('/feed');
     } catch (err) {
       push({ message: (err as Error).message, type: 'error' });
     }

@@ -3,6 +3,7 @@ import NeonButton from "../../components/atoms/NeonButton";
 import api from "../../lib/axios";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../../components/atoms/Toast";
+import { GoogleSignInButton } from "../../components/GoogleSignInButton";
 
 interface RegisterValues {
   name: string;
@@ -85,6 +86,12 @@ const RegisterPage = () => {
         <NeonButton type="submit" className="w-full justify-center">
           Register
         </NeonButton>
+        <div className="space-y-2 text-center">
+          <p className="text-sm text-muted">Or continue with</p>
+          <div className="flex justify-center">
+            <GoogleSignInButton />
+          </div>
+        </div>
       </form>
     </main>
   );
