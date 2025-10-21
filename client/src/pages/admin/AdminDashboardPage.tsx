@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import api from '../../lib/axios';
 import RecommendedAlumniCarousel from '../../components/organisms/RecommendedAlumniCarousel';
+import { TrainingOpportunitiesCarousel } from '../../components/organisms/TrainingOpportunitiesCarousel';
 
 interface AdminStats {
   users: {
@@ -109,6 +110,11 @@ const AdminDashboardPage = () => {
       <section className="space-y-4">
         <h3 className="text-lg font-semibold text-neonCyan">Featured Alumni Network</h3>
         <RecommendedAlumniCarousel />
+      </section>
+
+      {/* Training Opportunities Preview */}
+      <section className="space-y-4">
+        <TrainingOpportunitiesCarousel />
       </section>
     </main>
   );
