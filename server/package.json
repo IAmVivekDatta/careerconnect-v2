@@ -9,7 +9,9 @@
     "lint": "eslint \"src/**/*.ts\"",
     "test": "jest",
     "test:int": "cross-env NODE_ENV=test jest --runInBand",
-    "seed": "tsx scripts/seedAdmin.ts"
+    "seed": "tsx scripts/seedAdmin.ts",
+    "seed:users": "tsx scripts/seedDemoUsers.ts",
+    "seed:opps": "tsx scripts/seedDemoOpportunities.ts"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
