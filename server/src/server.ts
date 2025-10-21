@@ -12,6 +12,7 @@ import opportunityRoutes from './routes/opportunityRoutes';
 import adminRoutes from './routes/adminRoutes';
 import achievementRoutes from './routes/achievementRoutes';
 import uploadRoutes from './routes/uploadRoutes';
+import alumniRoutes from './routes/alumniRoutes';
 
 const app = express();
 
@@ -44,6 +45,7 @@ app.use('/api/opportunities', opportunityRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/achievements', achievementRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/alumni', alumniRoutes);
 
 app.use(errorHandler);
 

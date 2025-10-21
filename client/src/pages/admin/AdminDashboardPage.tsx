@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import api from '../../lib/axios';
+import RecommendedAlumniCarousel from '../../components/organisms/RecommendedAlumniCarousel';
 
 interface AdminStats {
   users: {
@@ -87,7 +88,7 @@ const AdminDashboardPage = () => {
       {/* Quick Actions */}
       <section className="space-y-4">
         <h3 className="text-lg font-semibold text-neonCyan">Quick Actions</h3>
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {[
             { label: 'Manage Users', color: 'from-blue-600 to-blue-700' },
             { label: 'Review Posts', color: 'from-purple-600 to-purple-700' },
@@ -102,6 +103,12 @@ const AdminDashboardPage = () => {
             </button>
           ))}
         </div>
+      </section>
+
+      {/* Recommended Alumni Preview */}
+      <section className="space-y-4">
+        <h3 className="text-lg font-semibold text-neonCyan">Featured Alumni Network</h3>
+        <RecommendedAlumniCarousel />
       </section>
     </main>
   );
