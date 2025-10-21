@@ -39,15 +39,17 @@ CareerConnect v2 is a role-based community network where students can showcase a
 ## Feature Matrix
 | Module | Capabilities |
 | --- | --- |
-| Authentication | JWT register/login/logout/refresh, role-based guards, optional alumni invite code, rate limiting, password reset email |
-| Profiles | Resume upload (Cloudinary), portfolio links, education, experience, skills, badges, profile completion meter |
+| Authentication | JWT register/login/logout/refresh, Google OAuth 2.0, role-based guards, rate limiting, password reset email |
+| Profiles | Resume upload (Cloudinary), portfolio links, education, experience, skills, badges, profile completion meter, hero section, editable sections |
 | Connections | Send/accept/remove requests, mutual connections, block/unblock placeholder |
-| Feed & Posts | Text/image posts, likes, comments, pagination (infinite scroll), admin override removal |
+| Feed & Posts | Text/image posts, likes, comments with inline threads, share/repost, pagination (infinite scroll), admin override removal |
 | Opportunities | CRUD with approval workflow, filters (type/company/keyword), apply with resume snapshot, saved jobs |
-| Notifications | Toast + in-app center (polling to start), templates for key events |
-| Admin Portal | Login, dashboards (users by role, posts/day, active users 30d, open jobs), user moderation, job approvals, badge awards |
-| Achievements | Leaderboard, badge catalog, admin award flow |
-| Messaging (phase 3) | Socket.io ready UI scaffold |
+| Alumni Network | Skill-matching recommendations, alumni directory, browseable profiles, suggest connections |
+| Training Opportunities | Skill-based course recommendations, save for later, provider integrations (Udemy, Coursera, DataCamp) |
+| Achievements & Badges | Leaderboard with top performers, skill endorsements (peer-reviewed), badge gallery, points system, admin award flow |
+| Messaging & Notifications | Inbox with conversations, real-time message sending, notification bell with unread count, notification center |
+| Admin Portal | Login, dashboards (users by role, posts/day, active users 30d, open jobs), user moderation, job approvals, badge awards, stats card |
+| Gamification | Points earned for endorsements, posts, comments; badges for milestones; leaderboard rankings |
 
 ## System Architecture
 ```
@@ -179,6 +181,108 @@ VITE_SENTRY_DSN=
 - **E2E (future)**: Cypress or Playwright covering auth, feed interactions, job application, admin approval.
 - **CI Gate**: Lint + unit tests + build must pass before merge.
 
+## QA Checklist (Manual Testing)
+### Auth & Accounts
+- [ ] Register new student account successfully
+- [ ] Register new alumni account successfully
+- [ ] Login with correct credentials
+- [ ] Logout clears token and redirects to login
+- [ ] Login fails with incorrect password
+- [ ] Google Sign-In creates account or logs in existing user
+- [ ] Admin login redirects to admin dashboard
+- [ ] Non-admin users cannot access `/admin/*` routes
+
+### Profile & Personalization
+- [ ] View own profile with hero section showing name, role, bio
+- [ ] Edit profile: update bio, add/remove skills
+- [ ] Edit profile: add experience entry with title, company, dates, description
+- [ ] Edit profile: add education entry with institution, degree, year
+- [ ] Upload profile picture and resume
+- [ ] Profile photo displays correctly in avatar
+- [ ] View badges earned and total points
+- [ ] See skill endorsements with endorser avatars
+- [ ] Endorse a peer's skill on their profile
+- [ ] Remove own endorsement for a skill
+
+### Feed & Engagement
+- [ ] Create new post with text content
+- [ ] Create post with image attachment
+- [ ] View feed with posts in reverse chronological order
+- [ ] Like a post (heart icon fills, counter increments)
+- [ ] Unlike a post (heart unfills, counter decrements)
+- [ ] Comment on a post (appears inline immediately)
+- [ ] Delete own comment (removed from comment thread)
+- [ ] Share post (triggers native share or copies link)
+- [ ] Pagination works when scrolling (load more posts)
+- [ ] Edit own post (content updated)
+- [ ] Delete own post (post removed from feed)
+
+### Alumni & Training
+- [ ] View Alumni Recommendations carousel on admin dashboard
+- [ ] Click next/prev to browse alumni profiles
+- [ ] See alumni skills, connection button, message button
+- [ ] View Training Opportunities carousel on admin dashboard
+- [ ] Browse trainings with provider logo, level badge, duration, price
+- [ ] "Enroll Now" button opens external training link in new tab
+- [ ] "Save for Later" saves training (no error)
+- [ ] Saved trainings are retrievable from personal dashboard
+
+### Achievements & Leaderboard
+- [ ] View leaderboard (top 20 users by points)
+- [ ] Leaderboard shows rank (🥇 🥈 🥉 for top 3), name, points, badge count
+- [ ] Click on leaderboard entry navigates to that user's profile
+- [ ] Badge gallery shows all earned badges on profile
+- [ ] Hover badge displays tooltip with name and description
+- [ ] Admin dashboard shows real-time stats (total users, active 30d, posts today, etc.)
+
+### Messaging & Notifications
+- [ ] Notification bell displays unread count badge
+- [ ] Click notification bell shows dropdown with latest 5 notifications
+- [ ] Notifications show actor name/avatar, content, timestamp
+- [ ] View notification center (all notifications paginated)
+- [ ] Mark notification as read (removes unread badge)
+- [ ] Create conversation with another user
+- [ ] Send message in conversation (appears immediately)
+- [ ] View message thread in chronological order
+- [ ] Receive unread message count in bell icon
+- [ ] Older messages are loaded when scrolling up (pagination)
+
+### Admin Features
+- [ ] Admin dashboard displays stats cards (users, alumni, students, active 30d, posts, opportunities)
+- [ ] Admin can view list of all users with role badges
+- [ ] Admin can deactivate/reactivate a user
+- [ ] Admin can change user role (student ↔ alumni)
+- [ ] Admin can view list of pending jobs
+- [ ] Admin can approve/reject a job listing
+- [ ] Admin can award badges to users
+- [ ] Admin can remove/moderate posts
+- [ ] Admin can view and export user statistics (CSV export future)
+
+### Cross-Browser & Responsive
+- [ ] App responsive on mobile (375px width) - all layouts adapt
+- [ ] App responsive on tablet (768px width)
+- [ ] App responsive on desktop (1024px width and above)
+- [ ] Touch interactions work on mobile (buttons, scrolling, modals)
+- [ ] Chrome, Firefox, Safari all load app without console errors
+- [ ] Navigation works on all breakpoints
+
+### Performance & Stability
+- [ ] Feed loads in <2 seconds on first visit
+- [ ] Liking/commenting feels instant (no lag)
+- [ ] Profile page loads profile data and badges
+- [ ] No console errors or warnings on main pages
+- [ ] No memory leaks on extended browsing
+- [ ] Images load correctly (avatar, post images)
+
+### Security
+- [ ] Cannot access `/admin/*` without admin role
+- [ ] Cannot access `/profile/edit` without authentication
+- [ ] Tokens are stored securely (localStorage, HttpOnly when possible)
+- [ ] CORS errors do not appear for localhost/Netlify/Render domains
+- [ ] Rate limiting returns 429 after too many auth attempts
+- [ ] Cannot modify other user's profile via PUT /users/me spoofing user ID
+- [ ] Cannot approve own job listing (admin must approve)
+
 ## Deployment Guide
 ### Frontend (Netlify)
 1. Connect the `client/` folder to Netlify (GitHub integration).
@@ -217,26 +321,31 @@ VITE_SENTRY_DSN=
 - [ ] Regularly rotate JWT secrets and admin seed password.
 
 ## Roadmap
-### Sprint 1 (MVP)
-- Repo bootstrap (client + server).
-- Auth with JWT and admin seeding.
-- Profile CRUD + resume upload.
-- Feed posts CRUD + pagination.
-- Opportunities CRUD + apply + admin approval.
-- Netlify + Render deployments live.
-- Documentation and env samples finalized.
+### Sprint 1 (MVP) ✅ COMPLETE
+- ✅ Repo bootstrap (client + server).
+- ✅ Auth with JWT and Google OAuth 2.0.
+- ✅ Profile CRUD + resume upload + hero section.
+- ✅ Feed posts CRUD + like/comment/share + pagination.
+- ✅ Opportunities CRUD + apply + admin approval.
+- ✅ Netlify + Render deployments live.
 
-### Sprint 2
-- Connection requests and list view.
-- Admin analytics dashboard and CSV exports.
-- Points, badges, leaderboard features.
-- Alumni/job advanced filters and search improvements.
+### Sprint 2 (Community & Engagement) ✅ COMPLETE
+- ✅ Step 1: Admin Console Foundations - Real-time stats dashboard.
+- ✅ Step 2: Alumni Recommendations - Skill-based matching, carousel UI.
+- ✅ Step 3: Training Opportunities - Curated courses, save for later.
+- ✅ Step 4: Feed Engagement Enhancements - Full like/comment/share CRUD.
+- ✅ Step 5: Achievements & Badges - Endorsements, leaderboard, points.
+- ✅ Step 6: Messaging & Notifications - Inbox, notification bell, real-time.
+- ✅ Step 7: Profile Personalization Polish - Hero, editable skills/experience.
 
-### Sprint 3
-- Notifications center and optional push.
-- Real-time chat foundation (Socket.io).
-- Automated testing (Cypress/Playwright) and CI pipeline.
-- Optional AI resume scoring module.
+### Sprint 3 (Polish & Scale)
+- [ ] Connection requests and mutual connections list.
+- [ ] Advanced search and filters (skills, location, role).
+- [ ] Automated testing (Cypress/Playwright) and CI pipeline.
+- [ ] Optional AI resume scoring and match suggestions.
+- [ ] Push notifications (web push API).
+- [ ] Dark/light theme toggle.
+- [ ] Accessibility audit (WCAG 2.1 AA compliance).
 
 ## Contributing
 1. Fork repository and create feature branch (`git checkout -b feat/amazing-feature`).
