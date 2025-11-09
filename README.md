@@ -82,12 +82,17 @@ services
 ```
 careerconnect-v2/
   README.md
+  docs/
+    README.md
+    archive/
   client/
   server/
-  docs/
-  scripts/
-  .github/workflows/
+    scripts/
+  .github/
+    workflows/
 ```
+
+All legacy deployment reports and investigation notes are stored under `docs/archive/` to keep the repository root focused on active source code and documentation.
 
 ## Environments
 | Stage | Domain | Notes |

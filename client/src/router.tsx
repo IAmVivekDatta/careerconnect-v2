@@ -18,15 +18,18 @@ import AdminUsersPage from "./pages/admin/AdminUsersPage";
 import AdminPostsPage from "./pages/admin/AdminPostsPage";
 import AdminOpportunitiesPage from "./pages/admin/AdminOpportunitiesPage";
 import AdminSettingsPage from "./pages/admin/AdminSettingsPage";
+import AdminReportsPage from "./pages/admin/AdminReportsPage";
 import LandingPage from "./pages/public/LandingPage";
 import AuthSelectPage from "./pages/public/AuthSelectPage";
 import LoginPage from "./pages/public/LoginPage";
 import RegisterPage from "./pages/public/RegisterPage";
 import AdminLoginPage from "./pages/public/AdminLoginPage";
+import RouteError from "./components/feedback/RouteError";
 
 const router = createBrowserRouter([
   {
     element: <PublicLayout />,
+    errorElement: <RouteError />,
     children: [
       { path: "/", element: <LandingPage /> },
       { path: "/auth", element: <AuthSelectPage /> },
@@ -41,6 +44,7 @@ const router = createBrowserRouter([
         <AppLayout />
       </ProtectedRoute>
     ),
+    errorElement: <RouteError />,
     children: [
       { path: "/feed", element: <FeedPage /> },
       { path: "/profile/:id", element: <ProfilePage /> },
@@ -62,12 +66,14 @@ const router = createBrowserRouter([
         </AdminRoute>
       </ProtectedRoute>
     ),
+    errorElement: <RouteError />,
     children: [
       { path: "", element: <AdminDashboardPage /> },
       { path: "dashboard", element: <AdminDashboardPage /> },
       { path: "users", element: <AdminUsersPage /> },
       { path: "posts", element: <AdminPostsPage /> },
       { path: "opportunities", element: <AdminOpportunitiesPage /> },
+  { path: "reports", element: <AdminReportsPage /> },
       { path: "settings", element: <AdminSettingsPage /> }
     ]
   }

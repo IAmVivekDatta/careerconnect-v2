@@ -1,15 +1,16 @@
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import api from "../lib/axios";
 import useAuthStore from "../store/useAuthStore";
 import { useToast } from "../components/atoms/Toast";
-import { useState } from "react";
+import type { Opportunity } from "../types";
 
 const OpportunityDetailPage = () => {
   const { id } = useParams();
   const { token } = useAuthStore();
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading } = useQuery<Opportunity>({
     queryKey: ["opportunity", id],
     queryFn: async () => {
       const res = await api.get(`/opportunities/${id}`);
@@ -52,6 +53,31 @@ const OpportunityDetailPage = () => {
       </header>
       <article className="neon-border rounded-lg bg-surface/80 p-6">
         <p className="text-sm text-white/80">{data?.description}</p>
+        {data?.skills && data.skills.length > 0 && (
+          <div className="mt-4 flex flex-wrap gap-2">
+            {data.skills.map((skill) => (
+              <span key={skill} className="rounded bg-white/10 px-2 py-1 text-xs uppercase tracking-wide text-neonCyan">
+                {skill}
+              </span>
+            ))}
+          </div>
+        )}
+        {(data?.location || data?.salary) && (
+          <dl className="mt-4 grid grid-cols-2 gap-2 text-sm text-muted">
+            {data.location && (
+              <div>
+                <dt className="font-semibold text-white/80">Location</dt>
+                <dd>{data.location}</dd>
+              </div>
+            )}
+            {data.salary && (
+              <div>
+                <dt className="font-semibold text-white/80">Salary</dt>
+                <dd>{data.salary}</dd>
+              </div>
+            )}
+          </dl>
+        )}
         <div className="mt-4">
           <div className="mb-2">
             <label className="text-sm text-muted">Attach resume (optional)</label>

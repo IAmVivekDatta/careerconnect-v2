@@ -12,7 +12,7 @@ export interface MessageDocument extends Document {
 const MessageSchema = new Schema<MessageDocument>({
   conversationId: { type: Schema.Types.ObjectId, ref: 'Conversation', required: true },
   sender: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  content: { type: String, required: true },
+  content: { type: String, default: '' },
   attachmentUrl: String,
   isRead: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now }

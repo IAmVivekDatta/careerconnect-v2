@@ -15,6 +15,7 @@ import uploadRoutes from './routes/uploadRoutes';
 import alumniRoutes from './routes/alumniRoutes';
 import trainingRoutes from './routes/trainingRoutes';
 import messagingRoutes from './routes/messagingRoutes';
+import connectionRoutes from './routes/connectionRoutes';
 
 const app = express();
 
@@ -50,6 +51,7 @@ app.use('/api/upload', uploadRoutes);
 app.use('/api/alumni', alumniRoutes);
 app.use('/api/trainings', trainingRoutes);
 app.use('/api/messaging', messagingRoutes);
+app.use('/api/connections', connectionRoutes);
 
 app.use(errorHandler);
 

@@ -14,7 +14,6 @@ CareerConnect is a digital bridge between students, alumni, and career opportuni
 - Admin seeding workflow implemented (`server/scripts/seedAdmin.ts`).
 
 Status: Work paused before implementing Sprint 1 backend routes; server currently exits early because `env.ts` prefers `MONGO_URI`/`FRONTEND_URL` while some environments may provide `MONGODB_URI`/`CLIENT_URL`.
-
 ✅ Admin seed script implemented
 
 ✅ .env templates added

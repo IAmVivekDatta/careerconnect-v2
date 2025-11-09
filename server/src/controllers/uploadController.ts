@@ -20,7 +20,7 @@ export const uploadFile = async (req: Request, res: Response) => {
   if (!file) return res.status(400).json({ error: true, message: 'No file uploaded' });
 
   try {
-    const uploadStream = cloudinary.uploader.upload_stream({ folder: 'careerconnect' }, (err, result) => {
+  const uploadStream = cloudinary.uploader.upload_stream({ folder: 'careerconnect', resource_type: 'auto' }, (err, result) => {
       if (err || !result) {
         return res.status(500).json({ error: true, message: 'Upload failed', details: err?.message });
       }

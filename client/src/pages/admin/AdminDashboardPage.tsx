@@ -1,25 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 import api from '../../lib/axios';
 import RecommendedAlumniCarousel from '../../components/organisms/RecommendedAlumniCarousel';
 import { TrainingOpportunitiesCarousel } from '../../components/organisms/TrainingOpportunitiesCarousel';
-
-interface AdminStats {
-  users: {
-    total: number;
-    students: number;
-    alumni: number;
-    active30d: number;
-  };
-  posts: {
-    total: number;
-    today: number;
-  };
-  opportunities: {
-    total: number;
-    pending: number;
-    approved: number;
-  };
-}
+import { AdminStats } from '../../types';
 
 const StatCard = ({ label, value, color }: { label: string; value: number; color: string }) => (
   <article className={`neon-border rounded-lg bg-gradient-to-br ${color} p-6 shadow-lg`}>
@@ -29,6 +13,7 @@ const StatCard = ({ label, value, color }: { label: string; value: number; color
 );
 
 const AdminDashboardPage = () => {
+  const navigate = useNavigate();
   const { data: stats, isLoading } = useQuery<AdminStats>({
     queryKey: ['admin-stats'],
     queryFn: async () => {
@@ -91,14 +76,16 @@ const AdminDashboardPage = () => {
         <h3 className="text-lg font-semibold text-neonCyan">Quick Actions</h3>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {[
-            { label: 'Manage Users', color: 'from-blue-600 to-blue-700' },
-            { label: 'Review Posts', color: 'from-purple-600 to-purple-700' },
-            { label: 'Approve Jobs', color: 'from-green-600 to-green-700' },
-            { label: 'View Reports', color: 'from-orange-600 to-orange-700' }
+            { label: 'Manage Users', color: 'from-blue-600 to-blue-700', to: '/admin/users' },
+            { label: 'Review Posts', color: 'from-purple-600 to-purple-700', to: '/admin/posts' },
+            { label: 'Approve Jobs', color: 'from-green-600 to-green-700', to: '/admin/opportunities' },
+            { label: 'View Reports', color: 'from-orange-600 to-orange-700', to: '/admin/reports' }
           ].map((action) => (
             <button
               key={action.label}
               className={`neon-border rounded-lg bg-gradient-to-r ${action.color} px-4 py-3 font-medium text-white transition hover:shadow-lg hover:shadow-neonCyan/50`}
+              type="button"
+              onClick={() => navigate(action.to)}
             >
               {action.label}
             </button>

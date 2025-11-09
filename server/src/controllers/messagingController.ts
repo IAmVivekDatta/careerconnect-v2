@@ -97,15 +97,16 @@ export const getConversationMessages = async (
 };
 
 export const sendMessage = async (
-  req: AuthRequest<{ conversationId: string }, unknown, { content: string; attachmentUrl?: string }>,
+  req: AuthRequest<{ conversationId: string }, unknown, { content?: string; attachmentUrl?: string }> ,
   res: Response
 ) => {
   try {
     const { conversationId } = req.params;
     const { content, attachmentUrl } = req.body;
+    const trimmedPreview = content?.trim() ?? '';
 
-    if (!content || content.trim().length === 0) {
-      return res.status(400).json({ error: true, message: 'Message content is required' });
+    if ((!content || content.trim().length === 0) && !attachmentUrl) {
+      return res.status(400).json({ error: true, message: 'Message content or attachment is required' });
     }
 
     // Verify user is participant
@@ -123,7 +124,7 @@ export const sendMessage = async (
     const message = await Message.create({
       conversationId,
       sender: req.user?.id,
-      content: content.trim(),
+      content: content ?? '',
       attachmentUrl
     });
 
@@ -131,7 +132,7 @@ export const sendMessage = async (
     const otherParticipant = conversation.participants.find((p) => String(p) !== req.user?.id);
     await Conversation.findByIdAndUpdate(conversationId, {
       lastMessage: {
-        content: content.trim(),
+        content: trimmedPreview || (attachmentUrl ? 'Attachment' : ''),
         sender: req.user?.id,
         timestamp: new Date()
       },
