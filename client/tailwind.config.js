@@ -1,3 +1,10 @@
+const withOpacityValue = (variable) => ({ opacityValue }) => {
+  if (opacityValue !== undefined) {
+    return `rgba(var(${variable}) / ${opacityValue})`;
+  }
+  return `rgb(var(${variable}))`;
+};
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: "class",
@@ -5,11 +12,13 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        neonCyan: "#00F5FF",
-        neonMagenta: "#FF00D6",
-        bgDark: "#0a0a0a",
-        surface: "#111111",
-        muted: "#9a9a9a"
+        neonCyan: withOpacityValue("--cc-neon-cyan"),
+        neonMagenta: withOpacityValue("--cc-neon-magenta"),
+        bgDark: withOpacityValue("--cc-background"),
+        surface: withOpacityValue("--cc-surface"),
+        muted: withOpacityValue("--cc-muted"),
+        textPrimary: withOpacityValue("--cc-text-primary"),
+        textSecondary: withOpacityValue("--cc-text-secondary")
       },
       boxShadow: {
         neon: "0 0 18px rgba(0,245,255,0.2)"

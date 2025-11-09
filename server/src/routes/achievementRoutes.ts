@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { body, param } from 'express-validator';
+import { body } from 'express-validator';
 import { authMiddleware } from '../middlewares/authMiddleware';
 import { adminMiddleware } from '../middlewares/adminMiddleware';
 import { validate } from '../middlewares/validationMiddleware';
@@ -9,14 +9,24 @@ import {
   awardAchievement,
   endorseSkill,
   getSkillEndorsements,
-  removeEndorsement
+  removeEndorsement,
+  getQuestProgress,
+  toggleQuestCompletion
 } from '../controllers/achievementController';
 
 const router = Router();
 
 router.get('/leaderboard', authMiddleware, getLeaderboard);
+router.get('/:userId/quests', authMiddleware, getQuestProgress);
 router.get('/:userId/badges', authMiddleware, getUserBadges);
 router.get('/:userId/endorsements', authMiddleware, getSkillEndorsements);
+router.post(
+  '/:userId/quests',
+  authMiddleware,
+  [body('questId').isString().trim().isLength({ min: 1 })],
+  validate,
+  toggleQuestCompletion
+);
 router.post('/award', authMiddleware, adminMiddleware, awardAchievement);
 router.post(
   '/:userId/endorse',

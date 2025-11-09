@@ -100,6 +100,12 @@ export interface BadgeResponse {
   badges: BadgeWithMeta[];
 }
 
+export interface QuestProgressResponse {
+  streak: number;
+  completedToday: string[];
+  history: Record<string, string[]>;
+}
+
 export type SkillEndorsementsResponse = Record<
   string,
   Array<{

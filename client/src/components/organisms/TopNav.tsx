@@ -8,6 +8,7 @@ import { appNavItems } from "../../constants/navItems";
 import type { AppNavItem } from "../../constants/navItems";
 import DynamoHamburger from "../atoms/DynamoHamburger";
 import { useLayoutStore } from "../../store/useLayoutStore";
+import ThemeSwitcher from "./ThemeSwitcher";
 
 const TopNav = () => {
   const { user, logout } = useAuthStore();
@@ -45,7 +46,7 @@ const TopNav = () => {
   const renderDesktopLink = (item: AppNavItem) => {
     const Icon = item.icon;
     const isActive = location.pathname === item.to || location.pathname.startsWith(`${item.to}/`);
-  const badge = getBadgeFor(item.to);
+    const badge = getBadgeFor(item.to);
 
     return (
       <NavLink
@@ -75,7 +76,7 @@ const TopNav = () => {
   const renderMobileLink = (item: AppNavItem) => {
     const Icon = item.icon;
     const isActive = location.pathname === item.to || location.pathname.startsWith(`${item.to}/`);
-  const badge = getBadgeFor(item.to);
+    const badge = getBadgeFor(item.to);
 
     return (
       <NavLink
@@ -133,6 +134,7 @@ const TopNav = () => {
         </nav>
 
         <div className="flex items-center gap-3">
+          <ThemeSwitcher />
           <NeonButton asChild>
             <Link to="/opportunities">Find Opportunities</Link>
           </NeonButton>

@@ -1,8 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import {
   AlertTriangle,
   Code2,
@@ -19,6 +17,13 @@ import api from '../lib/axios';
 import useAuthStore from '../store/useAuthStore';
 import { useToast } from '../components/atoms/Toast';
 import type { ChatMessage, ConversationSummary } from '../types';
+import CodeSnippet from '../components/molecules/CodeSnippet';
+import {
+  isNearBottom,
+  shouldFetchNextPage,
+  submitMessage,
+  validateFileSize
+} from './messages/helpers';
 
 const quickReplies = [
   'Thanks for the update! I will review it shortly.',
@@ -300,38 +305,42 @@ const MessagesPage = () => {
   const handleComposerSubmit = useCallback(
     async (event: React.FormEvent) => {
       event.preventDefault();
-      if (!selectedConversation) return;
-
-      const trimmed = composerValue.trim();
-      if (!trimmed && !pendingFile) return;
 
       try {
-        let attachmentUrl: string | undefined;
-        if (pendingFile) {
-          const { url } = await uploadMutation.mutateAsync(pendingFile);
-          attachmentUrl = url;
-        }
-
-        await sendMessageMutation.mutateAsync({
+        const result = await submitMessage({
           conversationId: selectedConversation,
-          content: trimmed,
-          attachmentUrl
+          text: composerValue,
+          file: pendingFile,
+          upload: (file) => uploadMutation.mutateAsync(file),
+          send: (payload) => sendMessageMutation.mutateAsync(payload)
         });
+
+        if (!result.sent && !pendingFile && !composerValue.trim()) {
+          push({ message: 'Add text or attach a file before sending.', type: 'error' });
+        }
       } catch (error) {
-        // errors surfaced via toast
+        if (error instanceof Error) {
+          push({ message: error.message, type: 'error' });
+        } else {
+          push({ message: 'Unable to send message. Please try again.', type: 'error' });
+        }
       }
     },
-    [composerValue, pendingFile, selectedConversation, sendMessageMutation, uploadMutation]
+    [composerValue, pendingFile, push, selectedConversation, sendMessageMutation, uploadMutation]
   );
 
   const handleScroll = useCallback(
     (event: React.UIEvent<HTMLDivElement>) => {
       const target = event.currentTarget;
-      const nearTop = target.scrollTop < 60;
-      const atBottom = target.scrollHeight - (target.scrollTop + target.clientHeight) < 80;
-      shouldStickToBottom.current = atBottom;
+      const metrics = {
+        scrollTop: target.scrollTop,
+        scrollHeight: target.scrollHeight,
+        clientHeight: target.clientHeight
+      };
 
-      if (nearTop && hasNextPage && !isFetchingNextPage) {
+      shouldStickToBottom.current = isNearBottom(metrics);
+
+      if (shouldFetchNextPage(metrics) && hasNextPage && !isFetchingNextPage) {
         fetchNextPage();
       }
     },
@@ -343,7 +352,7 @@ const MessagesPage = () => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
-    if (file.size > 5 * 1024 * 1024) {
+    if (!validateFileSize(file)) {
       push({ message: 'File size limited to 5MB.', type: 'error' });
       return;
     }
@@ -540,14 +549,7 @@ const MessagesPage = () => {
 
                           {code && (
                             <div className="overflow-hidden rounded-lg border border-white/10">
-                              <SyntaxHighlighter
-                                language={language}
-                                style={atomDark}
-                                wrapLines
-                                customStyle={{ margin: 0, padding: '1rem', fontSize: '0.85rem' }}
-                              >
-                                {code}
-                              </SyntaxHighlighter>
+                              <CodeSnippet code={code} language={language} />
                             </div>
                           )}
 

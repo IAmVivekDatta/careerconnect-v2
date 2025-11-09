@@ -22,6 +22,17 @@ export interface Badge {
   awardedAt: Date;
 }
 
+export interface QuestCompletion {
+  questId: string;
+  date: string;
+}
+
+export interface AchievementProgress {
+  quests: QuestCompletion[];
+  streak: number;
+  lastCompletedDate?: string;
+}
+
 export interface ConnectionRequest {
   from: Types.ObjectId;
   createdAt: Date;
@@ -45,6 +56,7 @@ export interface UserDocument extends Document {
   points: number;
   isActive: boolean;
   createdAt: Date;
+  achievementProgress: AchievementProgress;
   comparePassword(candidate: string): Promise<boolean>;
 }
 
@@ -52,6 +64,23 @@ const ConnectionRequestSchema = new Schema<ConnectionRequest>({
   from: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   createdAt: { type: Date, default: Date.now }
 });
+
+const QuestCompletionSchema = new Schema<QuestCompletion>(
+  {
+    questId: { type: String, required: true },
+    date: { type: String, required: true }
+  },
+  { _id: false }
+);
+
+const AchievementProgressSchema = new Schema<AchievementProgress>(
+  {
+    quests: { type: [QuestCompletionSchema], default: [] },
+    streak: { type: Number, default: 0 },
+    lastCompletedDate: { type: String }
+  },
+  { _id: false }
+);
 
 const UserSchema = new Schema<UserDocument>({
   name: { type: String, required: true },
@@ -90,6 +119,10 @@ const UserSchema = new Schema<UserDocument>({
       }
     ],
     default: []
+  },
+  achievementProgress: {
+    type: AchievementProgressSchema,
+    default: () => ({ quests: [], streak: 0 })
   },
   points: { type: Number, default: 0 },
   isActive: { type: Boolean, default: true },
