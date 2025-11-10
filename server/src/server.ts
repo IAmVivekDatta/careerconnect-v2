@@ -19,7 +19,12 @@ import connectionRoutes from './routes/connectionRoutes';
 
 const app = express();
 
-app.use(helmet());
+app.use(
+  helmet({
+    crossOriginEmbedderPolicy: false,
+    crossOriginOpenerPolicy: { policy: 'same-origin-allow-popups' }
+  })
+);
 app.use(
   cors({
     origin: env.CORS_ORIGINS,
