@@ -4,7 +4,8 @@ import { Conversation } from '../models/Conversation';
 import { Message } from '../models/Message';
 import { User } from '../models/User';
 import { Notification } from '../models/Notification';
-import { Types } from 'mongoose';
+import { emitToConversation, emitToUser, SOCKET_EVENTS } from '../sockets';
+import { getUnreadSummaryForUser } from '../services/unreadService';
 
 export const getConversations = async (req: AuthRequest, res: Response) => {
   try {
@@ -128,29 +129,64 @@ export const sendMessage = async (
       attachmentUrl
     });
 
-    // Update conversation
-    const otherParticipant = conversation.participants.find((p) => String(p) !== req.user?.id);
-    await Conversation.findByIdAndUpdate(conversationId, {
-      lastMessage: {
-        content: trimmedPreview || (attachmentUrl ? 'Attachment' : ''),
-        sender: req.user?.id,
-        timestamp: new Date()
-      },
-      $inc: { [`unreadCount.${String(otherParticipant)}`]: 1 }
-    });
+    const authorId = req.user?.id;
+    const participantIds = conversation.participants.map((participant) => String(participant));
+    const recipients = participantIds.filter((participantId) => participantId !== authorId);
 
-    // Create notification
-    if (otherParticipant) {
-      await Notification.create({
-        recipient: otherParticipant,
-        actor: req.user?.id,
-        type: 'message',
-        content: `New message from ${(req.user as any)?.name || 'User'}`,
-        relatedId: conversationId
-      });
+    const lastMessagePayload = {
+      content: trimmedPreview || (attachmentUrl ? 'Attachment' : ''),
+      sender: authorId,
+      timestamp: message.createdAt ?? new Date()
+    };
+
+    const unreadIncrements = recipients.reduce<Record<string, number>>((acc, participantId) => {
+      acc[`unreadCount.${participantId}`] = 1;
+      return acc;
+    }, {});
+
+    const updatedConversation = await Conversation.findByIdAndUpdate(
+      conversationId,
+      {
+        lastMessage: lastMessagePayload,
+        ...(Object.keys(unreadIncrements).length > 0 ? { $inc: unreadIncrements } : {}),
+        $set: { updatedAt: new Date() }
+      },
+      { new: true }
+    ).populate('participants', '_id name profilePicture');
+
+    if (recipients.length > 0 && authorId) {
+      await Promise.all(
+        recipients.map((recipientId) =>
+          Notification.create({
+            recipient: recipientId,
+            actor: authorId,
+            type: 'message',
+            content: `New message from ${(req.user as any)?.name || 'User'}`,
+            relatedId: conversationId
+          })
+        )
+      );
     }
 
     const populated = await Message.findById(message._id).populate('sender', '_id name profilePicture');
+    const conversationIdStr = String(conversation._id);
+  if (populated && authorId) {
+      emitToConversation(conversationIdStr, SOCKET_EVENTS.CONVERSATION_NEW_MESSAGE, populated);
+
+      if (updatedConversation) {
+        const conversationPayload = updatedConversation.toObject({ flattenMaps: true });
+
+        await Promise.all(
+          recipients.map(async (participantId) => {
+            emitToUser(participantId, SOCKET_EVENTS.CONVERSATION_UPDATED, conversationPayload);
+            const summary = await getUnreadSummaryForUser(participantId);
+            emitToUser(participantId, SOCKET_EVENTS.UNREAD_SUMMARY, summary);
+          })
+        );
+
+        emitToUser(authorId, SOCKET_EVENTS.CONVERSATION_UPDATED, conversationPayload);
+      }
+    }
     res.status(201).json(populated);
   } catch (error: any) {
     res.status(400).json({ error: true, message: error.message });
@@ -171,9 +207,22 @@ export const markAsRead = async (
     );
 
     // Reset unread count
-    await Conversation.findByIdAndUpdate(conversationId, {
-      [`unreadCount.${req.user?.id}`]: 0
-    });
+    const updatedConversation = await Conversation.findByIdAndUpdate(
+      conversationId,
+      {
+        [`unreadCount.${req.user?.id}`]: 0,
+        $set: { updatedAt: new Date() }
+      },
+      { new: true }
+    ).populate('participants', '_id name profilePicture');
+
+    if (req.user?.id) {
+      const summary = await getUnreadSummaryForUser(req.user.id);
+      emitToUser(req.user.id, SOCKET_EVENTS.UNREAD_SUMMARY, summary);
+      if (updatedConversation) {
+  emitToUser(req.user.id, SOCKET_EVENTS.CONVERSATION_UPDATED, updatedConversation.toObject({ flattenMaps: true }));
+      }
+    }
 
     res.json({ success: true });
   } catch (error: any) {
@@ -183,21 +232,12 @@ export const markAsRead = async (
 
 export const getUnreadCount = async (req: AuthRequest, res: Response) => {
   try {
-    const unreadCount = await Message.countDocuments({
-      isRead: false,
-      sender: { $ne: req.user?.id }
-    });
+    if (!req.user?.id) {
+      return res.status(400).json({ error: true, message: 'Missing user' });
+    }
 
-    const unreadNotifications = await Notification.countDocuments({
-      recipient: req.user?.id,
-      isRead: false
-    });
-
-    res.json({
-      messages: unreadCount,
-      notifications: unreadNotifications,
-      total: unreadCount + unreadNotifications
-    });
+    const summary = await getUnreadSummaryForUser(req.user.id);
+    res.json(summary);
   } catch (error: any) {
     res.status(500).json({ error: true, message: error.message });
   }
@@ -240,6 +280,11 @@ export const markNotificationAsRead = async (
       { isRead: true },
       { new: true }
     );
+
+    if (notification && req.user?.id && String(notification.recipient) === req.user.id) {
+      const summary = await getUnreadSummaryForUser(req.user.id);
+      emitToUser(req.user.id, SOCKET_EVENTS.UNREAD_SUMMARY, summary);
+    }
 
     res.json(notification);
   } catch (error: any) {

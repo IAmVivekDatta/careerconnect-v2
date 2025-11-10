@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { AuthRequest } from '../middlewares/authMiddleware';
 import { Post } from '../models/Post';
-import { Types } from 'mongoose';
+import { getIO, SOCKET_EVENTS } from '../sockets';
 
 export const createPost = async (req: AuthRequest<Record<string, unknown>, unknown, { content: string; imageUrl?: string }>, res: Response) => {
   try {
@@ -12,6 +12,10 @@ export const createPost = async (req: AuthRequest<Record<string, unknown>, unkno
     });
 
     const populated = await Post.findById(post._id).populate('author', '_id name profilePicture role').populate('comments.user', '_id name profilePicture');
+    const io = getIO();
+    if (populated && io) {
+      io.emit(SOCKET_EVENTS.POST_CREATED, populated);
+    }
     res.status(201).json(populated);
   } catch (error: any) {
     res.status(400).json({ error: true, message: error.message });

@@ -1,7 +1,7 @@
 # CareerConnect — Progress Report
 Checkpoint Save Date: October 20, 2025
 
-Prepared by: GitHub Copilot supporting Vivek Datta & Team (III B.Tech – CSE CIC)
+Prepared by: Vivek Datta & Team (III B.Tech – CSE CIC)
 Guide: Dr. P. Sudhakar
 
 ## Abstract

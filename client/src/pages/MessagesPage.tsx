@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient, type InfiniteData } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
 import {
   AlertTriangle,
@@ -17,6 +17,8 @@ import api from '../lib/axios';
 import useAuthStore from '../store/useAuthStore';
 import { useToast } from '../components/atoms/Toast';
 import type { ChatMessage, ConversationSummary } from '../types';
+import { useSocket } from '../hooks/useSocket';
+import { SOCKET_EVENTS } from '../constants/socketEvents';
 import CodeSnippet from '../components/molecules/CodeSnippet';
 import {
   isNearBottom,
@@ -102,6 +104,7 @@ const MessagesPage = () => {
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
   const shouldStickToBottom = useRef(true);
   const queryClient = useQueryClient();
+  const socket = useSocket();
 
   const { data: conversations = [], isLoading: conversationsLoading } = useQuery<ConversationSummary[]>(
     {
@@ -203,12 +206,9 @@ const MessagesPage = () => {
     return filtered;
   }, [conversations, debouncedSearch, filter, user?._id]);
 
-  const { mutate: markAsRead } = useMutation({
+  const markAsReadMutation = useMutation({
     mutationFn: (conversationId: string) =>
-      api.post(`/messaging/conversations/${conversationId}/read`),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['conversations'] });
-    }
+      api.post(`/messaging/conversations/${conversationId}/read`)
   });
 
   const uploadMutation = useMutation({
@@ -259,9 +259,9 @@ const MessagesPage = () => {
         next.set('conversation', conversationId);
         return next;
       });
-      markAsRead(conversationId);
+      markAsReadMutation.mutate(conversationId);
     },
-    [markAsRead, setSearchParams]
+    [markAsReadMutation, setSearchParams]
   );
 
   useEffect(() => {
@@ -292,6 +292,87 @@ const MessagesPage = () => {
       behavior: 'smooth'
     });
   }, [messages.length, selectedConversation]);
+
+  useEffect(() => {
+    if (!socket) {
+      return;
+    }
+
+    if (!selectedConversation) {
+      return;
+    }
+
+    socket.emit('conversation:join', selectedConversation);
+
+    return () => {
+      socket.emit('conversation:leave', selectedConversation);
+    };
+  }, [socket, selectedConversation]);
+
+  useEffect(() => {
+    if (!socket) {
+      return;
+    }
+
+    const handleNewMessage = (message: ChatMessage) => {
+      if (!message?.conversationId) {
+        return;
+      }
+
+      queryClient.setQueryData<InfiniteData<MessagePageResponse>>(
+        ['messages', message.conversationId],
+        (previous) => {
+          if (!previous || previous.pages.length === 0) {
+            return previous;
+          }
+
+          const alreadyExists = previous.pages.some((page) =>
+            page.data.some((item) => item._id === message._id)
+          );
+
+          if (alreadyExists) {
+            return previous;
+          }
+
+          const updatedPages = previous.pages.map((page, index) => {
+            if (index === 0) {
+              const ordered = [...page.data, message].sort(
+                (a: ChatMessage, b: ChatMessage) =>
+                  new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+              );
+              return {
+                ...page,
+                data: ordered,
+                total: page.total + 1
+              };
+            }
+
+            return {
+              ...page,
+              total: page.total + 1
+            };
+          });
+
+          return {
+            ...previous,
+            pages: updatedPages
+          };
+        }
+      );
+
+      if (message.conversationId === selectedConversation) {
+        if (message.sender._id !== user?._id) {
+          markAsReadMutation.mutate(message.conversationId);
+        }
+      }
+    };
+
+    socket.on(SOCKET_EVENTS.CONVERSATION_NEW_MESSAGE, handleNewMessage);
+
+    return () => {
+      socket.off(SOCKET_EVENTS.CONVERSATION_NEW_MESSAGE, handleNewMessage);
+    };
+  }, [socket, queryClient, selectedConversation, user?._id, markAsReadMutation]);
 
   useEffect(
     () => () => {

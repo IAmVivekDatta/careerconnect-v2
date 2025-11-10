@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { body, param } from 'express-validator';
+import { body } from 'express-validator';
 import { authMiddleware } from '../middlewares/authMiddleware';
 import { validate } from '../middlewares/validationMiddleware';
 import {
@@ -21,7 +21,15 @@ router.use(authMiddleware);
 router.get('/conversations', getConversations);
 router.get('/conversations/:userId', getOrCreateConversation);
 router.get('/conversations/:conversationId/messages', getConversationMessages);
-router.post('/conversations/:conversationId/messages', [body('content').isString().isLength({ min: 1 })], validate, sendMessage);
+router.post(
+  '/conversations/:conversationId/messages',
+  [
+    body('content').optional().isString().trim().isLength({ min: 1 }),
+    body('attachmentUrl').optional().isString()
+  ],
+  validate,
+  sendMessage
+);
 router.post('/conversations/:conversationId/read', markAsRead);
 
 // Notifications
