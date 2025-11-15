@@ -51,18 +51,22 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
     }
 
     const instance = io(socketUrl, {
-      transports: ['websocket'],
       withCredentials: true,
       autoConnect: false,
-      auth: { token }
+      auth: { token },
+      reconnectionAttempts: 5
     });
 
     const handleConnect = () => setIsConnected(true);
     const handleDisconnect = () => setIsConnected(false);
+    const handleConnectError = (error: Error) => {
+      console.warn('Socket connect_error', error);
+      setIsConnected(false);
+    };
 
     instance.on('connect', handleConnect);
     instance.on('disconnect', handleDisconnect);
-    instance.on('connect_error', handleDisconnect);
+    instance.on('connect_error', handleConnectError);
 
     instance.connect();
     setSocket(instance);
@@ -70,7 +74,7 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
     return () => {
       instance.off('connect', handleConnect);
       instance.off('disconnect', handleDisconnect);
-      instance.off('connect_error', handleDisconnect);
+      instance.off('connect_error', handleConnectError);
       instance.disconnect();
     };
   }, [token, socketUrl]);
