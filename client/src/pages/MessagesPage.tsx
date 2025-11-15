@@ -3,6 +3,7 @@ import { useInfiniteQuery, useMutation, useQuery, useQueryClient, type InfiniteD
 import { useSearchParams } from 'react-router-dom';
 import {
   AlertTriangle,
+  ArrowLeft,
   Code2,
   ExternalLink,
   FileText,
@@ -105,6 +106,9 @@ const MessagesPage = () => {
   const shouldStickToBottom = useRef(true);
   const queryClient = useQueryClient();
   const socket = useSocket();
+  const getIsMobile = useCallback(() => (typeof window !== 'undefined' ? window.innerWidth < 1024 : false), []);
+  const [isMobile, setIsMobile] = useState(getIsMobile);
+  const [showConversationList, setShowConversationList] = useState(() => !getIsMobile());
 
   const { data: conversations = [], isLoading: conversationsLoading } = useQuery<ConversationSummary[]>(
     {
@@ -260,8 +264,11 @@ const MessagesPage = () => {
         return next;
       });
       markAsReadMutation.mutate(conversationId);
+      if (isMobile) {
+        setShowConversationList(false);
+      }
     },
-    [markAsReadMutation, setSearchParams]
+    [isMobile, markAsReadMutation, setSearchParams]
   );
 
   useEffect(() => {
@@ -292,6 +299,32 @@ const MessagesPage = () => {
       behavior: 'smooth'
     });
   }, [messages.length, selectedConversation]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    const handleResize = () => {
+      setIsMobile(getIsMobile());
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [getIsMobile]);
+
+  useEffect(() => {
+    if (!isMobile) {
+      setShowConversationList(true);
+      return;
+    }
+
+    if (selectedConversation) {
+      setShowConversationList(false);
+    } else {
+      setShowConversationList(true);
+    }
+  }, [isMobile, selectedConversation]);
 
   useEffect(() => {
     if (!socket) {
@@ -373,6 +406,14 @@ const MessagesPage = () => {
       socket.off(SOCKET_EVENTS.CONVERSATION_NEW_MESSAGE, handleNewMessage);
     };
   }, [socket, queryClient, selectedConversation, user?._id, markAsReadMutation]);
+
+  const panelHeightClass = isMobile ? 'h-[calc(100vh-220px)]' : 'h-[70vh]';
+
+  const handleBackToConversations = () => {
+    if (isMobile) {
+      setShowConversationList(true);
+    }
+  };
 
   useEffect(
     () => () => {
@@ -488,8 +529,9 @@ const MessagesPage = () => {
         </div>
       </header>
 
-      <div className="grid gap-4 lg:grid-cols-[320px_minmax(0,1fr)]">
-        <aside className="neon-border flex h-[70vh] flex-col rounded-xl bg-surface/80 p-4">
+      <div className={`grid gap-4 ${!isMobile ? 'lg:grid-cols-[320px_minmax(0,1fr)]' : ''}`}>
+        {(!isMobile || showConversationList) && (
+          <aside className={`neon-border flex ${panelHeightClass} flex-col rounded-xl bg-surface/80 p-4 ${isMobile ? 'relative' : ''}`}>
           <div className="mb-4 space-y-3">
             <div className="relative">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" />
@@ -570,13 +612,25 @@ const MessagesPage = () => {
               </ul>
             )}
           </div>
-        </aside>
+          </aside>
+        )}
 
-        <main className="neon-border flex h-[70vh] flex-col rounded-xl bg-surface/80">
+        {(!isMobile || !showConversationList) && (
+          <main className={`neon-border flex ${panelHeightClass} flex-col rounded-xl bg-surface/80`}>
           {selectedConversation ? (
             <>
               <header className="flex items-center justify-between border-b border-white/5 px-5 py-3">
-                <div>
+                <div className="flex items-center gap-3">
+                  {isMobile && (
+                    <button
+                      type="button"
+                      onClick={handleBackToConversations}
+                      className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/80 transition hover:border-neonCyan/60 hover:text-white"
+                    >
+                      <ArrowLeft className="h-3 w-3" />
+                      Inbox
+                    </button>
+                  )}
                   <h3 className="text-lg font-semibold text-white">
                     {activeConversation
                       ? getConversationTitle(activeConversation, user._id)
@@ -735,6 +789,7 @@ const MessagesPage = () => {
                   </div>
 
                   <textarea
+                    name="messageContent"
                     value={composerValue}
                     onChange={(event) => setComposerValue(event.target.value)}
                     placeholder={
@@ -769,6 +824,7 @@ const MessagesPage = () => {
                 <input
                   ref={fileInputRef}
                   type="file"
+                  name="messageAttachment"
                   className="hidden"
                   onChange={handleFileChange}
                   accept=".png,.jpg,.jpeg,.gif,.webp,.pdf,.zip,.json,.txt,.css,.html,.js,.ts,.tsx,.py,.java,.c,.cpp"
@@ -782,6 +838,7 @@ const MessagesPage = () => {
             </div>
           )}
         </main>
+        )}
       </div>
     </section>
   );

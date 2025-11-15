@@ -80,8 +80,14 @@ const OpportunityDetailPage = () => {
         )}
         <div className="mt-4">
           <div className="mb-2">
-            <label className="text-sm text-muted">Attach resume (optional)</label>
-            <input type="file" accept="application/pdf,image/*" onChange={(e) => setResumeFile(e.target.files?.[0] ?? null)} />
+            <label htmlFor="opportunity-resume" className="text-sm text-muted">Attach resume (optional)</label>
+            <input
+              id="opportunity-resume"
+              name="resume"
+              type="file"
+              accept="application/pdf,image/*"
+              onChange={(e) => setResumeFile(e.target.files?.[0] ?? null)}
+            />
           </div>
           <button onClick={onApply} disabled={loading} className="neon-border rounded px-4 py-2 text-sm font-semibold text-white">
             {loading ? 'Applying...' : 'Apply'}

@@ -167,15 +167,38 @@ const OpportunitiesPage = () => {
           >
             <div className="grid gap-2 sm:grid-cols-2">
               <div>
-                <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title" className="p-2 w-full bg-white/5 rounded" />
+                <input
+                  name="opportunityTitle"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="Title"
+                  className="p-2 w-full bg-white/5 rounded"
+                />
                 {errors.title && <p className="text-xs text-red-400">{errors.title}</p>}
               </div>
-              <input value={company} onChange={(e) => setCompany(e.target.value)} placeholder="Company" className="p-2 bg-white/5 rounded" />
+              <input
+                name="opportunityCompany"
+                value={company}
+                onChange={(e) => setCompany(e.target.value)}
+                placeholder="Company"
+                className="p-2 bg-white/5 rounded"
+              />
               <div className="col-span-2">
-                <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description" className="w-full col-span-2 p-2 bg-white/5 rounded" />
+                <textarea
+                  name="opportunityDescription"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Description"
+                  className="w-full col-span-2 p-2 bg-white/5 rounded"
+                />
                 {errors.description && <p className="text-xs text-red-400">{errors.description}</p>}
               </div>
-              <select value={type} onChange={(e) => setType(e.target.value as Opportunity["type"])} className="p-2 bg-white/5 rounded">
+              <select
+                name="opportunityType"
+                value={type}
+                onChange={(e) => setType(e.target.value as Opportunity["type"])}
+                className="p-2 bg-white/5 rounded"
+              >
                 <option value="Internship">Internship</option>
                 <option value="Full-time">Full-time</option>
                 <option value="Part-time">Part-time</option>

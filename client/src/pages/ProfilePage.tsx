@@ -312,7 +312,13 @@ const EnhancedProfileEditor = ({
                 <label className="absolute -bottom-2 left-1/2 inline-flex -translate-x-1/2 cursor-pointer items-center gap-1 rounded-full bg-black/70 px-3 py-1.5 text-xs font-semibold text-white shadow-lg transition hover:bg-black/80">
                   <Edit2 className="h-3.5 w-3.5" />
                   Change photo
-                  <input type="file" accept="image/*" className="hidden" onChange={handleProfileImageChange} />
+                  <input
+                    type="file"
+                    name="profileImage"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleProfileImageChange}
+                  />
                 </label>
               )}
             </div>
@@ -320,6 +326,7 @@ const EnhancedProfileEditor = ({
             <div className="flex-1 space-y-4">
               {isEditing ? (
                 <input
+                  name="displayName"
                   value={name}
                   onChange={(event) => setName(event.target.value)}
                   placeholder="Your full name"
@@ -396,11 +403,13 @@ const EnhancedProfileEditor = ({
               <h2 className="text-xs font-semibold uppercase tracking-[0.4em] text-white/50">About</h2>
               {isEditing ? (
                 <textarea
+                  name="bio"
                   value={bio}
                   onChange={(event) => setBio(event.target.value)}
                   placeholder="Tell your network what excites you right now..."
                   className="mt-3 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white focus:border-neonCyan focus:outline-none focus:ring-2 focus:ring-neonCyan/30"
                   rows={4}
+                  aria-label="Profile bio"
                 />
               ) : (
                 <p className="mt-3 text-base text-white/80">{bio || 'Let others know about your journey, goals, and passions.'}</p>
@@ -461,6 +470,7 @@ const EnhancedProfileEditor = ({
             {isEditing && (
               <div className="mt-4 flex gap-2">
                 <input
+                  name="newSkill"
                   value={newSkill}
                   onChange={(event) => setNewSkill(event.target.value)}
                   onKeyDown={(event) => {
@@ -514,6 +524,7 @@ const EnhancedProfileEditor = ({
                 <span className="text-xs text-white/50">PDF, DOC, or DOCX · up to 5MB</span>
                 <input
                   type="file"
+                  name="resumeFile"
                   accept="application/pdf,.doc,.docx,image/*"
                   className="hidden"
                   onChange={handleResumeChange}
@@ -555,12 +566,14 @@ const EnhancedProfileEditor = ({
                       {isEditing ? (
                         <div className="space-y-3">
                           <input
+                            name={`experience[${index}].title`}
                             value={exp.title}
                             onChange={(event) => handleUpdateExperience(index, 'title', event.target.value)}
                             placeholder="Role"
                             className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-neonCyan focus:outline-none"
                           />
                           <input
+                            name={`experience[${index}].company`}
                             value={exp.company}
                             onChange={(event) => handleUpdateExperience(index, 'company', event.target.value)}
                             placeholder="Company"
@@ -571,6 +584,7 @@ const EnhancedProfileEditor = ({
                               Start date
                               <input
                                 type="date"
+                                name={`experience[${index}].from`}
                                 value={exp.from}
                                 onChange={(event) => handleUpdateExperience(index, 'from', event.target.value)}
                                 className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-neonCyan focus:outline-none"
@@ -580,6 +594,7 @@ const EnhancedProfileEditor = ({
                               End date (leave empty if current)
                               <input
                                 type="date"
+                                name={`experience[${index}].to`}
                                 value={exp.to ?? ''}
                                 onChange={(event) => handleUpdateExperience(index, 'to', event.target.value)}
                                 className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-neonCyan focus:outline-none"
@@ -587,6 +602,7 @@ const EnhancedProfileEditor = ({
                             </label>
                           </div>
                           <textarea
+                            name={`experience[${index}].description`}
                             value={exp.description ?? ''}
                             onChange={(event) => handleUpdateExperience(index, 'description', event.target.value)}
                             placeholder="What did you deliver? Highlight wins, metrics, or moments you’re proud of."
@@ -659,12 +675,14 @@ const EnhancedProfileEditor = ({
                       {isEditing ? (
                         <div className="space-y-3">
                           <input
+                            name={`education[${index}].degree`}
                             value={edu.degree}
                             onChange={(event) => handleUpdateEducation(index, 'degree', event.target.value)}
                             placeholder="Degree or certification"
                             className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-neonMagenta focus:outline-none"
                           />
                           <input
+                            name={`education[${index}].institution`}
                             value={edu.institution}
                             onChange={(event) => handleUpdateEducation(index, 'institution', event.target.value)}
                             placeholder="Institution"
@@ -674,6 +692,7 @@ const EnhancedProfileEditor = ({
                             Graduation year
                             <input
                               type="number"
+                              name={`education[${index}].year`}
                               value={edu.year}
                               onChange={(event) => handleUpdateEducation(index, 'year', event.target.value)}
                               className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-neonMagenta focus:outline-none"
