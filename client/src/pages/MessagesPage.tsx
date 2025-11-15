@@ -510,23 +510,27 @@ const MessagesPage = () => {
     <section className="space-y-6">
       <header className="space-y-2">
         <h2 className="text-2xl font-semibold text-white">Inbox</h2>
-        <p className="text-sm text-white/70">
-          Share updates, snippets, and files with your network in real time.
-        </p>
-        <div className="grid gap-3 sm:grid-cols-3">
-          <article className="neon-border rounded-lg bg-surface/80 p-3 text-sm text-white/70">
-            <p className="text-xs uppercase tracking-[0.2em] text-white/50">Conversations</p>
-            <p className="mt-1 text-2xl font-semibold text-white">{conversations.length}</p>
-          </article>
-          <article className="neon-border rounded-lg bg-surface/80 p-3 text-sm text-white/70">
-            <p className="text-xs uppercase tracking-[0.2em] text-white/50">Unread</p>
-            <p className="mt-1 text-2xl font-semibold text-neonCyan">{unreadTotal}</p>
-          </article>
-          <article className="neon-border rounded-lg bg-surface/80 p-3 text-sm text-white/70">
-            <p className="text-xs uppercase tracking-[0.2em] text-white/50">Attachments</p>
-            <p className="mt-1 text-2xl font-semibold text-neonMagenta">{attachmentConversations}</p>
-          </article>
-        </div>
+        {!isMobile && (
+          <>
+            <p className="text-sm text-white/70">
+              Share updates, snippets, and files with your network in real time.
+            </p>
+            <div className="grid gap-3 sm:grid-cols-3">
+              <article className="neon-border rounded-lg bg-surface/80 p-3 text-sm text-white/70">
+                <p className="text-xs uppercase tracking-[0.2em] text-white/50">Conversations</p>
+                <p className="mt-1 text-2xl font-semibold text-white">{conversations.length}</p>
+              </article>
+              <article className="neon-border rounded-lg bg-surface/80 p-3 text-sm text-white/70">
+                <p className="text-xs uppercase tracking-[0.2em] text-white/50">Unread</p>
+                <p className="mt-1 text-2xl font-semibold text-neonCyan">{unreadTotal}</p>
+              </article>
+              <article className="neon-border rounded-lg bg-surface/80 p-3 text-sm text-white/70">
+                <p className="text-xs uppercase tracking-[0.2em] text-white/50">Attachments</p>
+                <p className="mt-1 text-2xl font-semibold text-neonMagenta">{attachmentConversations}</p>
+              </article>
+            </div>
+          </>
+        )}
       </header>
 
       <div className={`grid gap-4 ${!isMobile ? 'lg:grid-cols-[320px_minmax(0,1fr)]' : ''}`}>
@@ -725,7 +729,7 @@ const MessagesPage = () => {
               </div>
 
               <footer className="border-t border-white/5 px-5 py-4">
-                <div className="mb-3 flex flex-wrap gap-2">
+                <div className="mb-3 hidden flex-wrap gap-2 sm:flex">
                   {quickReplies.map((reply) => (
                     <button
                       key={reply}
@@ -764,8 +768,8 @@ const MessagesPage = () => {
                 )}
 
                 <form onSubmit={handleComposerSubmit} className="space-y-3">
-                  <div className="flex items-center justify-between text-xs text-white/60">
-                    <div className="flex items-center gap-2">
+                  <div className="flex flex-col gap-3 text-xs text-white/60 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="flex flex-wrap items-center gap-2">
                       <button
                         type="button"
                         onClick={handleFilePick}
@@ -785,7 +789,9 @@ const MessagesPage = () => {
                         <Code2 className="h-3 w-3" /> {composerMode === 'code' ? 'Code mode' : 'Plain text'}
                       </button>
                     </div>
-                    <span>Max 5MB · markdown code fences supported</span>
+                    <span className="text-center text-[11px] text-white/50 sm:text-right">
+                      Max 5MB · markdown code fences supported
+                    </span>
                   </div>
 
                   <textarea
