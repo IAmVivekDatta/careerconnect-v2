@@ -14,7 +14,13 @@ interface PostCardProps {
 const PostCard = ({ post, onPostUpdate }: PostCardProps) => {
   const [showComments, setShowComments] = useState(false);
   const [commentText, setCommentText] = useState('');
-  const [isLiked, setIsLiked] = useState(post.likes.some((l: any) => l._id === useAuthStore.getState().user?._id || l === useAuthStore.getState().user?._id));
+  const [isLiked, setIsLiked] = useState(
+    post.likes.some(
+      (l: any) =>
+        l._id === useAuthStore.getState().user?._id ||
+        l === useAuthStore.getState().user?._id
+    )
+  );
   const { user } = useAuthStore();
   const queryClient = useQueryClient();
 
@@ -44,7 +50,9 @@ const PostCard = ({ post, onPostUpdate }: PostCardProps) => {
 
   const commentPostMutation = useMutation({
     mutationFn: async () => {
-      const response = await api.post(`/posts/${post._id}/comment`, { text: commentText });
+      const response = await api.post(`/posts/${post._id}/comment`, {
+        text: commentText
+      });
       return response.data;
     },
     onSuccess: (data) => {
@@ -56,7 +64,9 @@ const PostCard = ({ post, onPostUpdate }: PostCardProps) => {
 
   const deleteCommentMutation = useMutation({
     mutationFn: async (commentId: string) => {
-      const response = await api.delete(`/posts/${post._id}/comment/${commentId}`);
+      const response = await api.delete(
+        `/posts/${post._id}/comment/${commentId}`
+      );
       return response.data;
     },
     onSuccess: (data) => {
@@ -99,7 +109,10 @@ const PostCard = ({ post, onPostUpdate }: PostCardProps) => {
       {/* Post Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3 flex-1">
-          <Avatar src={post.author.profilePicture} alt={post.author.name} />
+          <Avatar
+            src={post.author.profilePicture ?? post.author.googlePhotoUrl}
+            alt={post.author.name}
+          />
           <div>
             <p className="text-sm font-semibold">{post.author.name}</p>
             <p className="text-xs text-muted">
@@ -187,16 +200,30 @@ const PostCard = ({ post, onPostUpdate }: PostCardProps) => {
               <p className="text-xs text-slate-500 italic">No comments yet</p>
             ) : (
               post.comments.map((comment: any) => (
-                <div key={comment._id} className="bg-slate-800/30 rounded-lg p-2 flex gap-2 items-start">
+                <div
+                  key={comment._id}
+                  className="bg-slate-800/30 rounded-lg p-2 flex gap-2 items-start"
+                >
                   <div className="flex-shrink-0">
-                    <Avatar src={comment.user.profilePicture} alt={comment.user.name} />
+                    <Avatar
+                      src={
+                        comment.user.profilePicture ??
+                        comment.user.googlePhotoUrl
+                      }
+                      alt={comment.user.name}
+                    />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-2">
-                      <p className="text-xs font-semibold text-white">{comment.user.name}</p>
-                      {(user?._id === comment.user._id || user?.role === 'admin') && (
+                      <p className="text-xs font-semibold text-white">
+                        {comment.user.name}
+                      </p>
+                      {(user?._id === comment.user._id ||
+                        user?.role === 'admin') && (
                         <button
-                          onClick={() => deleteCommentMutation.mutate(comment._id)}
+                          onClick={() =>
+                            deleteCommentMutation.mutate(comment._id)
+                          }
                           disabled={deleteCommentMutation.isPending}
                           className="text-red-400 hover:text-red-300 opacity-0 hover:opacity-100 transition-opacity"
                         >
@@ -204,7 +231,9 @@ const PostCard = ({ post, onPostUpdate }: PostCardProps) => {
                         </button>
                       )}
                     </div>
-                    <p className="text-xs text-slate-300 break-words">{comment.text}</p>
+                    <p className="text-xs text-slate-300 break-words">
+                      {comment.text}
+                    </p>
                     <p className="text-xs text-slate-500 mt-1">
                       {new Date(comment.createdAt).toLocaleString()}
                     </p>

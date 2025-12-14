@@ -1,10 +1,10 @@
-import { useDeferredValue, useMemo, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
-import RecommendedAlumniCarousel from "../components/organisms/RecommendedAlumniCarousel";
-import api from "../lib/axios";
-import { useToast } from "../components/atoms/Toast";
-import { ConnectionsOverview, ConnectionUser } from "../types";
+import { useDeferredValue, useMemo, useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
+import RecommendedAlumniCarousel from '../components/organisms/RecommendedAlumniCarousel';
+import api from '../lib/axios';
+import { useToast } from '../components/atoms/Toast';
+import { ConnectionsOverview, ConnectionUser } from '../types';
 
 interface AlumniRecord extends ConnectionUser {
   experience?: Array<{ title?: string; company?: string }>;
@@ -23,17 +23,19 @@ const uniqueSkills = (alumni: AlumniRecord[]) => {
 };
 
 const AlumniDirectoryPage = () => {
-  const [search, setSearch] = useState("");
-  const [skillFilter, setSkillFilter] = useState("all");
+  const [search, setSearch] = useState('');
+  const [skillFilter, setSkillFilter] = useState('all');
   const deferredSearch = useDeferredValue(search);
   const { push } = useToast();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery<AlumniDirectoryResponse>({
-    queryKey: ["alumni-directory"],
+    queryKey: ['alumni-directory'],
     queryFn: async () => {
-      const response = await api.get<AlumniDirectoryResponse>("/alumni/directory");
+      const response = await api.get<AlumniDirectoryResponse>(
+        '/alumni/directory'
+      );
       return response.data;
     },
     staleTime: 1000 * 60 * 5
@@ -46,10 +48,10 @@ const AlumniDirectoryPage = () => {
       await api.post(`/connections/request/${targetId}`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["connections-overview"] });
-      push({ message: "Connection request sent", type: "success" });
+      queryClient.invalidateQueries({ queryKey: ['connections-overview'] });
+      push({ message: 'Connection request sent', type: 'success' });
     },
-    onError: () => push({ message: "Unable to send request", type: "error" })
+    onError: () => push({ message: 'Unable to send request', type: 'error' })
   });
 
   const openConversationMutation = useMutation({
@@ -63,16 +65,19 @@ const AlumniDirectoryPage = () => {
         navigate(`/messages?conversation=${conversationId}`);
       }
     },
-    onError: () => push({ message: "Unable to start conversation", type: "error" })
+    onError: () =>
+      push({ message: 'Unable to start conversation', type: 'error' })
   });
 
   const filteredAlumni = useMemo(() => {
     const term = deferredSearch.trim().toLowerCase();
     return alumniList.filter((alum) => {
       const matchesSearch = term
-        ? alum.name.toLowerCase().includes(term) || alum.email.toLowerCase().includes(term)
+        ? alum.name.toLowerCase().includes(term) ||
+          alum.email.toLowerCase().includes(term)
         : true;
-      const matchesSkill = skillFilter === "all" || alum.skills?.includes(skillFilter);
+      const matchesSkill =
+        skillFilter === 'all' || alum.skills?.includes(skillFilter);
       return matchesSearch && matchesSkill;
     });
   }, [alumniList, deferredSearch, skillFilter]);
@@ -84,7 +89,8 @@ const AlumniDirectoryPage = () => {
       <header className="space-y-2">
         <h2 className="text-2xl font-bold text-white">Alumni Network</h2>
         <p className="text-sm text-muted">
-          Discover alumni mentors, explore their expertise, and grow your professional circle.
+          Discover alumni mentors, explore their expertise, and grow your
+          professional circle.
         </p>
       </header>
 
@@ -94,7 +100,9 @@ const AlumniDirectoryPage = () => {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h3 className="text-xl font-semibold text-white">Directory</h3>
-            <p className="text-xs text-white/50">{filteredAlumni.length} results</p>
+            <p className="text-xs text-white/50">
+              {filteredAlumni.length} results
+            </p>
           </div>
           <div className="flex flex-wrap items-center gap-3">
             <input
@@ -121,7 +129,10 @@ const AlumniDirectoryPage = () => {
         {isLoading ? (
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {[...Array(6)].map((_, index) => (
-              <div key={index} className="h-40 animate-pulse rounded-lg bg-white/10" />
+              <div
+                key={index}
+                className="h-40 animate-pulse rounded-lg bg-white/10"
+              />
             ))}
           </div>
         ) : filteredAlumni.length === 0 ? (
@@ -131,16 +142,27 @@ const AlumniDirectoryPage = () => {
         ) : (
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {filteredAlumni.map((alum) => (
-              <article key={alum._id} className="neon-border rounded-lg bg-surface/80 p-5 shadow-lg">
+              <article
+                key={alum._id}
+                className="neon-border rounded-lg bg-surface/80 p-5 shadow-lg"
+              >
                 <div className="flex items-start gap-4">
                   <img
-                    src={alum.profilePicture || `https://i.pravatar.cc/120?u=${alum.email}`}
+                    src={
+                      alum.profilePicture ||
+                      alum.googlePhotoUrl ||
+                      `https://i.pravatar.cc/120?u=${alum.email}`
+                    }
                     alt={alum.name}
                     className="h-14 w-14 rounded-full border border-white/10 object-cover"
                   />
                   <div className="flex-1 space-y-1">
-                    <h4 className="text-sm font-semibold text-white">{alum.name}</h4>
-                    <p className="text-xs text-white/60">{alum.bio ?? 'Alumni mentor'}</p>
+                    <h4 className="text-sm font-semibold text-white">
+                      {alum.name}
+                    </h4>
+                    <p className="text-xs text-white/60">
+                      {alum.bio ?? 'Alumni mentor'}
+                    </p>
                     <div className="flex flex-wrap gap-1">
                       {alum.skills?.slice(0, 4).map((skill) => (
                         <span
@@ -165,7 +187,7 @@ const AlumniDirectoryPage = () => {
                       {role.title ?? 'Role'} · {role.company ?? 'Company'}
                     </p>
                   ))}
-                  {typeof alum.overlap === "number" && alum.overlap > 0 && (
+                  {typeof alum.overlap === 'number' && alum.overlap > 0 && (
                     <p className="rounded bg-neonCyan/10 px-2 py-1 text-[11px] text-neonCyan">
                       {alum.overlap} shared skill{alum.overlap === 1 ? '' : 's'}
                     </p>

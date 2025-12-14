@@ -48,6 +48,7 @@ export interface UserDocument extends Document {
   education: Education[];
   experience: Experience[];
   profilePicture?: string;
+  googlePhotoUrl?: string;
   resumeUrl?: string;
   portfolioLinks: string[];
   connections: Types.ObjectId[];
@@ -86,7 +87,11 @@ const UserSchema = new Schema<UserDocument>({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true, lowercase: true },
   password: { type: String, required: true },
-  role: { type: String, enum: ['student', 'alumni', 'admin'], default: 'student' },
+  role: {
+    type: String,
+    enum: ['student', 'alumni', 'admin'],
+    default: 'student'
+  },
   bio: String,
   skills: { type: [String], default: [] },
   education: [
@@ -106,6 +111,7 @@ const UserSchema = new Schema<UserDocument>({
     }
   ],
   profilePicture: String,
+  googlePhotoUrl: String,
   resumeUrl: String,
   portfolioLinks: { type: [String], default: [] },
   connections: [{ type: Schema.Types.ObjectId, ref: 'User' }],

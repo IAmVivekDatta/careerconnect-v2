@@ -9,6 +9,7 @@ interface LeaderboardUser {
   name: string;
   points: number;
   profilePicture?: string;
+  googlePhotoUrl?: string;
   badges: any[];
 }
 
@@ -27,7 +28,10 @@ export const Leaderboard = () => {
     return (
       <div className="space-y-3">
         {[...Array(5)].map((_, i) => (
-          <div key={i} className="h-16 bg-gradient-to-r from-slate-900 to-slate-800 rounded-lg animate-pulse" />
+          <div
+            key={i}
+            className="h-16 bg-gradient-to-r from-slate-900 to-slate-800 rounded-lg animate-pulse"
+          />
         ))}
       </div>
     );
@@ -57,21 +61,27 @@ export const Leaderboard = () => {
         >
           <div className="flex items-center gap-4">
             {/* Rank Badge */}
-            <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${
-              idx === 0
-                ? 'bg-gradient-to-r from-yellow-500 to-amber-500 text-white'
-                : idx === 1
+            <div
+              className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${
+                idx === 0
+                  ? 'bg-gradient-to-r from-yellow-500 to-amber-500 text-white'
+                  : idx === 1
                   ? 'bg-gradient-to-r from-gray-300 to-gray-400 text-gray-900'
                   : idx === 2
-                    ? 'bg-gradient-to-r from-orange-500 to-amber-600 text-white'
-                    : 'bg-slate-700 text-slate-300'
-            }`}>
-              {idx < 3 && [idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉']}{idx >= 3 && `#${idx + 1}`}
+                  ? 'bg-gradient-to-r from-orange-500 to-amber-600 text-white'
+                  : 'bg-slate-700 text-slate-300'
+              }`}
+            >
+              {idx < 3 && [idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉']}
+              {idx >= 3 && `#${idx + 1}`}
             </div>
 
             {/* Avatar & Name */}
             <div className="flex-1 min-w-0">
-              <Avatar src={user.profilePicture} alt={user.name} />
+              <Avatar
+                src={user.profilePicture ?? user.googlePhotoUrl}
+                alt={user.name}
+              />
             </div>
             <div className="flex-1">
               <p className="text-sm font-semibold text-white truncate group-hover:text-cyan-400 transition-colors">

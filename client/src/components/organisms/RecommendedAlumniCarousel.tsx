@@ -8,6 +8,7 @@ interface Alumni {
   email: string;
   skills: string[];
   profilePicture?: string;
+  googlePhotoUrl?: string;
   bio?: string;
   similarity?: number;
 }
@@ -30,7 +31,9 @@ const RecommendedAlumniCarousel = () => {
   if (!alumni?.data || alumni.data.length === 0) {
     return (
       <div className="rounded-lg bg-surface/80 p-8 text-center">
-        <p className="text-muted">Complete your skills profile to see recommended alumni</p>
+        <p className="text-muted">
+          Complete your skills profile to see recommended alumni
+        </p>
       </div>
     );
   }
@@ -43,30 +46,45 @@ const RecommendedAlumniCarousel = () => {
   };
 
   const handlePrev = () => {
-    setCurrentIndex((prev) => (prev - 1 + recommendedList.length) % recommendedList.length);
+    setCurrentIndex(
+      (prev) => (prev - 1 + recommendedList.length) % recommendedList.length
+    );
   };
 
   return (
     <section className="space-y-4">
-      <h3 className="text-lg font-semibold text-neonCyan">Recommended Alumni</h3>
+      <h3 className="text-lg font-semibold text-neonCyan">
+        Recommended Alumni
+      </h3>
       <div className="neon-border rounded-lg bg-gradient-to-br from-purple-900/30 to-blue-900/30 p-6">
         <div className="space-y-4">
           {/* Alumni Card */}
           <div className="flex items-center gap-6">
             {/* Avatar */}
             <img
-              src={currentAlumnus.profilePicture || `https://i.pravatar.cc/150?u=${currentAlumnus.email}`}
+              src={
+                currentAlumnus.profilePicture ||
+                currentAlumnus.googlePhotoUrl ||
+                `https://i.pravatar.cc/150?u=${currentAlumnus.email}`
+              }
               alt={currentAlumnus.name}
               className="h-20 w-20 rounded-full border-2 border-neonCyan shadow-lg"
             />
 
             {/* Info */}
             <div className="flex-1 space-y-2">
-              <h4 className="text-xl font-bold text-white">{currentAlumnus.name}</h4>
-              <p className="text-sm text-muted">{currentAlumnus.bio || 'Alumni member'}</p>
+              <h4 className="text-xl font-bold text-white">
+                {currentAlumnus.name}
+              </h4>
+              <p className="text-sm text-muted">
+                {currentAlumnus.bio || 'Alumni member'}
+              </p>
               <div className="flex flex-wrap gap-2">
                 {currentAlumnus.skills.slice(0, 3).map((skill) => (
-                  <span key={skill} className="inline-block rounded-full bg-neonCyan/20 px-3 py-1 text-xs text-neonCyan">
+                  <span
+                    key={skill}
+                    className="inline-block rounded-full bg-neonCyan/20 px-3 py-1 text-xs text-neonCyan"
+                  >
                     {skill}
                   </span>
                 ))}

@@ -1,4 +1,4 @@
-export type UserRole = "student" | "alumni" | "admin";
+export type UserRole = 'student' | 'alumni' | 'admin';
 
 export interface AuthUser {
   _id: string;
@@ -6,6 +6,7 @@ export interface AuthUser {
   email: string;
   role: UserRole;
   profilePicture?: string;
+  googlePhotoUrl?: string;
 }
 
 // @ts-prune-ignore-next
@@ -14,8 +15,8 @@ export interface Opportunity {
   title: string;
   company: string;
   description: string;
-  type: "Internship" | "Full-time" | "Part-time" | "Training";
-  status: "pending" | "approved" | "rejected";
+  type: 'Internship' | 'Full-time' | 'Part-time' | 'Training';
+  status: 'pending' | 'approved' | 'rejected';
   skills?: string[];
   location?: string;
   salary?: string;
@@ -121,6 +122,7 @@ export interface ConversationParticipant {
   email?: string;
   role?: UserRole;
   profilePicture?: string;
+  googlePhotoUrl?: string;
 }
 
 export interface ConversationSummary {

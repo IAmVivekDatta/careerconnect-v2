@@ -9,10 +9,13 @@ type UpdateProfilePayload = {
   experience?: unknown[];
   portfolioLinks?: string[];
   resumeUrl?: string;
+  profilePicture?: string;
 };
 
 export const getMe = async (req: AuthRequest, res: Response) => {
-  const user = await User.findById(req.user?.id).select('-password -connectionRequests');
+  const user = await User.findById(req.user?.id).select(
+    '-password -connectionRequests'
+  );
   if (!user) {
     return res.status(404).json({ error: true, message: 'User not found' });
   }
@@ -28,6 +31,7 @@ export const getMe = async (req: AuthRequest, res: Response) => {
     education: user.education,
     experience: user.experience,
     profilePicture: user.profilePicture,
+    googlePhotoUrl: user.googlePhotoUrl,
     resumeUrl: user.resumeUrl,
     portfolioLinks: user.portfolioLinks,
     connections: user.connections,
@@ -38,8 +42,19 @@ export const getMe = async (req: AuthRequest, res: Response) => {
   });
 };
 
-export const updateMe = async (req: AuthRequest<Record<string, unknown>, unknown, UpdateProfilePayload>, res: Response) => {
-  const allowedFields = ['bio', 'skills', 'education', 'experience', 'portfolioLinks', 'resumeUrl'];
+export const updateMe = async (
+  req: AuthRequest<Record<string, unknown>, unknown, UpdateProfilePayload>,
+  res: Response
+) => {
+  const allowedFields = [
+    'bio',
+    'skills',
+    'education',
+    'experience',
+    'portfolioLinks',
+    'resumeUrl',
+    'profilePicture'
+  ];
   const updates: Record<string, unknown> = {};
 
   const bodyAny = req.body as any;
@@ -49,19 +64,28 @@ export const updateMe = async (req: AuthRequest<Record<string, unknown>, unknown
     }
   });
 
-  const user = await User.findByIdAndUpdate(req.user?.id, updates, { new: true });
+  const user = await User.findByIdAndUpdate(req.user?.id, updates, {
+    new: true
+  });
 
   if (!user) {
     return res.status(404).json({ error: true, message: 'User not found' });
   }
 
   // Return sanitized user without password
-  const sanitized = await User.findById(user._id).select('-password -connectionRequests');
+  const sanitized = await User.findById(user._id).select(
+    '-password -connectionRequests'
+  );
   res.json(sanitized);
 };
 
-export const getUserById = async (req: AuthRequest<{ id: string }>, res: Response) => {
-  const user = await User.findById(req.params.id).select('-password -connectionRequests');
+export const getUserById = async (
+  req: AuthRequest<{ id: string }>,
+  res: Response
+) => {
+  const user = await User.findById(req.params.id).select(
+    '-password -connectionRequests'
+  );
   if (!user) {
     return res.status(404).json({ error: true, message: 'User not found' });
   }
@@ -69,7 +93,12 @@ export const getUserById = async (req: AuthRequest<{ id: string }>, res: Respons
 };
 
 export const listUsers = async (
-  req: AuthRequest<Record<string, unknown>, unknown, Record<string, unknown>, { role?: string; skill?: string; batch?: string }>,
+  req: AuthRequest<
+    Record<string, unknown>,
+    unknown,
+    Record<string, unknown>,
+    { role?: string; skill?: string; batch?: string }
+  >,
   res: Response
 ) => {
   const { role, skill, batch } = req.query;

@@ -4,7 +4,8 @@ import { AuthRequest } from '../middlewares/authMiddleware';
 import { User } from '../models/User';
 import { Notification } from '../models/Notification';
 
-const USER_SUMMARY_FIELDS = '_id name email profilePicture role skills bio points createdAt';
+const USER_SUMMARY_FIELDS =
+  '_id name email profilePicture googlePhotoUrl role skills bio points createdAt';
 
 type ConnectionAction = 'accept' | 'decline';
 
@@ -13,6 +14,7 @@ const toSummary = (user: any) => ({
   name: user.name,
   email: user.email,
   profilePicture: user.profilePicture,
+  googlePhotoUrl: user.googlePhotoUrl,
   role: user.role,
   skills: user.skills ?? [],
   bio: user.bio,
@@ -20,14 +22,25 @@ const toSummary = (user: any) => ({
   createdAt: user.createdAt
 });
 
-const scoreBySkillOverlap = (sourceSkills: string[], candidateSkills: string[]) => {
+const scoreBySkillOverlap = (
+  sourceSkills: string[],
+  candidateSkills: string[]
+) => {
   if (!sourceSkills.length || !candidateSkills?.length) return 0;
   const set = new Set(sourceSkills.map((s) => s.toLowerCase()));
-  return candidateSkills.reduce((acc, skill) => (set.has(skill.toLowerCase()) ? acc + 1 : acc), 0);
+  return candidateSkills.reduce(
+    (acc, skill) => (set.has(skill.toLowerCase()) ? acc + 1 : acc),
+    0
+  );
 };
 
 export const getConnectionOverview = async (
-  req: AuthRequest<Record<string, unknown>, unknown, Record<string, unknown>, { summary?: string }>,
+  req: AuthRequest<
+    Record<string, unknown>,
+    unknown,
+    Record<string, unknown>,
+    { summary?: string }
+  >,
   res: Response
 ) => {
   const currentUser = await User.findById(req.user?.id).select(
@@ -40,13 +53,17 @@ export const getConnectionOverview = async (
 
   const summaryOnly = req.query.summary === 'true';
 
-  const connectionIds = (currentUser.connections ?? []).map((id) => new Types.ObjectId(id));
-  const incomingRequests = currentUser.connectionRequests ?? [];
-  const incomingIds = incomingRequests.map((reqItem) => reqItem.from as Types.ObjectId);
-
-  const outgoingUsers = await User.find({ 'connectionRequests.from': currentUser._id }).select(
-    `${USER_SUMMARY_FIELDS} connectionRequests`
+  const connectionIds = (currentUser.connections ?? []).map(
+    (id) => new Types.ObjectId(id)
   );
+  const incomingRequests = currentUser.connectionRequests ?? [];
+  const incomingIds = incomingRequests.map(
+    (reqItem) => reqItem.from as Types.ObjectId
+  );
+
+  const outgoingUsers = await User.find({
+    'connectionRequests.from': currentUser._id
+  }).select(`${USER_SUMMARY_FIELDS} connectionRequests`);
 
   if (summaryOnly) {
     return res.json({
@@ -68,8 +85,8 @@ export const getConnectionOverview = async (
   ]);
 
   const outgoing = outgoingUsers.map((user) => {
-    const request = user.connectionRequests.find((reqItem: any) =>
-      String(reqItem.from) === String(currentUser._id)
+    const request = user.connectionRequests.find(
+      (reqItem: any) => String(reqItem.from) === String(currentUser._id)
     );
     return {
       ...toSummary(user),
@@ -109,7 +126,10 @@ export const getConnectionOverview = async (
     }))
     .sort((a, b) => {
       if (b.overlap !== a.overlap) return b.overlap - a.overlap;
-      return new Date(b.summary.createdAt).getTime() - new Date(a.summary.createdAt).getTime();
+      return (
+        new Date(b.summary.createdAt).getTime() -
+        new Date(a.summary.createdAt).getTime()
+      );
     })
     .slice(0, 12)
     .map(({ summary, overlap }) => ({ ...summary, overlap }));
@@ -128,7 +148,7 @@ export const getConnectionOverview = async (
 };
 
 export const requestConnection = async (
-  req: AuthRequest<{ userId: string }> ,
+  req: AuthRequest<{ userId: string }>,
   res: Response
 ) => {
   const targetId = req.params.userId;
@@ -139,7 +159,9 @@ export const requestConnection = async (
   }
 
   if (targetId === currentUserId) {
-    return res.status(400).json({ error: true, message: 'Cannot connect with yourself' });
+    return res
+      .status(400)
+      .json({ error: true, message: 'Cannot connect with yourself' });
   }
 
   const [currentUser, targetUser] = await Promise.all([
@@ -151,7 +173,9 @@ export const requestConnection = async (
     return res.status(404).json({ error: true, message: 'User not found' });
   }
 
-  if (targetUser.connections?.some((connId) => String(connId) === currentUserId)) {
+  if (
+    targetUser.connections?.some((connId) => String(connId) === currentUserId)
+  ) {
     return res.status(400).json({ error: true, message: 'Already connected' });
   }
 
@@ -159,7 +183,9 @@ export const requestConnection = async (
     (reqItem: any) => String(reqItem.from) === currentUserId
   );
   if (alreadyRequested) {
-    return res.status(409).json({ error: true, message: 'Request already sent' });
+    return res
+      .status(409)
+      .json({ error: true, message: 'Request already sent' });
   }
 
   await User.findByIdAndUpdate(targetId, {
@@ -183,7 +209,11 @@ export const requestConnection = async (
 };
 
 export const respondToConnection = async (
-  req: AuthRequest<Record<string, unknown>, unknown, { requesterId: string; action: ConnectionAction }> ,
+  req: AuthRequest<
+    Record<string, unknown>,
+    unknown,
+    { requesterId: string; action: ConnectionAction }
+  >,
   res: Response
 ) => {
   const currentUserId = req.user?.id;
@@ -215,8 +245,12 @@ export const respondToConnection = async (
 
   if (action === 'accept') {
     await Promise.all([
-      User.findByIdAndUpdate(currentUserId, { $addToSet: { connections: requesterId } }),
-      User.findByIdAndUpdate(requesterId, { $addToSet: { connections: currentUserId } })
+      User.findByIdAndUpdate(currentUserId, {
+        $addToSet: { connections: requesterId }
+      }),
+      User.findByIdAndUpdate(requesterId, {
+        $addToSet: { connections: currentUserId }
+      })
     ]);
     await Notification.create({
       recipient: requesterId,
@@ -231,7 +265,7 @@ export const respondToConnection = async (
 };
 
 export const cancelConnectionRequest = async (
-  req: AuthRequest<{ userId: string }> ,
+  req: AuthRequest<{ userId: string }>,
   res: Response
 ) => {
   const currentUserId = req.user?.id;
@@ -249,7 +283,7 @@ export const cancelConnectionRequest = async (
 };
 
 export const removeConnection = async (
-  req: AuthRequest<{ userId: string }> ,
+  req: AuthRequest<{ userId: string }>,
   res: Response
 ) => {
   const currentUserId = req.user?.id;

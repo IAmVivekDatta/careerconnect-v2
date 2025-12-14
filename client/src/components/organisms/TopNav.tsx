@@ -1,14 +1,14 @@
-import { useEffect, useMemo, useState } from "react";
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
-import NeonButton from "../atoms/NeonButton";
-import Avatar from "../atoms/Avatar";
-import useAuthStore from "../../store/useAuthStore";
-import { useNavMetrics } from "../../hooks/useNavMetrics";
-import { appNavItems } from "../../constants/navItems";
-import type { AppNavItem } from "../../constants/navItems";
-import DynamoHamburger from "../atoms/DynamoHamburger";
-import { useLayoutStore } from "../../store/useLayoutStore";
-import ThemeSwitcher from "./ThemeSwitcher";
+import { useEffect, useMemo, useState } from 'react';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
+import NeonButton from '../atoms/NeonButton';
+import Avatar from '../atoms/Avatar';
+import useAuthStore from '../../store/useAuthStore';
+import { useNavMetrics } from '../../hooks/useNavMetrics';
+import { appNavItems } from '../../constants/navItems';
+import type { AppNavItem } from '../../constants/navItems';
+import DynamoHamburger from '../atoms/DynamoHamburger';
+import { useLayoutStore } from '../../store/useLayoutStore';
+import ThemeSwitcher from './ThemeSwitcher';
 
 const TopNav = () => {
   const { user, logout } = useAuthStore();
@@ -30,14 +30,16 @@ const TopNav = () => {
 
   const visibleNavItems = useMemo(() => {
     if (!user) return [];
-    return appNavItems.filter((item) => !item.roles || item.roles.includes(user.role));
+    return appNavItems.filter(
+      (item) => !item.roles || item.roles.includes(user.role)
+    );
   }, [user]);
 
   const getBadgeFor = (path: string) => {
-    if (path.startsWith("/connections")) {
+    if (path.startsWith('/connections')) {
       return connectionCounts?.pending ?? 0;
     }
-    if (path.startsWith("/messages")) {
+    if (path.startsWith('/messages')) {
       return unreadCounts?.messages ?? 0;
     }
     return 0;
@@ -45,7 +47,9 @@ const TopNav = () => {
 
   const renderDesktopLink = (item: AppNavItem) => {
     const Icon = item.icon;
-    const isActive = location.pathname === item.to || location.pathname.startsWith(`${item.to}/`);
+    const isActive =
+      location.pathname === item.to ||
+      location.pathname.startsWith(`${item.to}/`);
     const badge = getBadgeFor(item.to);
 
     return (
@@ -54,13 +58,15 @@ const TopNav = () => {
         to={item.to}
         className={`group flex items-center gap-2 rounded-full px-3 py-1.5 text-sm transition ${
           isActive
-            ? "bg-neonCyan/15 text-white shadow-[0_0_18px_rgba(0,255,255,0.15)]"
-            : "text-white/70 hover:bg-white/10 hover:text-white"
+            ? 'bg-neonCyan/15 text-white shadow-[0_0_18px_rgba(0,255,255,0.15)]'
+            : 'text-white/70 hover:bg-white/10 hover:text-white'
         }`}
       >
         <Icon
           className={`h-4 w-4 ${
-            isActive ? "text-neonCyan" : "text-white/50 group-hover:text-neonCyan"
+            isActive
+              ? 'text-neonCyan'
+              : 'text-white/50 group-hover:text-neonCyan'
           }`}
         />
         <span>{item.label}</span>
@@ -75,7 +81,9 @@ const TopNav = () => {
 
   const renderMobileLink = (item: AppNavItem) => {
     const Icon = item.icon;
-    const isActive = location.pathname === item.to || location.pathname.startsWith(`${item.to}/`);
+    const isActive =
+      location.pathname === item.to ||
+      location.pathname.startsWith(`${item.to}/`);
     const badge = getBadgeFor(item.to);
 
     return (
@@ -83,13 +91,17 @@ const TopNav = () => {
         key={`${item.to}-mobile`}
         to={item.to}
         className={`group flex items-center justify-between rounded-lg px-3 py-2 text-sm transition ${
-          isActive ? "bg-neonCyan/10 text-white" : "text-muted hover:bg-white/5 hover:text-white"
+          isActive
+            ? 'bg-neonCyan/10 text-white'
+            : 'text-muted hover:bg-white/5 hover:text-white'
         }`}
       >
         <span className="flex items-center gap-2">
           <Icon
             className={`h-4 w-4 ${
-              isActive ? "text-neonCyan" : "text-white/40 group-hover:text-neonCyan"
+              isActive
+                ? 'text-neonCyan'
+                : 'text-white/40 group-hover:text-neonCyan'
             }`}
           />
           <span>{item.label}</span>
@@ -151,12 +163,15 @@ const TopNav = () => {
             className="relative flex items-center transition hover:opacity-80"
             aria-label="Open profile"
           >
-            <Avatar src={user?.profilePicture} alt={user?.name ?? "User"} />
-            {unreadCounts?.total ? (
-              unreadCounts.total > 0 && (
-                <span className="absolute -right-1 -top-1 h-3 w-3 rounded-full bg-neonCyan shadow-[0_0_12px_rgba(0,255,255,0.6)]" />
-              )
-            ) : null}
+            <Avatar
+              src={user?.profilePicture ?? user?.googlePhotoUrl}
+              alt={user?.name ?? 'User'}
+            />
+            {unreadCounts?.total
+              ? unreadCounts.total > 0 && (
+                  <span className="absolute -right-1 -top-1 h-3 w-3 rounded-full bg-neonCyan shadow-[0_0_12px_rgba(0,255,255,0.6)]" />
+                )
+              : null}
           </button>
         </div>
       </div>

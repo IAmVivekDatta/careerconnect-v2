@@ -9,6 +9,7 @@ interface SkillEndorsement {
   _id: string;
   name: string;
   profilePicture?: string;
+  googlePhotoUrl?: string;
 }
 
 interface SkillEndorsementsProps {
@@ -17,7 +18,11 @@ interface SkillEndorsementsProps {
   isOwnProfile?: boolean;
 }
 
-export const SkillEndorsements = ({ userId, skills, isOwnProfile }: SkillEndorsementsProps) => {
+export const SkillEndorsements = ({
+  userId,
+  skills,
+  isOwnProfile
+}: SkillEndorsementsProps) => {
   const [selectedSkill, setSelectedSkill] = useState<string>('');
   const queryClient = useQueryClient();
   const { user: currentUser } = useAuthStore();
@@ -32,7 +37,9 @@ export const SkillEndorsements = ({ userId, skills, isOwnProfile }: SkillEndorse
 
   const endorseSkillMutation = useMutation({
     mutationFn: async (skill: string) => {
-      const response = await api.post(`/achievements/${userId}/endorse`, { skill });
+      const response = await api.post(`/achievements/${userId}/endorse`, {
+        skill
+      });
       return response.data;
     },
     onSuccess: () => {
@@ -43,7 +50,9 @@ export const SkillEndorsements = ({ userId, skills, isOwnProfile }: SkillEndorse
 
   const removeEndorsementMutation = useMutation({
     mutationFn: async (skill: string) => {
-      const response = await api.delete(`/achievements/${userId}/endorse/${skill}`);
+      const response = await api.delete(
+        `/achievements/${userId}/endorse/${skill}`
+      );
       return response.data;
     },
     onSuccess: () => {
@@ -70,7 +79,9 @@ export const SkillEndorsements = ({ userId, skills, isOwnProfile }: SkillEndorse
       <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
         {skills.map((skill) => {
           const endorsers = endorsements?.[skill] || [];
-          const isEndorsed = endorsers.some((e: any) => e._id === currentUser?._id);
+          const isEndorsed = endorsers.some(
+            (e: any) => e._id === currentUser?._id
+          );
 
           return (
             <div
@@ -78,7 +89,9 @@ export const SkillEndorsements = ({ userId, skills, isOwnProfile }: SkillEndorse
               className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-lg p-3 border border-slate-700/50 hover:border-cyan-500/30 transition-all duration-200"
             >
               <div className="flex items-start justify-between gap-2 mb-2">
-                <p className="text-sm font-semibold text-white truncate">{skill}</p>
+                <p className="text-sm font-semibold text-white truncate">
+                  {skill}
+                </p>
                 <span className="flex-shrink-0 bg-cyan-500/20 text-cyan-400 text-xs font-bold px-2 py-1 rounded-full">
                   {endorsers.length}
                 </span>
@@ -90,7 +103,7 @@ export const SkillEndorsements = ({ userId, skills, isOwnProfile }: SkillEndorse
                   {endorsers.slice(0, 3).map((endorser: any) => (
                     <Avatar
                       key={endorser._id}
-                      src={endorser.profilePicture}
+                      src={endorser.profilePicture ?? endorser.googlePhotoUrl}
                       alt={endorser.name}
                     />
                   ))}

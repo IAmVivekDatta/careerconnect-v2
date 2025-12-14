@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useParams } from 'react-router-dom';
 import {
   Briefcase,
   Calendar,
@@ -42,22 +43,44 @@ type Education = {
 
 const ProfilePage = () => {
   const { user } = useAuthStore();
+  const { id: routeId } = useParams();
+  const targetId = routeId ?? user?._id;
+  const isOwnProfile = !routeId || routeId === user?._id;
   const [isEditing, setIsEditing] = useState(false);
 
-  if (!user) {
-    return <div className="p-8 text-center text-white/60">Please log in to view your profile.</div>;
+  useEffect(() => {
+    if (!isOwnProfile && isEditing) {
+      setIsEditing(false);
+    }
+  }, [isOwnProfile, isEditing]);
+
+  if (!user || !targetId) {
+    return (
+      <div className="p-8 text-center text-white/60">
+        Please log in to view your profile.
+      </div>
+    );
   }
 
   return (
     <main className="space-y-8">
-      <EnhancedProfileEditor userId={user._id} isEditing={isEditing} setIsEditing={setIsEditing} />
+      <EnhancedProfileEditor
+        userId={targetId}
+        isEditing={isEditing && isOwnProfile}
+        setIsEditing={setIsEditing}
+        canEdit={isOwnProfile}
+      />
 
       <div className="grid gap-6 xl:grid-cols-3">
         <section className="glass-panel rounded-3xl p-6">
-          <BadgeGallery userId={user._id} />
+          <BadgeGallery userId={targetId} />
         </section>
         <section className="glass-panel rounded-3xl p-6">
-          <SkillEndorsements userId={user._id} skills={[]} isOwnProfile={true} />
+          <SkillEndorsements
+            userId={targetId}
+            skills={[]}
+            isOwnProfile={isOwnProfile}
+          />
         </section>
         <section className="glass-panel rounded-3xl p-6">
           <Leaderboard />
@@ -72,11 +95,13 @@ export default ProfilePage;
 const EnhancedProfileEditor = ({
   userId,
   isEditing,
-  setIsEditing
+  setIsEditing,
+  canEdit
 }: {
   userId: string;
   isEditing: boolean;
   setIsEditing: (value: boolean) => void;
+  canEdit: boolean;
 }) => {
   const [name, setName] = useState('');
   const [bio, setBio] = useState('');
@@ -94,10 +119,12 @@ const EnhancedProfileEditor = ({
   const { data: profile, isLoading } = useQuery({
     queryKey: ['profile', userId],
     queryFn: async () => {
-      const response = await api.get('/users/me');
+      const endpoint = canEdit ? '/users/me' : `/users/${userId}`;
+      const response = await api.get(endpoint);
       return response.data;
     },
-    staleTime: 60_000
+    staleTime: 60_000,
+    enabled: Boolean(userId)
   });
 
   useEffect(() => {
@@ -107,7 +134,7 @@ const EnhancedProfileEditor = ({
     setSkills(profile.skills || []);
     setExperience(profile.experience || []);
     setEducation(profile.education || []);
-    setProfilePreview(profile.profilePicture ?? null);
+    setProfilePreview(profile.profilePicture ?? profile.googlePhotoUrl ?? null);
   }, [profile]);
 
   useEffect(() => {
@@ -117,9 +144,11 @@ const EnhancedProfileEditor = ({
       return () => URL.revokeObjectURL(objectUrl);
     }
 
-    setProfilePreview(profile?.profilePicture ?? null);
+    setProfilePreview(
+      profile?.profilePicture ?? profile?.googlePhotoUrl ?? null
+    );
     return undefined;
-  }, [profilePicFile, profile?.profilePicture]);
+  }, [profilePicFile, profile?.profilePicture, profile?.googlePhotoUrl]);
 
   const stats = useMemo(
     () => [
@@ -156,7 +185,7 @@ const EnhancedProfileEditor = ({
     setEducation(profile.education || []);
     setResumeFile(null);
     setProfilePicFile(null);
-    setProfilePreview(profile.profilePicture ?? null);
+    setProfilePreview(profile.profilePicture ?? profile.googlePhotoUrl ?? null);
   };
 
   const updateProfileMutation = useMutation({
@@ -166,7 +195,8 @@ const EnhancedProfileEditor = ({
         bio,
         skills,
         experience,
-        education
+        education,
+        resumeUrl: profile?.resumeUrl
       };
 
       if (profilePicFile) {
@@ -198,7 +228,10 @@ const EnhancedProfileEditor = ({
       push({ message: 'Profile updated successfully.', type: 'success' });
     },
     onError: () => {
-      push({ message: 'Unable to update profile right now. Please try again.', type: 'error' });
+      push({
+        message: 'Unable to update profile right now. Please try again.',
+        type: 'error'
+      });
     }
   });
 
@@ -228,7 +261,11 @@ const EnhancedProfileEditor = ({
     setExperience((current) => current.filter((_, idx) => idx !== index));
   };
 
-  const handleUpdateExperience = (index: number, field: keyof Experience, value: string) => {
+  const handleUpdateExperience = (
+    index: number,
+    field: keyof Experience,
+    value: string
+  ) => {
     setExperience((current) => {
       const next = [...current];
       next[index] = { ...next[index], [field]: value };
@@ -256,13 +293,16 @@ const EnhancedProfileEditor = ({
       const next = [...current];
       next[index] = {
         ...next[index],
-        [field]: field === 'year' ? Number(value) || new Date().getFullYear() : value
+        [field]:
+          field === 'year' ? Number(value) || new Date().getFullYear() : value
       };
       return next;
     });
   };
 
-  const handleProfileImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleProfileImageChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
     if (!file) return;
     if (file.size > MAX_UPLOAD_SIZE) {
@@ -304,7 +344,7 @@ const EnhancedProfileEditor = ({
           <div className="flex flex-col gap-6 lg:flex-row lg:items-end">
             <div className="relative flex-shrink-0">
               <Avatar
-                src={profilePreview ?? undefined}
+                src={profilePreview ?? profile?.googlePhotoUrl ?? undefined}
                 alt={name || 'Profile avatar'}
                 className="h-32 w-32 border-4 border-white/20 shadow-[0_25px_55px_rgba(15,23,42,0.45)]"
               />
@@ -343,7 +383,13 @@ const EnhancedProfileEditor = ({
                 </span>
                 {contactItems.map(({ icon: Icon, value, href, label }) => {
                   const content = (
-                    <span className={`inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 ${value?.startsWith('Add') ? 'text-white/50' : 'text-white/80'}`}>
+                    <span
+                      className={`inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 ${
+                        value?.startsWith('Add')
+                          ? 'text-white/50'
+                          : 'text-white/80'
+                      }`}
+                    >
                       <Icon className="h-3.5 w-3.5" />
                       <span>{value}</span>
                     </span>
@@ -382,25 +428,31 @@ const EnhancedProfileEditor = ({
                     ) : (
                       <Save className="h-4 w-4" />
                     )}
-                    {updateProfileMutation.isPending ? 'Saving' : 'Save changes'}
+                    {updateProfileMutation.isPending
+                      ? 'Saving'
+                      : 'Save changes'}
                   </button>
                 </>
               ) : (
-                <button
-                  type="button"
-                  onClick={() => setIsEditing(true)}
-                  className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-6 py-2.5 text-sm font-semibold text-white transition hover:border-neonCyan/40 hover:text-neonCyan"
-                >
-                  <Edit2 className="h-4 w-4" />
-                  Edit profile
-                </button>
+                canEdit && (
+                  <button
+                    type="button"
+                    onClick={() => setIsEditing(true)}
+                    className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-6 py-2.5 text-sm font-semibold text-white transition hover:border-neonCyan/40 hover:text-neonCyan"
+                  >
+                    <Edit2 className="h-4 w-4" />
+                    Edit profile
+                  </button>
+                )
               )}
             </div>
           </div>
 
           <div className="space-y-6">
             <div>
-              <h2 className="text-xs font-semibold uppercase tracking-[0.4em] text-white/50">About</h2>
+              <h2 className="text-xs font-semibold uppercase tracking-[0.4em] text-white/50">
+                About
+              </h2>
               {isEditing ? (
                 <textarea
                   name="bio"
@@ -412,7 +464,10 @@ const EnhancedProfileEditor = ({
                   aria-label="Profile bio"
                 />
               ) : (
-                <p className="mt-3 text-base text-white/80">{bio || 'Let others know about your journey, goals, and passions.'}</p>
+                <p className="mt-3 text-base text-white/80">
+                  {bio ||
+                    'Let others know about your journey, goals, and passions.'}
+                </p>
               )}
             </div>
 
@@ -422,8 +477,12 @@ const EnhancedProfileEditor = ({
                   key={stat.label}
                   className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/70"
                 >
-                  <p className="text-xs uppercase tracking-[0.3em] text-white/40">{stat.label}</p>
-                  <p className="mt-2 text-2xl font-semibold text-white">{stat.value}</p>
+                  <p className="text-xs uppercase tracking-[0.3em] text-white/40">
+                    {stat.label}
+                  </p>
+                  <p className="mt-2 text-2xl font-semibold text-white">
+                    {stat.value}
+                  </p>
                 </div>
               ))}
             </div>
@@ -437,7 +496,9 @@ const EnhancedProfileEditor = ({
             <header className="flex items-center justify-between gap-3">
               <div>
                 <h3 className="text-lg font-semibold text-white">Skills</h3>
-                <p className="text-xs text-white/60">Spotlight the strengths you want endorsed.</p>
+                <p className="text-xs text-white/60">
+                  Spotlight the strengths you want endorsed.
+                </p>
               </div>
             </header>
 
@@ -495,7 +556,9 @@ const EnhancedProfileEditor = ({
 
           <section className="glass-panel rounded-3xl p-6">
             <h3 className="text-lg font-semibold text-white">Resume</h3>
-            <p className="mt-1 text-xs text-white/60">Share the latest version so recruiters can dive deeper.</p>
+            <p className="mt-1 text-xs text-white/60">
+              Share the latest version so recruiters can dive deeper.
+            </p>
 
             {profile?.resumeUrl ? (
               <a
@@ -508,7 +571,9 @@ const EnhancedProfileEditor = ({
                 Download current resume
               </a>
             ) : (
-              <p className="mt-4 text-sm text-white/60">No resume uploaded yet.</p>
+              <p className="mt-4 text-sm text-white/60">
+                No resume uploaded yet.
+              </p>
             )}
 
             {resumeFile && (
@@ -521,7 +586,9 @@ const EnhancedProfileEditor = ({
               <label className="mt-5 flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-white/20 bg-white/5 p-6 text-center text-sm text-white/60 transition hover:border-neonCyan/50 hover:text-white">
                 <FileText className="h-6 w-6" />
                 <span className="font-semibold">Upload new resume</span>
-                <span className="text-xs text-white/50">PDF, DOC, or DOCX · up to 5MB</span>
+                <span className="text-xs text-white/50">
+                  PDF, DOC, or DOCX · up to 5MB
+                </span>
                 <input
                   type="file"
                   name="resumeFile"
@@ -538,8 +605,12 @@ const EnhancedProfileEditor = ({
           <section className="glass-panel rounded-3xl p-6">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-semibold text-white">Experience timeline</h3>
-                <p className="text-xs text-white/60">Showcase the milestones that shaped your career.</p>
+                <h3 className="text-lg font-semibold text-white">
+                  Experience timeline
+                </h3>
+                <p className="text-xs text-white/60">
+                  Showcase the milestones that shaped your career.
+                </p>
               </div>
               {isEditing && (
                 <button
@@ -568,14 +639,26 @@ const EnhancedProfileEditor = ({
                           <input
                             name={`experience[${index}].title`}
                             value={exp.title}
-                            onChange={(event) => handleUpdateExperience(index, 'title', event.target.value)}
+                            onChange={(event) =>
+                              handleUpdateExperience(
+                                index,
+                                'title',
+                                event.target.value
+                              )
+                            }
                             placeholder="Role"
                             className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-neonCyan focus:outline-none"
                           />
                           <input
                             name={`experience[${index}].company`}
                             value={exp.company}
-                            onChange={(event) => handleUpdateExperience(index, 'company', event.target.value)}
+                            onChange={(event) =>
+                              handleUpdateExperience(
+                                index,
+                                'company',
+                                event.target.value
+                              )
+                            }
                             placeholder="Company"
                             className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-neonCyan focus:outline-none"
                           />
@@ -586,7 +669,13 @@ const EnhancedProfileEditor = ({
                                 type="date"
                                 name={`experience[${index}].from`}
                                 value={exp.from}
-                                onChange={(event) => handleUpdateExperience(index, 'from', event.target.value)}
+                                onChange={(event) =>
+                                  handleUpdateExperience(
+                                    index,
+                                    'from',
+                                    event.target.value
+                                  )
+                                }
                                 className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-neonCyan focus:outline-none"
                               />
                             </label>
@@ -596,7 +685,13 @@ const EnhancedProfileEditor = ({
                                 type="date"
                                 name={`experience[${index}].to`}
                                 value={exp.to ?? ''}
-                                onChange={(event) => handleUpdateExperience(index, 'to', event.target.value)}
+                                onChange={(event) =>
+                                  handleUpdateExperience(
+                                    index,
+                                    'to',
+                                    event.target.value
+                                  )
+                                }
                                 className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-neonCyan focus:outline-none"
                               />
                             </label>
@@ -604,7 +699,13 @@ const EnhancedProfileEditor = ({
                           <textarea
                             name={`experience[${index}].description`}
                             value={exp.description ?? ''}
-                            onChange={(event) => handleUpdateExperience(index, 'description', event.target.value)}
+                            onChange={(event) =>
+                              handleUpdateExperience(
+                                index,
+                                'description',
+                                event.target.value
+                              )
+                            }
                             placeholder="What did you deliver? Highlight wins, metrics, or moments you’re proud of."
                             className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-neonCyan focus:outline-none"
                             rows={3}
@@ -622,8 +723,12 @@ const EnhancedProfileEditor = ({
                         <div className="space-y-2">
                           <div className="flex flex-wrap items-center justify-between gap-2">
                             <div>
-                              <p className="text-base font-semibold text-white">{exp.title || 'Untitled role'}</p>
-                              <p className="text-sm text-white/60">{exp.company || 'Company name'}</p>
+                              <p className="text-base font-semibold text-white">
+                                {exp.title || 'Untitled role'}
+                              </p>
+                              <p className="text-sm text-white/60">
+                                {exp.company || 'Company name'}
+                              </p>
                             </div>
                             <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/60">
                               <Calendar className="h-3.5 w-3.5" />
@@ -631,9 +736,13 @@ const EnhancedProfileEditor = ({
                             </div>
                           </div>
                           {exp.description ? (
-                            <p className="text-sm text-white/70">{exp.description}</p>
+                            <p className="text-sm text-white/70">
+                              {exp.description}
+                            </p>
                           ) : (
-                            <p className="text-sm text-white/40">Describe your impact in this role.</p>
+                            <p className="text-sm text-white/40">
+                              Describe your impact in this role.
+                            </p>
                           )}
                         </div>
                       )}
@@ -648,7 +757,9 @@ const EnhancedProfileEditor = ({
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-lg font-semibold text-white">Education</h3>
-                <p className="text-xs text-white/60">Highlight programs and certifications that shaped your path.</p>
+                <p className="text-xs text-white/60">
+                  Highlight programs and certifications that shaped your path.
+                </p>
               </div>
               {isEditing && (
                 <button
@@ -677,14 +788,26 @@ const EnhancedProfileEditor = ({
                           <input
                             name={`education[${index}].degree`}
                             value={edu.degree}
-                            onChange={(event) => handleUpdateEducation(index, 'degree', event.target.value)}
+                            onChange={(event) =>
+                              handleUpdateEducation(
+                                index,
+                                'degree',
+                                event.target.value
+                              )
+                            }
                             placeholder="Degree or certification"
                             className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-neonMagenta focus:outline-none"
                           />
                           <input
                             name={`education[${index}].institution`}
                             value={edu.institution}
-                            onChange={(event) => handleUpdateEducation(index, 'institution', event.target.value)}
+                            onChange={(event) =>
+                              handleUpdateEducation(
+                                index,
+                                'institution',
+                                event.target.value
+                              )
+                            }
                             placeholder="Institution"
                             className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-neonMagenta focus:outline-none"
                           />
@@ -694,7 +817,13 @@ const EnhancedProfileEditor = ({
                               type="number"
                               name={`education[${index}].year`}
                               value={edu.year}
-                              onChange={(event) => handleUpdateEducation(index, 'year', event.target.value)}
+                              onChange={(event) =>
+                                handleUpdateEducation(
+                                  index,
+                                  'year',
+                                  event.target.value
+                                )
+                              }
                               className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-neonMagenta focus:outline-none"
                             />
                           </label>
@@ -711,8 +840,12 @@ const EnhancedProfileEditor = ({
                         <div className="space-y-2">
                           <div className="flex flex-wrap items-center justify-between gap-2">
                             <div>
-                              <p className="text-base font-semibold text-white">{edu.degree || 'Program name'}</p>
-                              <p className="text-sm text-white/60">{edu.institution || 'Institution'}</p>
+                              <p className="text-base font-semibold text-white">
+                                {edu.degree || 'Program name'}
+                              </p>
+                              <p className="text-sm text-white/60">
+                                {edu.institution || 'Institution'}
+                              </p>
                             </div>
                             <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/60">
                               <Calendar className="h-3.5 w-3.5" />
@@ -739,9 +872,16 @@ const formatDateRange = (from?: string, to?: string) => {
   const toDate = to ? new Date(to) : null;
   const fromLabel = Number.isNaN(fromDate.getTime())
     ? 'Start date'
-    : fromDate.toLocaleDateString(undefined, { month: 'short', year: 'numeric' });
-  const toLabel = toDate && !Number.isNaN(toDate.getTime())
-    ? toDate.toLocaleDateString(undefined, { month: 'short', year: 'numeric' })
-    : 'Present';
+    : fromDate.toLocaleDateString(undefined, {
+        month: 'short',
+        year: 'numeric'
+      });
+  const toLabel =
+    toDate && !Number.isNaN(toDate.getTime())
+      ? toDate.toLocaleDateString(undefined, {
+          month: 'short',
+          year: 'numeric'
+        })
+      : 'Present';
   return `${fromLabel} – ${toLabel}`;
 };
