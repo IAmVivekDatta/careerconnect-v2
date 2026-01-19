@@ -361,3 +361,4 @@ VITE_SENTRY_DSN=
 ## License
 MIT License. See `LICENSE` (to be added) for details.
 varshitha done 
+Feature branch update by Varshitha
