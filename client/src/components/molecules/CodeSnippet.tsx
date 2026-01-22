@@ -39,12 +39,12 @@ interface HighlighterProps {
   children: ReactNode;
 }
 
-interface PrismLightComponent extends ComponentType<HighlighterProps> {
+type PrismLightComponent = ComponentType<HighlighterProps> & {
   registerLanguage: (
     language: string,
     definition: PrismLanguageDefinition
   ) => void;
-}
+};
 
 const registeredLanguages = new Set<SupportedLanguage>();
 let prismLightPromise: Promise<PrismLightComponent> | null = null;

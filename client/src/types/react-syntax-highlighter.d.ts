@@ -1,4 +1,6 @@
-import type { ComponentType, CSSProperties, ReactNode } from 'react';
+type ComponentType<T = unknown> = import('react').ComponentType<T>;
+type CSSProperties = import('react').CSSProperties;
+type ReactNode = import('react').ReactNode;
 
 interface PrismLanguageDefinition {
   [key: string]: unknown;
@@ -13,8 +15,14 @@ interface PrismHighlighterProps {
   children?: ReactNode;
 }
 
-interface PrismLightComponent extends ComponentType<PrismHighlighterProps> {
+type PrismLightComponent = ComponentType<PrismHighlighterProps> & {
   registerLanguage: (name: string, definition: PrismLanguageDefinition) => void;
+};
+
+declare module 'react-syntax-highlighter' {
+  const Highlighter: ComponentType<PrismHighlighterProps>;
+  export type { PrismHighlighterProps };
+  export default Highlighter;
 }
 
 declare module 'react-syntax-highlighter/dist/esm/languages/prism/*' {
