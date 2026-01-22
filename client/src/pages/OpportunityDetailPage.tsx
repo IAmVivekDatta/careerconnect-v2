@@ -1,17 +1,17 @@
-import { useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
-import api from "../lib/axios";
-import useAuthStore from "../store/useAuthStore";
-import { useToast } from "../components/atoms/Toast";
-import type { Opportunity } from "../types";
+import { useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import api from '../lib/axios';
+import useAuthStore from '../store/useAuthStore';
+import { useToast } from '../components/atoms/Toast';
+import type { Opportunity } from '../types';
 
 const OpportunityDetailPage = () => {
   const { id } = useParams();
   const { token } = useAuthStore();
 
   const { data, isLoading } = useQuery<Opportunity>({
-    queryKey: ["opportunity", id],
+    queryKey: ['opportunity', id],
     queryFn: async () => {
       const res = await api.get(`/opportunities/${id}`);
       return res.data;
@@ -19,21 +19,24 @@ const OpportunityDetailPage = () => {
     enabled: !!id
   });
 
-  if (isLoading) return <p>Loading...</p>;
-
   const { push } = useToast();
   const [loading, setLoading] = useState(false);
   const [resumeFile, setResumeFile] = useState<File | null>(null);
 
+  if (isLoading) return <p>Loading...</p>;
+
   const onApply = async () => {
-    if (!token) return push({ message: 'Please login to apply', type: 'error' });
+    if (!token)
+      return push({ message: 'Please login to apply', type: 'error' });
     try {
       setLoading(true);
       let resumeUrl: string | undefined;
       if (resumeFile) {
         const fd = new FormData();
         fd.append('file', resumeFile);
-        const uploadRes = await api.post('/upload', fd, { headers: { 'Content-Type': 'multipart/form-data' } });
+        const uploadRes = await api.post('/upload', fd, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
         resumeUrl = uploadRes.data.url;
       }
       await api.post(`/opportunities/${id}/apply`, { resumeUrl });
@@ -56,7 +59,10 @@ const OpportunityDetailPage = () => {
         {data?.skills && data.skills.length > 0 && (
           <div className="mt-4 flex flex-wrap gap-2">
             {data.skills.map((skill) => (
-              <span key={skill} className="rounded bg-white/10 px-2 py-1 text-xs uppercase tracking-wide text-neonCyan">
+              <span
+                key={skill}
+                className="rounded bg-white/10 px-2 py-1 text-xs uppercase tracking-wide text-neonCyan"
+              >
                 {skill}
               </span>
             ))}
@@ -80,7 +86,9 @@ const OpportunityDetailPage = () => {
         )}
         <div className="mt-4">
           <div className="mb-2">
-            <label htmlFor="opportunity-resume" className="text-sm text-muted">Attach resume (optional)</label>
+            <label htmlFor="opportunity-resume" className="text-sm text-muted">
+              Attach resume (optional)
+            </label>
             <input
               id="opportunity-resume"
               name="resume"
@@ -89,7 +97,11 @@ const OpportunityDetailPage = () => {
               onChange={(e) => setResumeFile(e.target.files?.[0] ?? null)}
             />
           </div>
-          <button onClick={onApply} disabled={loading} className="neon-border rounded px-4 py-2 text-sm font-semibold text-white">
+          <button
+            onClick={onApply}
+            disabled={loading}
+            className="neon-border rounded px-4 py-2 text-sm font-semibold text-white"
+          >
             {loading ? 'Applying...' : 'Apply'}
           </button>
         </div>

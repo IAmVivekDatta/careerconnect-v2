@@ -1,4 +1,4 @@
-import clsx from "clsx";
+import clsx from 'clsx';
 
 interface DynamoHamburgerProps {
   open: boolean;
@@ -11,12 +11,13 @@ interface DynamoHamburgerProps {
 const DynamoHamburger = ({
   open,
   onToggle,
-  label = "Toggle navigation",
+  label = 'Toggle navigation',
   className,
   size = 24
 }: DynamoHamburgerProps) => {
   const lineHeight = Math.max(2, Math.round(size * 0.12));
   const lineOffset = (size * 0.75 - lineHeight) / 2;
+  const timingFunction = 'cubic-bezier(0.65, 0, 0.35, 1)';
 
   return (
     <button
@@ -25,7 +26,7 @@ const DynamoHamburger = ({
       aria-expanded={open}
       aria-label={label}
       className={clsx(
-        "relative flex items-center justify-center rounded-md border border-white/10 bg-white/5 p-1.5 text-white/80 transition hover:border-neonCyan hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-neonCyan/60",
+        'relative flex items-center justify-center rounded-md border border-white/10 bg-white/5 p-1.5 text-white/80 transition hover:border-neonCyan hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-neonCyan/60',
         className
       )}
     >
@@ -35,37 +36,40 @@ const DynamoHamburger = ({
       >
         <span
           className={clsx(
-            "absolute left-0 w-full origin-center rounded-full bg-current transition-all duration-300 ease-[cubic-bezier(0.65,0,0.35,1)]"
+            'absolute left-0 w-full origin-center rounded-full bg-current transition-all duration-300'
           )}
           style={{
             top: 0,
             height: lineHeight,
             transform: open
               ? `translateY(${lineOffset}px) rotate(45deg)`
-              : "translateY(0) rotate(0deg)"
+              : 'translateY(0) rotate(0deg)',
+            transitionTimingFunction: timingFunction
           }}
         />
         <span
           className={clsx(
-            "absolute left-0 w-full origin-center rounded-full bg-current transition-all duration-300 ease-[cubic-bezier(0.65,0,0.35,1)]"
+            'absolute left-0 w-full origin-center rounded-full bg-current transition-all duration-300'
           )}
           style={{
             top: lineOffset,
             height: lineHeight,
             opacity: open ? 0 : 1,
-            transform: open ? "scaleX(0.5)" : "scaleX(1)"
+            transform: open ? 'scaleX(0.5)' : 'scaleX(1)',
+            transitionTimingFunction: timingFunction
           }}
         />
         <span
           className={clsx(
-            "absolute left-0 w-full origin-center rounded-full bg-current transition-all duration-300 ease-[cubic-bezier(0.65,0,0.35,1)]"
+            'absolute left-0 w-full origin-center rounded-full bg-current transition-all duration-300'
           )}
           style={{
             top: lineOffset * 2,
             height: lineHeight,
             transform: open
               ? `translateY(-${lineOffset}px) rotate(-45deg)`
-              : "translateY(0) rotate(0deg)"
+              : 'translateY(0) rotate(0deg)',
+            transitionTimingFunction: timingFunction
           }}
         />
       </span>

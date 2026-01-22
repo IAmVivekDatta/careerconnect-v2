@@ -4,13 +4,18 @@ import api from '../../lib/axios';
 import Avatar from '../atoms/Avatar';
 import { Trophy, Flame } from 'lucide-react';
 
+interface LeaderboardBadge {
+  _id: string;
+  name: string;
+}
+
 interface LeaderboardUser {
   _id: string;
   name: string;
   points: number;
   profilePicture?: string;
   googlePhotoUrl?: string;
-  badges: any[];
+  badges: LeaderboardBadge[];
 }
 
 export const Leaderboard = () => {
@@ -66,10 +71,10 @@ export const Leaderboard = () => {
                 idx === 0
                   ? 'bg-gradient-to-r from-yellow-500 to-amber-500 text-white'
                   : idx === 1
-                  ? 'bg-gradient-to-r from-gray-300 to-gray-400 text-gray-900'
-                  : idx === 2
-                  ? 'bg-gradient-to-r from-orange-500 to-amber-600 text-white'
-                  : 'bg-slate-700 text-slate-300'
+                    ? 'bg-gradient-to-r from-gray-300 to-gray-400 text-gray-900'
+                    : idx === 2
+                      ? 'bg-gradient-to-r from-orange-500 to-amber-600 text-white'
+                      : 'bg-slate-700 text-slate-300'
               }`}
             >
               {idx < 3 && [idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉']}

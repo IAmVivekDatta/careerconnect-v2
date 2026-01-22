@@ -31,13 +31,15 @@ export interface PostComment {
   createdAt: string;
 }
 
+export type PostLike = string | { _id: string };
+
 export interface Post {
   _id: string;
   content: string;
   imageUrl?: string;
   author: AuthUser;
   createdAt: string;
-  likes: string[] | any[];
+  likes: PostLike[];
   comments: PostComment[];
 }
 
@@ -107,14 +109,14 @@ export interface QuestProgressResponse {
   history: Record<string, string[]>;
 }
 
-export type SkillEndorsementsResponse = Record<
-  string,
-  Array<{
-    _id: string;
-    name: string;
-    profilePicture?: string;
-  }>
->;
+export interface SkillEndorsementUser {
+  _id: string;
+  name: string;
+  profilePicture?: string;
+  googlePhotoUrl?: string;
+}
+
+export type SkillEndorsementsResponse = Record<string, SkillEndorsementUser[]>;
 
 export interface ConversationParticipant {
   _id: string;

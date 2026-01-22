@@ -1,7 +1,7 @@
-import { useDeferredValue, useMemo, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import api from "../../lib/axios";
-import { UserRole } from "../../types";
+import { useDeferredValue, useMemo, useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import api from '../../lib/axios';
+import { UserRole } from '../../types';
 
 interface AdminUser {
   _id: string;
@@ -17,79 +17,90 @@ interface AdminUsersResponse {
   total: number;
 }
 
-const roleFilters: Array<{ label: string; value: "all" | UserRole }> = [
-  { label: "All Roles", value: "all" },
-  { label: "Students", value: "student" },
-  { label: "Alumni", value: "alumni" },
-  { label: "Admins", value: "admin" }
+const roleFilters: Array<{ label: string; value: 'all' | UserRole }> = [
+  { label: 'All Roles', value: 'all' },
+  { label: 'Students', value: 'student' },
+  { label: 'Alumni', value: 'alumni' },
+  { label: 'Admins', value: 'admin' }
 ];
 
 const statusFilters = [
-  { label: "All", value: "all" },
-  { label: "Active", value: "active" },
-  { label: "Inactive", value: "inactive" }
+  { label: 'All', value: 'all' },
+  { label: 'Active', value: 'active' },
+  { label: 'Inactive', value: 'inactive' }
 ] as const;
 
 const AdminUsersPage = () => {
   const queryClient = useQueryClient();
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const deferredSearch = useDeferredValue(search);
-  const [role, setRole] = useState<(typeof roleFilters)[number]["value"]>("all");
-  const [status, setStatus] = useState<(typeof statusFilters)[number]["value"]>("all");
+  const [role, setRole] =
+    useState<(typeof roleFilters)[number]['value']>('all');
+  const [status, setStatus] =
+    useState<(typeof statusFilters)[number]['value']>('all');
   const [feedback, setFeedback] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const { data, isLoading, isFetching } = useQuery<AdminUsersResponse>({
-    queryKey: ["admin-users", { search: deferredSearch, role, status }],
+    queryKey: ['admin-users', { search: deferredSearch, role, status }],
     queryFn: async () => {
       const params: Record<string, string> = {};
       if (deferredSearch.trim()) params.search = deferredSearch.trim();
-      if (role !== "all") params.role = role;
-      if (status !== "all") params.status = status;
-      const response = await api.get<AdminUsersResponse>("/admin/users", { params });
+      if (role !== 'all') params.role = role;
+      if (status !== 'all') params.status = status;
+      const response = await api.get<AdminUsersResponse>('/admin/users', {
+        params
+      });
       return response.data;
     }
   });
 
-  const users = data?.data ?? [];
+  const users = useMemo(() => data?.data ?? [], [data]);
   const total = data?.total ?? 0;
 
   const updateRoleMutation = useMutation({
     mutationFn: ({ id, nextRole }: { id: string; nextRole: UserRole }) =>
       api.put(`/admin/user/${id}/role`, { role: nextRole }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin-users"] });
-      setFeedback("Role updated successfully.");
+      queryClient.invalidateQueries({ queryKey: ['admin-users'] });
+      setFeedback('Role updated successfully.');
       setErrorMessage(null);
     },
     onError: () => {
-      setErrorMessage("Failed to update role. Please try again.");
+      setErrorMessage('Failed to update role. Please try again.');
       setFeedback(null);
     }
   });
 
   const toggleActiveMutation = useMutation({
     mutationFn: ({ id, isActive }: { id: string; isActive: boolean }) =>
-      isActive ? api.delete(`/admin/users/${id}`) : api.patch(`/admin/users/${id}/restore`),
+      isActive
+        ? api.delete(`/admin/users/${id}`)
+        : api.patch(`/admin/users/${id}/restore`),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin-users"] });
-      setFeedback("User status updated.");
+      queryClient.invalidateQueries({ queryKey: ['admin-users'] });
+      setFeedback('User status updated.');
       setErrorMessage(null);
     },
     onError: () => {
-      setErrorMessage("Unable to update user status.");
+      setErrorMessage('Unable to update user status.');
       setFeedback(null);
     }
   });
 
-  const activeCount = useMemo(() => users.filter((user) => user.isActive).length, [users]);
+  const activeCount = useMemo(
+    () => users.filter((user) => user.isActive).length,
+    [users]
+  );
 
   return (
     <section className="space-y-6">
       <header className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h2 className="text-xl font-semibold">Manage Users</h2>
-          <p className="text-sm text-muted">Search, filter, and moderate user accounts.</p>
+          <p className="text-sm text-muted">
+            Search, filter, and moderate user accounts.
+          </p>
           <p className="mt-2 text-xs text-muted/80">
             Showing {users.length} of {total} accounts • {activeCount} active
           </p>
@@ -130,7 +141,9 @@ const AdminUsersPage = () => {
         {(feedback || errorMessage) && (
           <div className="border-b border-white/10 bg-black/40 px-4 py-2 text-xs text-white/70">
             {feedback && <span className="text-green-300">{feedback}</span>}
-            {errorMessage && <span className="text-red-300">{errorMessage}</span>}
+            {errorMessage && (
+              <span className="text-red-300">{errorMessage}</span>
+            )}
           </div>
         )}
         <table className="min-w-full divide-y divide-white/5 text-sm">
@@ -155,7 +168,10 @@ const AdminUsersPage = () => {
               ))
             ) : users.length === 0 ? (
               <tr>
-                <td className="px-4 py-6 text-center text-sm text-white/60" colSpan={6}>
+                <td
+                  className="px-4 py-6 text-center text-sm text-white/60"
+                  colSpan={6}
+                >
                   No users match the current filters.
                 </td>
               </tr>
@@ -172,12 +188,15 @@ const AdminUsersPage = () => {
                       className="rounded bg-white/10 px-2 py-1 text-xs"
                       value={user.role}
                       onChange={(event) =>
-                        updateRoleMutation.mutate({ id: user._id, nextRole: event.target.value as UserRole })
+                        updateRoleMutation.mutate({
+                          id: user._id,
+                          nextRole: event.target.value as UserRole
+                        })
                       }
                       disabled={updateRoleMutation.isPending || !user.isActive}
                     >
                       {roleFilters
-                        .filter((option) => option.value !== "all")
+                        .filter((option) => option.value !== 'all')
                         .map((option) => (
                           <option key={option.value} value={option.value}>
                             {option.label.replace(/s$/, '')}
@@ -188,10 +207,12 @@ const AdminUsersPage = () => {
                   <td className="px-4 py-3">
                     <span
                       className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${
-                        user.isActive ? "bg-green-500/10 text-green-400" : "bg-red-500/10 text-red-400"
+                        user.isActive
+                          ? 'bg-green-500/10 text-green-400'
+                          : 'bg-red-500/10 text-red-400'
                       }`}
                     >
-                      {user.isActive ? "Active" : "Inactive"}
+                      {user.isActive ? 'Active' : 'Inactive'}
                     </span>
                   </td>
                   <td className="px-4 py-3 text-white/70">
@@ -202,13 +223,18 @@ const AdminUsersPage = () => {
                       type="button"
                       className={`rounded px-3 py-1 text-xs font-semibold transition ${
                         user.isActive
-                          ? "bg-red-500/10 text-red-300 hover:bg-red-500/20"
-                          : "bg-blue-500/10 text-blue-300 hover:bg-blue-500/20"
+                          ? 'bg-red-500/10 text-red-300 hover:bg-red-500/20'
+                          : 'bg-blue-500/10 text-blue-300 hover:bg-blue-500/20'
                       }`}
-                      onClick={() => toggleActiveMutation.mutate({ id: user._id, isActive: user.isActive })}
+                      onClick={() =>
+                        toggleActiveMutation.mutate({
+                          id: user._id,
+                          isActive: user.isActive
+                        })
+                      }
                       disabled={toggleActiveMutation.isPending}
                     >
-                      {user.isActive ? "Deactivate" : "Restore"}
+                      {user.isActive ? 'Deactivate' : 'Restore'}
                     </button>
                   </td>
                 </tr>

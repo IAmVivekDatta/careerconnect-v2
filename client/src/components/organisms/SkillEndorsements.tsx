@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import api from '../../lib/axios';
 import Avatar from '../atoms/Avatar';
@@ -23,7 +22,6 @@ export const SkillEndorsements = ({
   skills,
   isOwnProfile
 }: SkillEndorsementsProps) => {
-  const [selectedSkill, setSelectedSkill] = useState<string>('');
   const queryClient = useQueryClient();
   const { user: currentUser } = useAuthStore();
 
@@ -44,7 +42,6 @@ export const SkillEndorsements = ({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['endorsements', userId] });
-      setSelectedSkill('');
     }
   });
 
@@ -80,7 +77,7 @@ export const SkillEndorsements = ({
         {skills.map((skill) => {
           const endorsers = endorsements?.[skill] || [];
           const isEndorsed = endorsers.some(
-            (e: any) => e._id === currentUser?._id
+            (endorser: SkillEndorsement) => endorser._id === currentUser?._id
           );
 
           return (
@@ -100,7 +97,7 @@ export const SkillEndorsements = ({
               {/* Endorsers Avatars */}
               {endorsers.length > 0 && (
                 <div className="flex gap-1 mb-2">
-                  {endorsers.slice(0, 3).map((endorser: any) => (
+                  {endorsers.slice(0, 3).map((endorser: SkillEndorsement) => (
                     <Avatar
                       key={endorser._id}
                       src={endorser.profilePicture ?? endorser.googlePhotoUrl}

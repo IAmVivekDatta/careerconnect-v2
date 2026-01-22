@@ -1,32 +1,78 @@
-const withOpacityValue = (variable) => ({ opacityValue }) => {
-  if (opacityValue !== undefined) {
-    return `rgba(var(${variable}) / ${opacityValue})`;
-  }
-  return `rgb(var(${variable}))`;
-};
+const withOpacityValue =
+  (variable) =>
+  ({ opacityValue }) => {
+    if (opacityValue !== undefined) {
+      return `rgba(var(${variable}) / ${opacityValue})`;
+    }
+    return `rgb(var(${variable}))`;
+  };
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: "class",
-  content: ["./index.html", "./src/**/*.{ts,tsx}"],
+  darkMode: ['class'],
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       colors: {
-        neonCyan: withOpacityValue("--cc-neon-cyan"),
-        neonMagenta: withOpacityValue("--cc-neon-magenta"),
-        bgDark: withOpacityValue("--cc-background"),
-        surface: withOpacityValue("--cc-surface"),
-        muted: withOpacityValue("--cc-muted"),
-        textPrimary: withOpacityValue("--cc-text-primary"),
-        textSecondary: withOpacityValue("--cc-text-secondary")
+        neonCyan: withOpacityValue('--cc-neon-cyan'),
+        neonMagenta: withOpacityValue('--cc-neon-magenta'),
+        bgDark: withOpacityValue('--cc-background'),
+        surface: withOpacityValue('--cc-surface'),
+        muted: {
+          DEFAULT: 'hsl(var(--muted))',
+          foreground: 'hsl(var(--muted-foreground))'
+        },
+        textPrimary: withOpacityValue('--cc-text-primary'),
+        textSecondary: withOpacityValue('--cc-text-secondary'),
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
+        card: {
+          DEFAULT: 'hsl(var(--card))',
+          foreground: 'hsl(var(--card-foreground))'
+        },
+        popover: {
+          DEFAULT: 'hsl(var(--popover))',
+          foreground: 'hsl(var(--popover-foreground))'
+        },
+        primary: {
+          DEFAULT: 'hsl(var(--primary))',
+          foreground: 'hsl(var(--primary-foreground))'
+        },
+        secondary: {
+          DEFAULT: 'hsl(var(--secondary))',
+          foreground: 'hsl(var(--secondary-foreground))'
+        },
+        accent: {
+          DEFAULT: 'hsl(var(--accent))',
+          foreground: 'hsl(var(--accent-foreground))'
+        },
+        destructive: {
+          DEFAULT: 'hsl(var(--destructive))',
+          foreground: 'hsl(var(--destructive-foreground))'
+        },
+        border: 'hsl(var(--border))',
+        input: 'hsl(var(--input))',
+        ring: 'hsl(var(--ring))',
+        chart: {
+          1: 'hsl(var(--chart-1))',
+          2: 'hsl(var(--chart-2))',
+          3: 'hsl(var(--chart-3))',
+          4: 'hsl(var(--chart-4))',
+          5: 'hsl(var(--chart-5))'
+        }
       },
       boxShadow: {
-        neon: "0 0 18px rgba(0,245,255,0.2)"
+        neon: '0 0 18px rgba(0,245,255,0.2)'
       },
       fontFamily: {
-        display: ["Orbitron", "Inter", "sans-serif"]
+        display: ['Orbitron', 'Inter', 'sans-serif']
+      },
+      borderRadius: {
+        lg: 'var(--radius)',
+        md: 'calc(var(--radius) - 2px)',
+        sm: 'calc(var(--radius) - 4px)'
       }
     }
   },
-  plugins: []
+  plugins: [require('tailwindcss-animate')]
 };

@@ -1,15 +1,17 @@
-import { useMemo } from "react";
-import { NavLink } from "react-router-dom";
-import useAuthStore from "../../store/useAuthStore";
-import { adminNavItems } from "../../constants/navItems";
-import type { AppNavItem } from "../../constants/navItems";
+import { useMemo } from 'react';
+import { NavLink } from 'react-router-dom';
+import useAuthStore from '../../store/useAuthStore';
+import { adminNavItems } from '../../constants/navItems';
+import type { AppNavItem } from '../../constants/navItems';
 
 const AdminSidebar = () => {
   const { user } = useAuthStore();
 
   const links = useMemo<AppNavItem[]>(() => {
     if (!user) return [];
-    return adminNavItems.filter((item) => !item.roles || item.roles.includes(user.role));
+    return adminNavItems.filter(
+      (item) => !item.roles || item.roles.includes(user.role)
+    );
   }, [user]);
 
   if (!links.length) {
@@ -29,8 +31,8 @@ const AdminSidebar = () => {
               className={({ isActive }) =>
                 `group flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition ${
                   isActive
-                    ? "bg-neonMagenta/15 text-white shadow-[0_0_18px_rgba(255,0,170,0.18)]"
-                    : "text-muted hover:bg-white/5 hover:text-white"
+                    ? 'bg-neonMagenta/15 text-white shadow-[0_0_18px_rgba(255,0,170,0.18)]'
+                    : 'text-white/80 hover:bg-white/10 hover:text-white'
                 }`
               }
             >
@@ -39,8 +41,8 @@ const AdminSidebar = () => {
                   <Icon
                     className={`h-4 w-4 ${
                       isActive
-                        ? "text-neonMagenta"
-                        : "text-white/40 group-hover:text-neonMagenta"
+                        ? 'text-neonMagenta'
+                        : 'text-white/65 group-hover:text-neonMagenta'
                     }`}
                   />
                   <span>{link.label}</span>

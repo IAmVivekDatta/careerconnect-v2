@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import RecommendedAlumniCarousel from '../components/organisms/RecommendedAlumniCarousel';
 import api from '../lib/axios';
 import { useToast } from '../components/atoms/Toast';
-import { ConnectionsOverview, ConnectionUser } from '../types';
+import { ConnectionUser } from '../types';
 
 interface AlumniRecord extends ConnectionUser {
   experience?: Array<{ title?: string; company?: string }>;
@@ -33,15 +33,14 @@ const AlumniDirectoryPage = () => {
   const { data, isLoading } = useQuery<AlumniDirectoryResponse>({
     queryKey: ['alumni-directory'],
     queryFn: async () => {
-      const response = await api.get<AlumniDirectoryResponse>(
-        '/alumni/directory'
-      );
+      const response =
+        await api.get<AlumniDirectoryResponse>('/alumni/directory');
       return response.data;
     },
     staleTime: 1000 * 60 * 5
   });
 
-  const alumniList = data?.data ?? [];
+  const alumniList = useMemo(() => data?.data ?? [], [data]);
 
   const sendRequestMutation = useMutation({
     mutationFn: async (targetId: string) => {

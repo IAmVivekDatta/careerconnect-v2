@@ -1,26 +1,26 @@
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Heart, MessageCircle, Share, Trash2, X } from 'lucide-react';
+import { Heart, MessageCircle, Share, X } from 'lucide-react';
 import api from '../../lib/axios';
-import { Post } from '../../types';
+import type { Post, PostComment, PostLike } from '../../types';
 import Avatar from '../atoms/Avatar';
 import useAuthStore from '../../store/useAuthStore';
 
 interface PostCardProps {
   post: Post;
-  onPostUpdate?: (updatedPost: any) => void;
+  onPostUpdate?: (updatedPost: Post) => void;
 }
 
 const PostCard = ({ post, onPostUpdate }: PostCardProps) => {
   const [showComments, setShowComments] = useState(false);
   const [commentText, setCommentText] = useState('');
-  const [isLiked, setIsLiked] = useState(
-    post.likes.some(
-      (l: any) =>
-        l._id === useAuthStore.getState().user?._id ||
-        l === useAuthStore.getState().user?._id
-    )
+  const currentUserId = useAuthStore.getState().user?._id;
+  const initialLikeState = post.likes.some((like: PostLike) =>
+    typeof like === 'string'
+      ? like === currentUserId
+      : like._id === currentUserId
   );
+  const [isLiked, setIsLiked] = useState(initialLikeState);
   const { user } = useAuthStore();
   const queryClient = useQueryClient();
 
@@ -199,7 +199,7 @@ const PostCard = ({ post, onPostUpdate }: PostCardProps) => {
             {post.comments.length === 0 ? (
               <p className="text-xs text-slate-500 italic">No comments yet</p>
             ) : (
-              post.comments.map((comment: any) => (
+              post.comments.map((comment: PostComment) => (
                 <div
                   key={comment._id}
                   className="bg-slate-800/30 rounded-lg p-2 flex gap-2 items-start"

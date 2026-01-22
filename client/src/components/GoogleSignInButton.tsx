@@ -8,8 +8,14 @@ declare global {
     google?: {
       accounts: {
         id: {
-          initialize: (config: { client_id: string; callback: (response: { credential: string }) => void }) => void;
-          renderButton: (element: HTMLElement | null, options: { theme: string; size: string }) => void;
+          initialize: (config: {
+            client_id: string;
+            callback: (response: { credential: string }) => void;
+          }) => void;
+          renderButton: (
+            element: HTMLElement | null,
+            options: { theme: string; size: string }
+          ) => void;
         };
       };
     };
@@ -20,19 +26,22 @@ export const GoogleSignInButton: React.FC = () => {
   const { push } = useToast();
   const setAuth = useAuthStore((state) => state.setAuth);
 
-  const handleCredentialResponse = useCallback(async (response: { credential: string }) => {
-    try {
-      const { data } = await api.post('/auth/google', {
-        id_token: response.credential
-      });
+  const handleCredentialResponse = useCallback(
+    async (response: { credential: string }) => {
+      try {
+        const { data } = await api.post('/auth/google', {
+          id_token: response.credential
+        });
 
-      setAuth({ token: data.token, user: data.user });
-      push({ message: 'Logged in with Google!', type: 'success' });
-      window.location.assign('/feed');
-    } catch (err) {
-      push({ message: (err as Error).message, type: 'error' });
-    }
-  }, [push]);
+        setAuth({ token: data.token, user: data.user });
+        push({ message: 'Logged in with Google!', type: 'success' });
+        window.location.assign('/feed');
+      } catch (err) {
+        push({ message: (err as Error).message, type: 'error' });
+      }
+    },
+    [push, setAuth]
+  );
 
   useEffect(() => {
     // Load Google script
@@ -47,7 +56,7 @@ export const GoogleSignInButton: React.FC = () => {
 
       window.google.accounts.id.initialize({
         client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
-        callback: handleCredentialResponse,
+        callback: handleCredentialResponse
       });
 
       window.google.accounts.id.renderButton(

@@ -1,4 +1,11 @@
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode
+} from 'react';
 import { io, type Socket } from 'socket.io-client';
 import { SOCKET_EVENTS } from '../constants/socketEvents';
 import api from '../lib/axios';
@@ -20,7 +27,9 @@ const deriveSocketUrl = (apiBase?: string | null) => {
 
   try {
     const parsed = new URL(apiBase, window.location.origin);
-    const normalizedPath = parsed.pathname.replace(/\/$/, '').replace(/\/api$/, '');
+    const normalizedPath = parsed.pathname
+      .replace(/\/$/, '')
+      .replace(/\/api$/, '');
     return `${parsed.origin}${normalizedPath || ''}`;
   } catch (error) {
     console.error('Failed to parse API base URL for sockets', error);
@@ -38,14 +47,17 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
   const [isConnected, setIsConnected] = useState(false);
   const queryClient = useQueryClient();
 
-  const socketUrl = useMemo(() => deriveSocketUrl(api.defaults.baseURL ?? ''), []);
+  const socketUrl = useMemo(
+    () => deriveSocketUrl(api.defaults.baseURL ?? ''),
+    []
+  );
 
   useEffect(() => {
     if (!token) {
-      if (socket) {
-        socket.disconnect();
-      }
-      setSocket(null);
+      setSocket((current) => {
+        current?.disconnect();
+        return null;
+      });
       setIsConnected(false);
       return;
     }
@@ -76,6 +88,7 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
       instance.off('disconnect', handleDisconnect);
       instance.off('connect_error', handleConnectError);
       instance.disconnect();
+      setSocket((current) => (current === instance ? null : current));
     };
   }, [token, socketUrl]);
 
@@ -102,20 +115,25 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
     };
 
     const handleConversationUpdated = (conversation: ConversationSummary) => {
-      queryClient.setQueryData<ConversationSummary[]>(['conversations'], (previous) => {
-        if (!previous || previous.length === 0) {
-          return [conversation];
-        }
+      queryClient.setQueryData<ConversationSummary[]>(
+        ['conversations'],
+        (previous) => {
+          if (!previous || previous.length === 0) {
+            return [conversation];
+          }
 
-        const copy = [...previous];
-        const index = copy.findIndex((existing) => existing._id === conversation._id);
-        if (index === -1) {
-          copy.unshift(conversation);
+          const copy = [...previous];
+          const index = copy.findIndex(
+            (existing) => existing._id === conversation._id
+          );
+          if (index === -1) {
+            copy.unshift(conversation);
+            return copy;
+          }
+          copy[index] = { ...copy[index], ...conversation };
           return copy;
         }
-        copy[index] = { ...copy[index], ...conversation };
-        return copy;
-      });
+      );
     };
 
     const handleUnreadSummary = (summary: UnreadSummary) => {
@@ -138,7 +156,9 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
     [socket, isConnected]
   );
 
-  return <SocketContext.Provider value={value}>{children}</SocketContext.Provider>;
+  return (
+    <SocketContext.Provider value={value}>{children}</SocketContext.Provider>
+  );
 };
 
 export const useSocketContext = () => {

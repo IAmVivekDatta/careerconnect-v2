@@ -440,25 +440,23 @@ const ConnectionsPage = () => {
     );
   };
 
-  const activeList = tabData[activeTab];
-
   const defaultEmptyTitle =
     activeTab === 'pending'
       ? 'No incoming requests right now'
       : activeTab === 'connections'
-      ? 'Your network is ready to grow'
-      : activeTab === 'outgoing'
-      ? 'No pending invitations'
-      : 'No tailored suggestions yet';
+        ? 'Your network is ready to grow'
+        : activeTab === 'outgoing'
+          ? 'No pending invitations'
+          : 'No tailored suggestions yet';
 
   const defaultEmptyDetail =
     activeTab === 'pending'
       ? "You're all caught up. Explore suggestions to discover new collaborators."
       : activeTab === 'connections'
-      ? 'Spark new conversations by reaching out to suggested peers.'
-      : activeTab === 'outgoing'
-      ? 'Send a fresh invite or reconnect with past classmates.'
-      : 'Update your skills and interests to unlock smarter matches.';
+        ? 'Spark new conversations by reaching out to suggested peers.'
+        : activeTab === 'outgoing'
+          ? 'Send a fresh invite or reconnect with past classmates.'
+          : 'Update your skills and interests to unlock smarter matches.';
 
   const emptyTitle = hasActiveFilters ? 'No matches found' : defaultEmptyTitle;
   const emptyDetail = hasActiveFilters
@@ -674,8 +672,8 @@ const ConnectionsPage = () => {
                 person.role === 'alumni'
                   ? 'Alumni'
                   : person.role === 'student'
-                  ? 'Student'
-                  : 'Admin';
+                    ? 'Student'
+                    : 'Admin';
               const relativeTimestamp = formatRelativeTime(
                 person.requestedAt ?? person.createdAt
               );
@@ -683,10 +681,10 @@ const ConnectionsPage = () => {
                 activeTab === 'pending'
                   ? 'Requested'
                   : activeTab === 'outgoing'
-                  ? 'Sent'
-                  : activeTab === 'connections'
-                  ? 'Connected'
-                  : 'Spotted';
+                    ? 'Sent'
+                    : activeTab === 'connections'
+                      ? 'Connected'
+                      : 'Spotted';
               const bioCopy =
                 person.bio || 'This member hasn’t added a bio yet.';
 
