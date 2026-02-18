@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+﻿import { useForm } from "react-hook-form";
 import NeonButton from "../../components/atoms/NeonButton";
 import useAuthStore from "../../store/useAuthStore";
 import api from "../../lib/axios";
@@ -29,8 +29,8 @@ const LoginPage = () => {
   });
 
   return (
-    <main className="grid min-h-screen place-items-center bg-bgDark px-6 py-12 text-white">
-      <form onSubmit={onSubmit} className="w-full max-w-md space-y-6 rounded-lg bg-surface/80 p-8 shadow-neon">
+    <main className="grid min-h-screen place-items-center bg-night px-6 py-12 text-white">
+      <form onSubmit={onSubmit} className="w-full max-w-md space-y-6 rounded-lg bg-surface/80 p-8 shadow-depth">
         <header className="space-y-2 text-center">
           <h1 className="text-2xl font-semibold">Welcome back</h1>
           <p className="text-sm text-muted">Log in to stay connected with the community.</p>
@@ -68,3 +68,5 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
+
+

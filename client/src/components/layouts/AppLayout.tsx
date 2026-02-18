@@ -1,10 +1,10 @@
-import { Outlet } from "react-router-dom";
+﻿import { Outlet } from "react-router-dom";
 import Sidebar from "../organisms/Sidebar";
 import TopNav from "../organisms/TopNav";
 
 const AppLayout = () => {
   return (
-    <div className="min-h-screen bg-bgDark text-white">
+    <div className="min-h-screen bg-night text-white">
       <TopNav />
       <div className="flex">
         <Sidebar />
@@ -17,3 +17,4 @@ const AppLayout = () => {
 };
 
 export default AppLayout;
+

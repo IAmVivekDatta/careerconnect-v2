@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+﻿import { useMemo } from "react";
 import { NavLink } from "react-router-dom";
 import useAuthStore from "../../store/useAuthStore";
 import { adminNavItems } from "../../constants/navItems";
@@ -29,7 +29,7 @@ const AdminSidebar = () => {
               className={({ isActive }) =>
                 `group flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition ${
                   isActive
-                    ? "bg-neonMagenta/15 text-white shadow-[0_0_18px_rgba(255,0,170,0.18)]"
+                    ? "bg-accentSoft/15 text-white shadow-[0_0_18px_rgba(255,0,170,0.18)]"
                     : "text-muted hover:bg-white/5 hover:text-white"
                 }`
               }
@@ -39,8 +39,8 @@ const AdminSidebar = () => {
                   <Icon
                     className={`h-4 w-4 ${
                       isActive
-                        ? "text-neonMagenta"
-                        : "text-white/40 group-hover:text-neonMagenta"
+                        ? "text-accentSoft"
+                        : "text-white/40 group-hover:text-accentSoft"
                     }`}
                   />
                   <span>{link.label}</span>
@@ -55,3 +55,4 @@ const AdminSidebar = () => {
 };
 
 export default AdminSidebar;
+

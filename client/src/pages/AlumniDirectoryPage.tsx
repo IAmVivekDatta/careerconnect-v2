@@ -1,4 +1,4 @@
-import { useDeferredValue, useMemo, useState } from 'react';
+﻿import { useDeferredValue, useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import RecommendedAlumniCarousel from '../components/organisms/RecommendedAlumniCarousel';
@@ -144,7 +144,7 @@ const AlumniDirectoryPage = () => {
             {filteredAlumni.map((alum) => (
               <article
                 key={alum._id}
-                className="neon-border rounded-lg bg-surface/80 p-5 shadow-lg"
+                className="night-panel rounded-lg bg-surface/80 p-5 shadow-lg"
               >
                 <div className="flex items-start gap-4">
                   <img
@@ -167,7 +167,7 @@ const AlumniDirectoryPage = () => {
                       {alum.skills?.slice(0, 4).map((skill) => (
                         <span
                           key={skill}
-                          className="rounded-full bg-neonCyan/20 px-2 py-1 text-[10px] uppercase tracking-wide text-neonCyan"
+                          className="rounded-full bg-accent/20 px-2 py-1 text-[10px] uppercase tracking-wide text-accent"
                         >
                           {skill}
                         </span>
@@ -184,11 +184,11 @@ const AlumniDirectoryPage = () => {
                 <div className="mt-4 space-y-2 text-xs text-white/50">
                   {alum.experience?.slice(0, 2).map((role, idx) => (
                     <p key={idx}>
-                      {role.title ?? 'Role'} · {role.company ?? 'Company'}
+                      {role.title ?? 'Role'} Â· {role.company ?? 'Company'}
                     </p>
                   ))}
                   {typeof alum.overlap === 'number' && alum.overlap > 0 && (
-                    <p className="rounded bg-neonCyan/10 px-2 py-1 text-[11px] text-neonCyan">
+                    <p className="rounded bg-accent/10 px-2 py-1 text-[11px] text-accent">
                       {alum.overlap} shared skill{alum.overlap === 1 ? '' : 's'}
                     </p>
                   )}
@@ -197,7 +197,7 @@ const AlumniDirectoryPage = () => {
                 <div className="mt-4 flex gap-2">
                   <button
                     type="button"
-                    className="flex-1 rounded bg-neonCyan/20 px-3 py-2 text-xs font-semibold text-neonCyan transition hover:bg-neonCyan/30 disabled:opacity-50"
+                    className="flex-1 rounded bg-accent/20 px-3 py-2 text-xs font-semibold text-accent transition hover:bg-accent/30 disabled:opacity-50"
                     onClick={() => sendRequestMutation.mutate(alum._id)}
                     disabled={sendRequestMutation.isPending}
                   >
@@ -222,3 +222,4 @@ const AlumniDirectoryPage = () => {
 };
 
 export default AlumniDirectoryPage;
+

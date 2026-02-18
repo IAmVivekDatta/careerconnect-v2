@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Heart, MessageCircle, Share, Trash2, X } from 'lucide-react';
 import api from '../../lib/axios';
@@ -105,7 +105,7 @@ const PostCard = ({ post, onPostUpdate }: PostCardProps) => {
   };
 
   return (
-    <article className="neon-border space-y-3 rounded-lg bg-surface/80 p-4 backdrop-blur-md hover:bg-surface/90 transition-colors">
+    <article className="night-panel space-y-3 rounded-lg bg-surface/80 p-4 backdrop-blur-md hover:bg-surface/90 transition-colors">
       {/* Post Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3 flex-1">
@@ -249,3 +249,4 @@ const PostCard = ({ post, onPostUpdate }: PostCardProps) => {
 };
 
 export default PostCard;
+

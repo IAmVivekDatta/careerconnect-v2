@@ -1,4 +1,4 @@
-import { useDeferredValue, useMemo, useState } from "react";
+﻿import { useDeferredValue, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "../../lib/axios";
 import { UserRole } from "../../types";
@@ -91,7 +91,7 @@ const AdminUsersPage = () => {
           <h2 className="text-xl font-semibold">Manage Users</h2>
           <p className="text-sm text-muted">Search, filter, and moderate user accounts.</p>
           <p className="mt-2 text-xs text-muted/80">
-            Showing {users.length} of {total} accounts • {activeCount} active
+            Showing {users.length} of {total} accounts â€¢ {activeCount} active
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-3">
@@ -126,7 +126,7 @@ const AdminUsersPage = () => {
         </div>
       </header>
 
-      <div className="neon-border overflow-hidden rounded-lg bg-surface/80">
+      <div className="night-panel overflow-hidden rounded-lg bg-surface/80">
         {(feedback || errorMessage) && (
           <div className="border-b border-white/10 bg-black/40 px-4 py-2 text-xs text-white/70">
             {feedback && <span className="text-green-300">{feedback}</span>}
@@ -149,7 +149,7 @@ const AdminUsersPage = () => {
               [...Array(6)].map((_, index) => (
                 <tr key={index} className="animate-pulse">
                   <td className="px-4 py-3 text-white/40" colSpan={6}>
-                    Loading users…
+                    Loading usersâ€¦
                   </td>
                 </tr>
               ))
@@ -222,3 +222,4 @@ const AdminUsersPage = () => {
 };
 
 export default AdminUsersPage;
+

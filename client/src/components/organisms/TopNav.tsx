@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+﻿import { useEffect, useMemo, useState } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import NeonButton from '../atoms/NeonButton';
 import Avatar from '../atoms/Avatar';
@@ -58,20 +58,20 @@ const TopNav = () => {
         to={item.to}
         className={`group flex items-center gap-2 rounded-full px-3 py-1.5 text-sm transition ${
           isActive
-            ? 'bg-neonCyan/15 text-white shadow-[0_0_18px_rgba(0,255,255,0.15)]'
+            ? 'bg-accent/15 text-white shadow-[0_0_18px_rgba(0,255,255,0.15)]'
             : 'text-white/70 hover:bg-white/10 hover:text-white'
         }`}
       >
         <Icon
           className={`h-4 w-4 ${
             isActive
-              ? 'text-neonCyan'
-              : 'text-white/50 group-hover:text-neonCyan'
+              ? 'text-accent'
+              : 'text-white/50 group-hover:text-accent'
           }`}
         />
         <span>{item.label}</span>
         {badge > 0 && (
-          <span className="ml-1 rounded-full bg-neonCyan px-2 text-[10px] font-semibold text-black">
+          <span className="ml-1 rounded-full bg-accent px-2 text-[10px] font-semibold text-black">
             {badge}
           </span>
         )}
@@ -92,7 +92,7 @@ const TopNav = () => {
         to={item.to}
         className={`group flex items-center justify-between rounded-lg px-3 py-2 text-sm transition ${
           isActive
-            ? 'bg-neonCyan/10 text-white'
+            ? 'bg-accent/10 text-white'
             : 'text-muted hover:bg-white/5 hover:text-white'
         }`}
       >
@@ -100,14 +100,14 @@ const TopNav = () => {
           <Icon
             className={`h-4 w-4 ${
               isActive
-                ? 'text-neonCyan'
-                : 'text-white/40 group-hover:text-neonCyan'
+                ? 'text-accent'
+                : 'text-white/40 group-hover:text-accent'
             }`}
           />
           <span>{item.label}</span>
         </span>
         {badge > 0 && (
-          <span className="rounded-full bg-neonCyan px-2 py-0.5 text-[10px] font-semibold text-black">
+          <span className="rounded-full bg-accent px-2 py-0.5 text-[10px] font-semibold text-black">
             {badge}
           </span>
         )}
@@ -136,7 +136,7 @@ const TopNav = () => {
               />
             </>
           )}
-          <Link to="/feed" className="text-lg font-semibold text-neonCyan">
+          <Link to="/feed" className="text-lg font-semibold text-accent">
             CareerConnect
           </Link>
         </div>
@@ -169,7 +169,7 @@ const TopNav = () => {
             />
             {unreadCounts?.total
               ? unreadCounts.total > 0 && (
-                  <span className="absolute -right-1 -top-1 h-3 w-3 rounded-full bg-neonCyan shadow-[0_0_12px_rgba(0,255,255,0.6)]" />
+                  <span className="absolute -right-1 -top-1 h-3 w-3 rounded-full bg-accent shadow-[0_0_12px_rgba(0,255,255,0.6)]" />
                 )
               : null}
           </button>
@@ -188,3 +188,4 @@ const TopNav = () => {
 };
 
 export default TopNav;
+

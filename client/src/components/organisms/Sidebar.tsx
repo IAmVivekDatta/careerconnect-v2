@@ -1,4 +1,4 @@
-import clsx from "clsx";
+﻿import clsx from "clsx";
 import { useMemo } from "react";
 import { NavLink } from "react-router-dom";
 import useAuthStore from "../../store/useAuthStore";
@@ -53,7 +53,7 @@ const Sidebar = () => {
               className={({ isActive }) =>
                 `group flex items-center justify-between rounded-lg px-3 py-2 text-sm transition ${
                   isActive
-                    ? "bg-neonCyan/10 text-white shadow-[0_0_18px_rgba(0,255,255,0.12)]"
+                    ? "bg-accent/10 text-white shadow-[0_0_18px_rgba(0,255,255,0.12)]"
                     : "text-muted hover:bg-white/5 hover:text-white"
                 }`
               }
@@ -64,8 +64,8 @@ const Sidebar = () => {
                     <Icon
                       className={`h-4 w-4 ${
                         isActive
-                          ? "text-neonCyan"
-                          : "text-white/40 group-hover:text-neonCyan"
+                          ? "text-accent"
+                          : "text-white/40 group-hover:text-accent"
                       }`}
                     />
                     <span
@@ -78,7 +78,7 @@ const Sidebar = () => {
                     </span>
                   </span>
                   {badge > 0 && isSidebarOpen && (
-                    <span className="rounded-full bg-neonCyan px-2 py-0.5 text-[10px] font-semibold text-black">
+                    <span className="rounded-full bg-accent px-2 py-0.5 text-[10px] font-semibold text-black">
                       {badge}
                     </span>
                   )}
@@ -93,3 +93,4 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
+

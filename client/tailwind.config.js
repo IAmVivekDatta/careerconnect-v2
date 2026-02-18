@@ -12,19 +12,25 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        neonCyan: withOpacityValue("--cc-neon-cyan"),
-        neonMagenta: withOpacityValue("--cc-neon-magenta"),
-        bgDark: withOpacityValue("--cc-background"),
+        night: withOpacityValue("--cc-background"),
         surface: withOpacityValue("--cc-surface"),
+        surfaceMuted: withOpacityValue("--cc-surface-muted"),
+        surfaceAlt: withOpacityValue("--cc-surface-alt"),
         muted: withOpacityValue("--cc-muted"),
+        border: withOpacityValue("--cc-border"),
         textPrimary: withOpacityValue("--cc-text-primary"),
-        textSecondary: withOpacityValue("--cc-text-secondary")
+        textSecondary: withOpacityValue("--cc-text-secondary"),
+        accent: withOpacityValue("--cc-accent"),
+        accentSoft: withOpacityValue("--cc-accent-soft"),
+        accentMuted: withOpacityValue("--cc-accent-muted")
       },
       boxShadow: {
-        neon: "0 0 18px rgba(0,245,255,0.2)"
+        depth: "0 18px 45px rgba(4,7,19,0.55)",
+        outline: "0 0 0 1px rgba(46,65,102,0.45)"
       },
       fontFamily: {
-        display: ["Orbitron", "Inter", "sans-serif"]
+        sans: ["Sora", "Inter", "sans-serif"],
+        display: ["Sora", "Inter", "sans-serif"]
       }
     }
   },

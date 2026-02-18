@@ -1,4 +1,4 @@
-import clsx from "clsx";
+﻿import clsx from "clsx";
 
 interface DynamoHamburgerProps {
   open: boolean;
@@ -25,7 +25,7 @@ const DynamoHamburger = ({
       aria-expanded={open}
       aria-label={label}
       className={clsx(
-        "relative flex items-center justify-center rounded-md border border-white/10 bg-white/5 p-1.5 text-white/80 transition hover:border-neonCyan hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-neonCyan/60",
+        "relative flex items-center justify-center rounded-md border border-white/10 bg-white/5 p-1.5 text-white/80 transition hover:border-accent hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/60",
         className
       )}
     >
@@ -75,3 +75,4 @@ const DynamoHamburger = ({
 };
 
 export default DynamoHamburger;
+

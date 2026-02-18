@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+﻿import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import api from "../lib/axios";
@@ -48,15 +48,15 @@ const OpportunityDetailPage = () => {
   return (
     <section className="space-y-4">
       <header>
-        <h2 className="text-2xl font-semibold text-neonCyan">{data?.title}</h2>
+        <h2 className="text-2xl font-semibold text-accent">{data?.title}</h2>
         <p className="text-sm text-muted">Company: {data?.company}</p>
       </header>
-      <article className="neon-border rounded-lg bg-surface/80 p-6">
+      <article className="night-panel rounded-lg bg-surface/80 p-6">
         <p className="text-sm text-white/80">{data?.description}</p>
         {data?.skills && data.skills.length > 0 && (
           <div className="mt-4 flex flex-wrap gap-2">
             {data.skills.map((skill) => (
-              <span key={skill} className="rounded bg-white/10 px-2 py-1 text-xs uppercase tracking-wide text-neonCyan">
+              <span key={skill} className="rounded bg-white/10 px-2 py-1 text-xs uppercase tracking-wide text-accent">
                 {skill}
               </span>
             ))}
@@ -89,7 +89,7 @@ const OpportunityDetailPage = () => {
               onChange={(e) => setResumeFile(e.target.files?.[0] ?? null)}
             />
           </div>
-          <button onClick={onApply} disabled={loading} className="neon-border rounded px-4 py-2 text-sm font-semibold text-white">
+          <button onClick={onApply} disabled={loading} className="night-panel rounded px-4 py-2 text-sm font-semibold text-white">
             {loading ? 'Applying...' : 'Apply'}
           </button>
         </div>
@@ -99,3 +99,4 @@ const OpportunityDetailPage = () => {
 };
 
 export default OpportunityDetailPage;
+

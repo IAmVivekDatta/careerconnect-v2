@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+﻿import { useQuery } from '@tanstack/react-query';
 import api from '../../lib/axios';
 import { useState } from 'react';
 
@@ -53,10 +53,10 @@ const RecommendedAlumniCarousel = () => {
 
   return (
     <section className="space-y-4">
-      <h3 className="text-lg font-semibold text-neonCyan">
+      <h3 className="text-lg font-semibold text-accent">
         Recommended Alumni
       </h3>
-      <div className="neon-border rounded-lg bg-gradient-to-br from-purple-900/30 to-blue-900/30 p-6">
+      <div className="night-panel rounded-lg bg-gradient-to-br from-purple-900/30 to-blue-900/30 p-6">
         <div className="space-y-4">
           {/* Alumni Card */}
           <div className="flex items-center gap-6">
@@ -68,7 +68,7 @@ const RecommendedAlumniCarousel = () => {
                 `https://i.pravatar.cc/150?u=${currentAlumnus.email}`
               }
               alt={currentAlumnus.name}
-              className="h-20 w-20 rounded-full border-2 border-neonCyan shadow-lg"
+              className="h-20 w-20 rounded-full border-2 border-accent shadow-lg"
             />
 
             {/* Info */}
@@ -83,7 +83,7 @@ const RecommendedAlumniCarousel = () => {
                 {currentAlumnus.skills.slice(0, 3).map((skill) => (
                   <span
                     key={skill}
-                    className="inline-block rounded-full bg-neonCyan/20 px-3 py-1 text-xs text-neonCyan"
+                    className="inline-block rounded-full bg-accent/20 px-3 py-1 text-xs text-accent"
                   >
                     {skill}
                   </span>
@@ -98,7 +98,7 @@ const RecommendedAlumniCarousel = () => {
 
             {/* Actions */}
             <div className="flex flex-col gap-2">
-              <button className="rounded-lg bg-neonCyan/20 px-4 py-2 text-sm font-medium text-neonCyan hover:bg-neonCyan/30">
+              <button className="rounded-lg bg-accent/20 px-4 py-2 text-sm font-medium text-accent hover:bg-accent/30">
                 Connect
               </button>
               <button className="rounded-lg bg-white/10 px-4 py-2 text-sm font-medium text-white hover:bg-white/20">
@@ -114,7 +114,7 @@ const RecommendedAlumniCarousel = () => {
               className="rounded-full bg-white/10 p-2 hover:bg-white/20"
               aria-label="Previous alumni"
             >
-              ←
+              â†
             </button>
 
             <div className="flex gap-1">
@@ -123,7 +123,7 @@ const RecommendedAlumniCarousel = () => {
                   key={idx}
                   onClick={() => setCurrentIndex(idx)}
                   className={`h-2 w-2 rounded-full transition ${
-                    idx === currentIndex ? 'bg-neonCyan' : 'bg-white/30'
+                    idx === currentIndex ? 'bg-accent' : 'bg-white/30'
                   }`}
                   aria-label={`Go to alumni ${idx + 1}`}
                 />
@@ -135,7 +135,7 @@ const RecommendedAlumniCarousel = () => {
               className="rounded-full bg-white/10 p-2 hover:bg-white/20"
               aria-label="Next alumni"
             >
-              →
+              â†’
             </button>
           </div>
 
@@ -149,3 +149,4 @@ const RecommendedAlumniCarousel = () => {
 };
 
 export default RecommendedAlumniCarousel;
+

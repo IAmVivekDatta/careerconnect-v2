@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+﻿import { useEffect, useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import {
@@ -337,8 +337,8 @@ const EnhancedProfileEditor = ({
     <div className="space-y-8">
       <section className="glass-panel relative overflow-hidden rounded-3xl px-6 py-8 sm:px-10">
         <div className="pointer-events-none absolute inset-0">
-          <div className="absolute -top-24 -right-10 h-64 w-64 rounded-full bg-neonCyan/20 blur-3xl" />
-          <div className="absolute -bottom-28 left-4 h-60 w-60 rounded-full bg-neonMagenta/20 blur-3xl" />
+          <div className="absolute -top-24 -right-10 h-64 w-64 rounded-full bg-accent/20 blur-3xl" />
+          <div className="absolute -bottom-28 left-4 h-60 w-60 rounded-full bg-accentSoft/20 blur-3xl" />
         </div>
         <div className="relative z-10 flex flex-col gap-8">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-end">
@@ -370,14 +370,14 @@ const EnhancedProfileEditor = ({
                   value={name}
                   onChange={(event) => setName(event.target.value)}
                   placeholder="Your full name"
-                  className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-3xl font-semibold text-white focus:border-neonCyan focus:outline-none focus:ring-2 focus:ring-neonCyan/40"
+                  className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-3xl font-semibold text-white focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/40"
                 />
               ) : (
                 <h1 className="text-4xl font-bold text-white">{name}</h1>
               )}
 
               <div className="flex flex-wrap items-center gap-2 text-sm text-white/70">
-                <span className="inline-flex items-center gap-2 rounded-full border border-neonCyan/50 bg-neonCyan/15 px-3 py-1 font-semibold text-neonCyan">
+                <span className="inline-flex items-center gap-2 rounded-full border border-accent/50 bg-accent/15 px-3 py-1 font-semibold text-accent">
                   <Briefcase className="h-3.5 w-3.5" />
                   {profile?.role === 'alumni' ? 'Alumni' : 'Student'}
                 </span>
@@ -421,7 +421,7 @@ const EnhancedProfileEditor = ({
                     type="button"
                     onClick={() => updateProfileMutation.mutate()}
                     disabled={updateProfileMutation.isPending}
-                    className="inline-flex items-center justify-center gap-2 rounded-full bg-neonCyan px-6 py-2.5 text-sm font-semibold text-black shadow-[0_12px_30px_rgba(0,245,255,0.35)] transition hover:bg-neonCyan/85 disabled:cursor-not-allowed disabled:opacity-70"
+                    className="inline-flex items-center justify-center gap-2 rounded-full bg-accent px-6 py-2.5 text-sm font-semibold text-black shadow-[0_12px_30px_rgba(0,245,255,0.35)] transition hover:bg-accent/85 disabled:cursor-not-allowed disabled:opacity-70"
                   >
                     {updateProfileMutation.isPending ? (
                       <Loader2 className="h-4 w-4 animate-spin" />
@@ -438,7 +438,7 @@ const EnhancedProfileEditor = ({
                   <button
                     type="button"
                     onClick={() => setIsEditing(true)}
-                    className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-6 py-2.5 text-sm font-semibold text-white transition hover:border-neonCyan/40 hover:text-neonCyan"
+                    className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-6 py-2.5 text-sm font-semibold text-white transition hover:border-accent/40 hover:text-accent"
                   >
                     <Edit2 className="h-4 w-4" />
                     Edit profile
@@ -459,7 +459,7 @@ const EnhancedProfileEditor = ({
                   value={bio}
                   onChange={(event) => setBio(event.target.value)}
                   placeholder="Tell your network what excites you right now..."
-                  className="mt-3 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white focus:border-neonCyan focus:outline-none focus:ring-2 focus:ring-neonCyan/30"
+                  className="mt-3 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
                   rows={4}
                   aria-label="Profile bio"
                 />
@@ -507,14 +507,14 @@ const EnhancedProfileEditor = ({
                 skills.map((skill) => (
                   <span
                     key={skill}
-                    className="inline-flex items-center gap-2 rounded-full border border-neonCyan/30 bg-neonCyan/10 px-3 py-1 text-xs font-semibold text-neonCyan"
+                    className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-3 py-1 text-xs font-semibold text-accent"
                   >
                     {skill}
                     {isEditing && (
                       <button
                         type="button"
                         onClick={() => handleRemoveSkill(skill)}
-                        className="text-neonCyan/70 transition hover:text-neonMagenta"
+                        className="text-accent/70 transition hover:text-accentSoft"
                       >
                         <X className="h-3 w-3" />
                       </button>
@@ -541,12 +541,12 @@ const EnhancedProfileEditor = ({
                     }
                   }}
                   placeholder="Add a skill"
-                  className="flex-1 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-neonCyan focus:outline-none"
+                  className="flex-1 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-accent focus:outline-none"
                 />
                 <button
                   type="button"
                   onClick={handleAddSkill}
-                  className="inline-flex items-center justify-center rounded-full bg-neonCyan px-4 py-2 text-sm font-semibold text-black transition hover:bg-neonCyan/85"
+                  className="inline-flex items-center justify-center rounded-full bg-accent px-4 py-2 text-sm font-semibold text-black transition hover:bg-accent/85"
                 >
                   <Plus className="h-4 w-4" />
                 </button>
@@ -565,7 +565,7 @@ const EnhancedProfileEditor = ({
                 href={profile.resumeUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="mt-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-neonCyan transition hover:border-neonCyan/40 hover:text-neonCyan"
+                className="mt-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-accent transition hover:border-accent/40 hover:text-accent"
               >
                 <Download className="h-4 w-4" />
                 Download current resume
@@ -577,17 +577,17 @@ const EnhancedProfileEditor = ({
             )}
 
             {resumeFile && (
-              <div className="mt-4 rounded-2xl border border-neonCyan/40 bg-neonCyan/10 px-4 py-2 text-xs text-neonCyan">
+              <div className="mt-4 rounded-2xl border border-accent/40 bg-accent/10 px-4 py-2 text-xs text-accent">
                 Ready to upload: {resumeFile.name}
               </div>
             )}
 
             {isEditing && (
-              <label className="mt-5 flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-white/20 bg-white/5 p-6 text-center text-sm text-white/60 transition hover:border-neonCyan/50 hover:text-white">
+              <label className="mt-5 flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-white/20 bg-white/5 p-6 text-center text-sm text-white/60 transition hover:border-accent/50 hover:text-white">
                 <FileText className="h-6 w-6" />
                 <span className="font-semibold">Upload new resume</span>
                 <span className="text-xs text-white/50">
-                  PDF, DOC, or DOCX · up to 5MB
+                  PDF, DOC, or DOCX Â· up to 5MB
                 </span>
                 <input
                   type="file"
@@ -616,7 +616,7 @@ const EnhancedProfileEditor = ({
                 <button
                   type="button"
                   onClick={handleAddExperience}
-                  className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-semibold text-white/80 transition hover:border-neonCyan/40 hover:text-neonCyan"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-semibold text-white/80 transition hover:border-accent/40 hover:text-accent"
                 >
                   <Plus className="h-3.5 w-3.5" />
                   Add role
@@ -632,7 +632,7 @@ const EnhancedProfileEditor = ({
               ) : (
                 experience.map((exp, index) => (
                   <div key={`experience-${index}`} className="relative pl-6">
-                    <span className="absolute left-0 top-2 h-3 w-3 rounded-full bg-neonCyan shadow-[0_0_10px_rgba(0,245,255,0.65)]" />
+                    <span className="absolute left-0 top-2 h-3 w-3 rounded-full bg-accent shadow-[0_0_10px_rgba(0,245,255,0.65)]" />
                     <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
                       {isEditing ? (
                         <div className="space-y-3">
@@ -647,7 +647,7 @@ const EnhancedProfileEditor = ({
                               )
                             }
                             placeholder="Role"
-                            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-neonCyan focus:outline-none"
+                            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-accent focus:outline-none"
                           />
                           <input
                             name={`experience[${index}].company`}
@@ -660,7 +660,7 @@ const EnhancedProfileEditor = ({
                               )
                             }
                             placeholder="Company"
-                            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-neonCyan focus:outline-none"
+                            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-accent focus:outline-none"
                           />
                           <div className="grid gap-2 sm:grid-cols-2">
                             <label className="text-xs text-white/60">
@@ -676,7 +676,7 @@ const EnhancedProfileEditor = ({
                                     event.target.value
                                   )
                                 }
-                                className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-neonCyan focus:outline-none"
+                                className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-accent focus:outline-none"
                               />
                             </label>
                             <label className="text-xs text-white/60">
@@ -692,7 +692,7 @@ const EnhancedProfileEditor = ({
                                     event.target.value
                                   )
                                 }
-                                className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-neonCyan focus:outline-none"
+                                className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-accent focus:outline-none"
                               />
                             </label>
                           </div>
@@ -706,8 +706,8 @@ const EnhancedProfileEditor = ({
                                 event.target.value
                               )
                             }
-                            placeholder="What did you deliver? Highlight wins, metrics, or moments you’re proud of."
-                            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-neonCyan focus:outline-none"
+                            placeholder="What did you deliver? Highlight wins, metrics, or moments youâ€™re proud of."
+                            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-accent focus:outline-none"
                             rows={3}
                           />
                           <button
@@ -765,7 +765,7 @@ const EnhancedProfileEditor = ({
                 <button
                   type="button"
                   onClick={handleAddEducation}
-                  className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-semibold text-white/80 transition hover:border-neonCyan/40 hover:text-neonCyan"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-semibold text-white/80 transition hover:border-accent/40 hover:text-accent"
                 >
                   <Plus className="h-3.5 w-3.5" />
                   Add program
@@ -781,7 +781,7 @@ const EnhancedProfileEditor = ({
               ) : (
                 education.map((edu, index) => (
                   <div key={`education-${index}`} className="relative pl-6">
-                    <span className="absolute left-0 top-2 h-3 w-3 rounded-full bg-neonMagenta shadow-[0_0_10px_rgba(255,0,214,0.45)]" />
+                    <span className="absolute left-0 top-2 h-3 w-3 rounded-full bg-accentSoft shadow-[0_0_10px_rgba(255,0,214,0.45)]" />
                     <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
                       {isEditing ? (
                         <div className="space-y-3">
@@ -796,7 +796,7 @@ const EnhancedProfileEditor = ({
                               )
                             }
                             placeholder="Degree or certification"
-                            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-neonMagenta focus:outline-none"
+                            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-accentSoft focus:outline-none"
                           />
                           <input
                             name={`education[${index}].institution`}
@@ -809,7 +809,7 @@ const EnhancedProfileEditor = ({
                               )
                             }
                             placeholder="Institution"
-                            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-neonMagenta focus:outline-none"
+                            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-accentSoft focus:outline-none"
                           />
                           <label className="text-xs text-white/60">
                             Graduation year
@@ -824,7 +824,7 @@ const EnhancedProfileEditor = ({
                                   event.target.value
                                 )
                               }
-                              className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-neonMagenta focus:outline-none"
+                              className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-accentSoft focus:outline-none"
                             />
                           </label>
                           <button
@@ -883,5 +883,6 @@ const formatDateRange = (from?: string, to?: string) => {
           year: 'numeric'
         })
       : 'Present';
-  return `${fromLabel} – ${toLabel}`;
+  return `${fromLabel} â€“ ${toLabel}`;
 };
+

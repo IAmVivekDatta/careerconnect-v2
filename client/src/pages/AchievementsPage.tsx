@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+﻿import { useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { Flame, Sparkles, Star, Target, Trophy, Zap } from "lucide-react";
@@ -245,22 +245,22 @@ const AchievementsPage = () => {
   const completedQuestCount = completedQuestIds.length;
 
   const questStreakLabel = isQuestProgressLoading
-    ? "…"
+    ? "â€¦"
     : questStreak > 0
       ? `${questStreak} day${questStreak === 1 ? "" : "s"}`
       : "0 days";
 
   const questStreakHelper = isQuestProgressLoading
-    ? "Tracking streak momentum…"
+    ? "Tracking streak momentumâ€¦"
     : questStreak > 0
       ? "Keep the blaze alive by returning tomorrow."
       : "Complete a quest to ignite your streak.";
 
   const questCompletionSummary = isQuestProgressLoading
-    ? "Loading…"
+    ? "Loadingâ€¦"
     : `${completedQuestCount}/${QUEST_LIBRARY.length} complete`;
 
-  const questStreakBadge = isQuestProgressLoading ? "Streak loading…" : `${questStreakLabel} streak`;
+  const questStreakBadge = isQuestProgressLoading ? "Streak loadingâ€¦" : `${questStreakLabel} streak`;
 
   const statCards = useMemo(
     () => {
@@ -275,7 +275,7 @@ const AchievementsPage = () => {
         {
           id: "badges",
           label: "Badges unlocked",
-          value: isBadgeSummaryLoading ? "…" : totalBadges.toString(),
+          value: isBadgeSummaryLoading ? "â€¦" : totalBadges.toString(),
           helper:
             totalBadges > 0 && badgeSummary?.badges[0]
               ? `Latest: ${badgeSummary.badges[0].name}`
@@ -286,7 +286,7 @@ const AchievementsPage = () => {
         {
           id: "endorsements",
           label: "Skill endorsements",
-          value: isEndorsementsLoading ? "…" : endorsementCount.toString(),
+          value: isEndorsementsLoading ? "â€¦" : endorsementCount.toString(),
           helper: highestMomentumSkill
             ? `Momentum: ${highestMomentumSkill}`
             : "Add skills to invite endorsements.",
@@ -296,8 +296,8 @@ const AchievementsPage = () => {
         {
           id: "streak",
           label: "Active streak",
-          value: isQuestProgressLoading ? "…" : questStreakLabel,
-          helper: isQuestProgressLoading ? "Tracking streak momentum…" : questStreakHelper,
+          value: isQuestProgressLoading ? "â€¦" : questStreakLabel,
+          helper: isQuestProgressLoading ? "Tracking streak momentumâ€¦" : questStreakHelper,
           icon: Flame,
           gradient: "from-amber-500/25 via-orange-500/15 to-rose-500/20"
         },
@@ -315,11 +315,11 @@ const AchievementsPage = () => {
         {
           id: "quests",
           label: "Quests cleared",
-          value: isQuestProgressLoading ? "…" : `${completedQuestCount}/${QUEST_LIBRARY.length}`,
+          value: isQuestProgressLoading ? "â€¦" : `${completedQuestCount}/${QUEST_LIBRARY.length}`,
           helper: isQuestProgressLoading
-            ? "Loading your quest progress…"
+            ? "Loading your quest progressâ€¦"
             : completedQuestCount === QUEST_LIBRARY.length
-              ? "All quests complete — streak secured!"
+              ? "All quests complete â€” streak secured!"
               : `Complete ${QUEST_LIBRARY.length - completedQuestCount} more for a streak boost.`,
           icon: Target,
           gradient: "from-fuchsia-500/25 via-purple-500/15 to-indigo-500/20"
@@ -350,7 +350,7 @@ const AchievementsPage = () => {
   };
 
   if (!user) {
-    return <div className="text-sm text-muted">Loading profile…</div>;
+    return <div className="text-sm text-muted">Loading profileâ€¦</div>;
   }
 
   return (
@@ -385,7 +385,7 @@ const AchievementsPage = () => {
                   <div className="rounded-xl bg-white/10 px-3 py-2 text-xs">
                     <p className="text-white/60">Current rank</p>
                     <p className="text-lg font-semibold text-white">
-                      {userRank ? `#${userRank}` : "—"}
+                      {userRank ? `#${userRank}` : "â€”"}
                     </p>
                   </div>
                   <div className="rounded-xl bg-white/10 px-3 py-2 text-xs">
@@ -397,7 +397,7 @@ const AchievementsPage = () => {
                   <div className="rounded-xl bg-white/10 px-3 py-2 text-xs lg:col-span-1">
                     <p className="text-white/60">Active streak</p>
                     <p className="text-lg font-semibold text-white">
-                      {isQuestProgressLoading ? "…" : questStreakLabel}
+                      {isQuestProgressLoading ? "â€¦" : questStreakLabel}
                     </p>
                   </div>
                 </div>
@@ -458,11 +458,11 @@ const AchievementsPage = () => {
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[1.75fr,1fr]">
-        <section className="neon-border rounded-3xl bg-surface/70 p-6 shadow-[0_32px_70px_-36px_rgba(8,10,26,0.85)]">
+        <section className="night-panel rounded-3xl bg-surface/70 p-6 shadow-[0_32px_70px_-36px_rgba(8,10,26,0.85)]">
           <Leaderboard />
         </section>
 
-        <section className="neon-border flex flex-col gap-4 rounded-3xl bg-surface/70 p-6 shadow-[0_32px_70px_-36px_rgba(8,10,26,0.85)]">
+        <section className="night-panel flex flex-col gap-4 rounded-3xl bg-surface/70 p-6 shadow-[0_32px_70px_-36px_rgba(8,10,26,0.85)]">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className="text-xs uppercase tracking-wide text-muted">Quest board</p>
@@ -473,7 +473,7 @@ const AchievementsPage = () => {
                 {questCompletionSummary}
               </span>
               <span className="rounded-full border border-amber-400/40 bg-amber-500/10 px-3 py-1 text-xs font-semibold text-amber-200">
-                🔥 {questStreakBadge}
+                ðŸ”¥ {questStreakBadge}
               </span>
             </div>
           </div>
@@ -538,11 +538,11 @@ const AchievementsPage = () => {
         </section>
       </div>
 
-      <section className="neon-border rounded-3xl bg-surface/70 p-6 shadow-[0_32px_70px_-36px_rgba(8,10,26,0.85)]">
+      <section className="night-panel rounded-3xl bg-surface/70 p-6 shadow-[0_32px_70px_-36px_rgba(8,10,26,0.85)]">
         <BadgeGallery userId={user._id} />
       </section>
 
-      <section className="neon-border rounded-3xl bg-surface/70 p-6 shadow-[0_32px_70px_-36px_rgba(8,10,26,0.85)]">
+      <section className="night-panel rounded-3xl bg-surface/70 p-6 shadow-[0_32px_70px_-36px_rgba(8,10,26,0.85)]">
         <SkillEndorsements userId={user._id} skills={profile?.skills ?? []} isOwnProfile />
       </section>
     </section>
@@ -550,3 +550,4 @@ const AchievementsPage = () => {
 };
 
 export default AchievementsPage;
+

@@ -1,4 +1,4 @@
-import { useDeferredValue, useState } from "react";
+﻿import { useDeferredValue, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "../../lib/axios";
 
@@ -86,7 +86,7 @@ const AdminOpportunitiesPage = () => {
         <div>
           <h2 className="text-xl font-semibold">Approve Opportunities</h2>
           <p className="text-sm text-muted">Approve or reject user-submitted job posts.</p>
-          <p className="mt-1 text-xs text-white/60">{opportunities.length} records shown • {status.toUpperCase()} view</p>
+          <p className="mt-1 text-xs text-white/60">{opportunities.length} records shown â€¢ {status.toUpperCase()} view</p>
         </div>
         <div className="flex flex-wrap items-center gap-3">
           <input
@@ -110,7 +110,7 @@ const AdminOpportunitiesPage = () => {
       </header>
 
       {(feedback || errorMessage) && (
-        <div className="neon-border rounded border border-white/10 bg-black/40 px-4 py-3 text-xs text-white/70">
+        <div className="night-panel rounded border border-white/10 bg-black/40 px-4 py-3 text-xs text-white/70">
           {feedback && <span className="text-green-300">{feedback}</span>}
           {errorMessage && <span className="text-red-300">{errorMessage}</span>}
         </div>
@@ -119,22 +119,22 @@ const AdminOpportunitiesPage = () => {
       <div className="grid gap-4">
         {isLoading || isFetching ? (
           [...Array(4)].map((_, index) => (
-            <article key={index} className="neon-border animate-pulse rounded-lg bg-surface/70 p-5">
+            <article key={index} className="night-panel animate-pulse rounded-lg bg-surface/70 p-5">
               <div className="h-4 w-1/3 rounded bg-white/10" />
               <div className="mt-3 h-3 w-2/3 rounded bg-white/10" />
               <div className="mt-2 h-3 w-1/4 rounded bg-white/10" />
             </article>
           ))
         ) : opportunities.length === 0 ? (
-          <div className="neon-border rounded-lg bg-surface/80 p-6 text-center text-sm text-white/60">
+          <div className="night-panel rounded-lg bg-surface/80 p-6 text-center text-sm text-white/60">
             No opportunities match the current filters.
           </div>
         ) : (
           opportunities.map((opportunity) => (
-            <article key={opportunity._id} className="neon-border rounded-lg bg-surface/80 p-5">
+            <article key={opportunity._id} className="night-panel rounded-lg bg-surface/80 p-5">
               <header className="flex flex-wrap items-start justify-between gap-2">
                 <div>
-                  <h3 className="text-lg font-semibold text-neonCyan">{opportunity.title}</h3>
+                  <h3 className="text-lg font-semibold text-accent">{opportunity.title}</h3>
                   <p className="text-sm text-white/70">{opportunity.company}</p>
                 </div>
                 <div className="text-right text-xs text-white/60">
@@ -192,3 +192,4 @@ const AdminOpportunitiesPage = () => {
 };
 
 export default AdminOpportunitiesPage;
+

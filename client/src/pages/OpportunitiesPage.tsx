@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+﻿import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import api from "../lib/axios";
@@ -18,7 +18,7 @@ const ROADMAP_SECTIONS = [
   {
     title: "Engineering Launchpads",
     description: "Pick a technical journey and follow curated milestones from roadmap.sh.",
-  accent: "from-neonCyan/20 via-blue-500/10 to-transparent",
+  accent: "from-accent/20 via-blue-500/10 to-transparent",
     roadmaps: [
       { label: "Frontend Developer", slug: "frontend" },
       { label: "Backend Developer", slug: "backend" },
@@ -28,7 +28,7 @@ const ROADMAP_SECTIONS = [
   {
     title: "Data & AI Paths",
     description: "Grow analytics and machine learning expertise step-by-step.",
-    accent: "from-neonMagenta/20 via-purple-500/10 to-transparent",
+    accent: "from-accentSoft/20 via-purple-500/10 to-transparent",
     roadmaps: [
       { label: "Data Analyst", slug: "data-analyst" },
       { label: "Data Engineer", slug: "data-engineer" },
@@ -104,7 +104,7 @@ const OpportunitiesPage = () => {
             href="https://roadmap.sh"
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 rounded-full border border-neonCyan/40 bg-neonCyan/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-neonCyan transition hover:bg-neonCyan/20"
+            className="inline-flex items-center gap-2 rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-accent transition hover:bg-accent/20"
           >
             Explore all roadmaps
             <ArrowUpRight className="h-3 w-3" />
@@ -132,10 +132,10 @@ const OpportunitiesPage = () => {
                         href={`https://roadmap.sh/${roadmap.slug}`}
                         target="_blank"
                         rel="noreferrer"
-                        className="group flex items-center justify-between rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white transition hover:border-neonCyan/70 hover:bg-neonCyan/10"
+                        className="group flex items-center justify-between rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white transition hover:border-accent/70 hover:bg-accent/10"
                       >
                         <span className="font-medium">{roadmap.label}</span>
-                        <ArrowUpRight className="h-4 w-4 text-white/60 transition group-hover:text-neonCyan" />
+                        <ArrowUpRight className="h-4 w-4 text-white/60 transition group-hover:text-accent" />
                       </a>
                     </li>
                   ))}
@@ -163,7 +163,7 @@ const OpportunitiesPage = () => {
 
               mutation.mutate({ title, company, description, type });
             }}
-            className="neon-border rounded-lg bg-surface/80 p-4 mb-4"
+            className="night-panel rounded-lg bg-surface/80 p-4 mb-4"
           >
             <div className="grid gap-2 sm:grid-cols-2">
               <div>
@@ -203,7 +203,7 @@ const OpportunitiesPage = () => {
                 <option value="Full-time">Full-time</option>
                 <option value="Part-time">Part-time</option>
               </select>
-              <button type="submit" className="neon-border rounded px-4 py-2 text-sm font-semibold text-white">Create</button>
+              <button type="submit" className="night-panel rounded px-4 py-2 text-sm font-semibold text-white">Create</button>
             </div>
           </form>
         )}
@@ -213,14 +213,14 @@ const OpportunitiesPage = () => {
             <p className="text-sm text-muted">Loading...</p>
           ) : (
             (data || []).map((opp) => (
-              <article key={opp._id} className="neon-border rounded-lg bg-surface/80 p-4">
-                <h3 className="text-lg font-semibold text-neonCyan">{opp.title}</h3>
-                <p className="text-sm text-muted">{opp.company} • {opp.type}</p>
+              <article key={opp._id} className="night-panel rounded-lg bg-surface/80 p-4">
+                <h3 className="text-lg font-semibold text-accent">{opp.title}</h3>
+                <p className="text-sm text-muted">{opp.company} â€¢ {opp.type}</p>
                 <p className="mt-2 text-sm text-white/80">{opp.description}</p>
                 {opp.skills && opp.skills.length > 0 && (
                   <div className="mt-3 flex flex-wrap gap-2">
                     {opp.skills.map((skill) => (
-                      <span key={skill} className="rounded bg-white/10 px-2 py-1 text-xs uppercase tracking-wide text-neonCyan">
+                      <span key={skill} className="rounded bg-white/10 px-2 py-1 text-xs uppercase tracking-wide text-accent">
                         {skill}
                       </span>
                     ))}
@@ -284,8 +284,9 @@ const ApplyButton = ({ oppId, token }: { oppId: string; token?: string | null })
   };
 
   return (
-    <button onClick={onApply} disabled={!token || loading} title={!token ? 'Login to apply' : undefined} className="neon-border rounded px-4 py-2 text-sm font-semibold text-white">
+    <button onClick={onApply} disabled={!token || loading} title={!token ? 'Login to apply' : undefined} className="night-panel rounded px-4 py-2 text-sm font-semibold text-white">
       {loading ? 'Applying...' : 'Apply'}
     </button>
   );
 };
+

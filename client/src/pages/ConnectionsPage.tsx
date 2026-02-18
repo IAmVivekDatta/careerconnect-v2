@@ -1,4 +1,4 @@
-import { type ChangeEvent, useMemo, useState } from 'react';
+﻿import { type ChangeEvent, useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -272,7 +272,7 @@ const ConnectionsPage = () => {
         helper:
           counts.pending > 0
             ? 'Respond today to keep momentum high.'
-            : 'No requests waiting — explore suggestions to expand.',
+            : 'No requests waiting â€” explore suggestions to expand.',
         icon: UserPlus,
         gradient: 'from-emerald-500/25 via-teal-500/15 to-cyan-500/15'
       },
@@ -322,9 +322,9 @@ const ConnectionsPage = () => {
   };
 
   const renderEmptyState = (title: string, detail?: string) => (
-    <div className="neon-border relative overflow-hidden rounded-3xl bg-surface/70 p-10 text-center shadow-[0_28px_60px_-30px_rgba(9,16,33,0.65)]">
+    <div className="night-panel relative overflow-hidden rounded-3xl bg-surface/70 p-10 text-center shadow-[0_28px_60px_-30px_rgba(9,16,33,0.65)]">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(0,245,255,0.18),_rgba(10,17,33,0))]" />
-      <Sparkles className="relative mx-auto mb-3 h-8 w-8 text-neonCyan" />
+      <Sparkles className="relative mx-auto mb-3 h-8 w-8 text-accent" />
       <h3 className="relative text-lg font-semibold text-white">{title}</h3>
       {detail && (
         <p className="relative mt-2 text-sm text-white/70">{detail}</p>
@@ -333,7 +333,7 @@ const ConnectionsPage = () => {
         <button
           type="button"
           onClick={resetFilters}
-          className="relative mt-5 inline-flex items-center gap-2 rounded-full border border-neonCyan/40 bg-neonCyan/15 px-4 py-2 text-xs font-semibold text-neonCyan hover:bg-neonCyan/25"
+          className="relative mt-5 inline-flex items-center gap-2 rounded-full border border-accent/40 bg-accent/15 px-4 py-2 text-xs font-semibold text-accent hover:bg-accent/25"
         >
           <Filter className="h-4 w-4" /> Clear filters
         </button>
@@ -350,7 +350,7 @@ const ConnectionsPage = () => {
         <div className="flex flex-wrap gap-2">
           <button
             type="button"
-            className={`${sharedButtonClass} border border-neonCyan/50 bg-neonCyan/15 text-neonCyan hover:bg-neonCyan/25`}
+            className={`${sharedButtonClass} border border-accent/50 bg-accent/15 text-accent hover:bg-accent/25`}
             onClick={() =>
               respondMutation.mutate({ requesterId: userId, action: 'accept' })
             }
@@ -422,7 +422,7 @@ const ConnectionsPage = () => {
       <div className="flex flex-wrap gap-2">
         <button
           type="button"
-          className={`${sharedButtonClass} border border-neonCyan/50 bg-neonCyan/15 text-neonCyan hover:bg-neonCyan/25`}
+          className={`${sharedButtonClass} border border-accent/50 bg-accent/15 text-accent hover:bg-accent/25`}
           onClick={() => sendRequestMutation.mutate(userId)}
           disabled={sendRequestMutation.isPending}
         >
@@ -547,7 +547,7 @@ const ConnectionsPage = () => {
         )}
       </div>
 
-      <div className="neon-border space-y-5 rounded-3xl bg-surface/70 p-6 shadow-[0_32px_80px_-46px_rgba(7,12,31,0.9)]">
+      <div className="night-panel space-y-5 rounded-3xl bg-surface/70 p-6 shadow-[0_32px_80px_-46px_rgba(7,12,31,0.9)]">
         <div className="grid gap-4 md:grid-cols-[minmax(260px,2fr)_minmax(180px,1fr)]">
           <div className="space-y-2">
             <label
@@ -561,10 +561,10 @@ const ConnectionsPage = () => {
               <input
                 id="connections-search"
                 type="search"
-                placeholder="Search by name, skill, or bio…"
+                placeholder="Search by name, skill, or bioâ€¦"
                 value={searchTerm}
                 onChange={handleSearchChange}
-                className="w-full rounded-2xl border border-white/10 bg-white/10 px-11 py-3 text-sm text-white outline-none transition focus:border-neonCyan/50 focus:ring-2 focus:ring-neonCyan/30"
+                className="w-full rounded-2xl border border-white/10 bg-white/10 px-11 py-3 text-sm text-white outline-none transition focus:border-accent/50 focus:ring-2 focus:ring-accent/30"
               />
             </div>
           </div>
@@ -579,7 +579,7 @@ const ConnectionsPage = () => {
               id="connections-sort"
               value={sortKey}
               onChange={handleSortChange}
-              className="w-full rounded-2xl border border-white/10 bg-white/10 px-4 py-3 text-sm text-white/80 outline-none transition focus:border-neonCyan/50 focus:ring-2 focus:ring-neonCyan/30"
+              className="w-full rounded-2xl border border-white/10 bg-white/10 px-4 py-3 text-sm text-white/80 outline-none transition focus:border-accent/50 focus:ring-2 focus:ring-accent/30"
             >
               {sortOptions.map((option) => (
                 <option
@@ -610,7 +610,7 @@ const ConnectionsPage = () => {
                   onClick={() => setRoleFilter(value)}
                   className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-semibold transition ${
                     isActive
-                      ? 'border-neonCyan/60 bg-neonCyan/20 text-neonCyan'
+                      ? 'border-accent/60 bg-accent/20 text-accent'
                       : 'border-white/10 bg-white/5 text-white/70 hover:border-white/20 hover:text-white'
                   }`}
                 >
@@ -625,7 +625,7 @@ const ConnectionsPage = () => {
         </div>
       </div>
 
-      <nav className="neon-border flex flex-wrap gap-2 rounded-3xl bg-surface/70 p-2 shadow-[0_28px_70px_-44px_rgba(6,12,30,0.85)]">
+      <nav className="night-panel flex flex-wrap gap-2 rounded-3xl bg-surface/70 p-2 shadow-[0_28px_70px_-44px_rgba(6,12,30,0.85)]">
         {(Object.keys(tabLabels) as TabKey[]).map((tab) => {
           const tabCount = getTabCount(tab);
           const isActive = activeTab === tab;
@@ -635,7 +635,7 @@ const ConnectionsPage = () => {
               type="button"
               className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition ${
                 isActive
-                  ? 'bg-neonCyan text-surface shadow-[0_0_22px_rgba(0,245,255,0.35)]'
+                  ? 'bg-accent text-surface shadow-[0_0_22px_rgba(0,245,255,0.35)]'
                   : 'text-white/70 hover:bg-white/10 hover:text-white'
               }`}
               onClick={() => setActiveTab(tab)}
@@ -661,7 +661,7 @@ const ConnectionsPage = () => {
             {Array.from({ length: 6 }).map((_, index) => (
               <div
                 key={index}
-                className="neon-border h-52 animate-pulse rounded-3xl bg-surface/70"
+                className="night-panel h-52 animate-pulse rounded-3xl bg-surface/70"
               />
             ))}
           </div>
@@ -688,14 +688,14 @@ const ConnectionsPage = () => {
                   ? 'Connected'
                   : 'Spotted';
               const bioCopy =
-                person.bio || 'This member hasn’t added a bio yet.';
+                person.bio || 'This member hasnâ€™t added a bio yet.';
 
               return (
                 <article
                   key={person._id}
-                  className="neon-border relative overflow-hidden rounded-3xl bg-surface/80 p-6 shadow-[0_32px_80px_-46px_rgba(7,12,31,0.9)] transition hover:-translate-y-1 hover:shadow-[0_40px_90px_-42px_rgba(0,245,255,0.25)]"
+                  className="night-panel relative overflow-hidden rounded-3xl bg-surface/80 p-6 shadow-[0_32px_80px_-46px_rgba(7,12,31,0.9)] transition hover:-translate-y-1 hover:shadow-[0_40px_90px_-42px_rgba(0,245,255,0.25)]"
                 >
-                  <div className="pointer-events-none absolute -top-20 right-0 h-36 w-36 rounded-full bg-neonCyan/10 blur-3xl" />
+                  <div className="pointer-events-none absolute -top-20 right-0 h-36 w-36 rounded-full bg-accent/10 blur-3xl" />
                   <div className="relative flex items-start gap-4">
                     <Avatar
                       src={
@@ -712,7 +712,7 @@ const ConnectionsPage = () => {
                         <button
                           type="button"
                           onClick={() => openProfile(person._id)}
-                          className="text-left text-base font-semibold text-white hover:text-neonCyan"
+                          className="text-left text-base font-semibold text-white hover:text-accent"
                         >
                           {person.name}
                         </button>
@@ -720,7 +720,7 @@ const ConnectionsPage = () => {
                           {roleLabel}
                         </span>
                         {person.points ? (
-                          <span className="inline-flex items-center gap-1 rounded-full border border-neonCyan/30 bg-neonCyan/10 px-2 py-0.5 text-[11px] font-semibold text-neonCyan">
+                          <span className="inline-flex items-center gap-1 rounded-full border border-accent/30 bg-accent/10 px-2 py-0.5 text-[11px] font-semibold text-accent">
                             <Sparkles className="h-3 w-3" /> {person.points} pts
                           </span>
                         ) : null}
@@ -740,7 +740,7 @@ const ConnectionsPage = () => {
                           </span>
                         ))}
                         {person.overlap ? (
-                          <span className="inline-flex items-center gap-1 rounded-full border border-neonCyan/40 bg-neonCyan/10 px-2 py-1 text-[11px] font-semibold text-neonCyan">
+                          <span className="inline-flex items-center gap-1 rounded-full border border-accent/40 bg-accent/10 px-2 py-1 text-[11px] font-semibold text-accent">
                             <Users className="h-3 w-3" /> {person.overlap}{' '}
                             shared skill
                           </span>
@@ -770,3 +770,4 @@ const ConnectionsPage = () => {
 };
 
 export default ConnectionsPage;
+

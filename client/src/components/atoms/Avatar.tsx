@@ -1,4 +1,4 @@
-import type React from 'react';
+﻿import type React from 'react';
 
 type AvatarProps = {
   src?: string | null;
@@ -20,7 +20,7 @@ const Avatar = ({ src, alt, className, onClick }: AvatarProps) => {
   if (!src) {
     return (
       <div
-        className={`flex items-center justify-center rounded-full bg-white/10 text-base font-semibold text-neonCyan ${sizeClasses}`}
+        className={`flex items-center justify-center rounded-full bg-white/10 text-base font-semibold text-accent ${sizeClasses}`}
         onClick={onClick}
         role={onClick ? 'button' : undefined}
         tabIndex={onClick ? 0 : undefined}
@@ -45,3 +45,4 @@ const Avatar = ({ src, alt, className, onClick }: AvatarProps) => {
 };
 
 export default Avatar;
+

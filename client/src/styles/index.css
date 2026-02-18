@@ -1,115 +1,220 @@
+@import url("https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
   color-scheme: dark;
-  --cc-background: 10 10 10;
-  --cc-surface: 17 17 17;
-  --cc-muted: 154 154 154;
-  --cc-text-primary: 255 255 255;
-  --cc-text-secondary: 210 210 210;
-  --cc-white-rgb: 255 255 255;
-  --cc-border-rgb: 255 255 255;
-  --cc-overlay-rgb: 255 255 255;
-  --cc-neon-cyan: 0 245 255;
-  --cc-neon-magenta: 255 0 214;
-  --cc-card-border: 58 90 120;
-  --cc-card-overlay: 20 28 40;
-  --cc-card-shadow: 8 18 38;
+  --cc-background: 7 10 18;
+  --cc-surface: 14 19 32;
+  --cc-surface-muted: 18 25 41;
+  --cc-surface-alt: 22 30 48;
+  --cc-muted: 138 150 178;
+  --cc-text-primary: 232 238 255;
+  --cc-text-secondary: 188 198 217;
+  --cc-white-rgb: 232 238 255;
+  --cc-border: 37 50 79;
+  --cc-border-rgb: 37 50 79;
+  --cc-overlay-rgb: 18 25 40;
+  --cc-accent: 72 124 217;
+  --cc-accent-soft: 111 156 232;
+  --cc-accent-muted: 42 60 92;
+  --cc-card-border: 33 45 72;
+  --cc-card-overlay: 15 21 34;
+  --cc-card-shadow: 3 6 14;
 }
 
-:root[data-theme='midnight'] {
-  color-scheme: dark;
-  --cc-background: 6 13 30;
-  --cc-surface: 14 23 45;
-  --cc-muted: 132 154 192;
-  --cc-text-primary: 226 235 255;
-  --cc-text-secondary: 190 205 235;
-  --cc-white-rgb: 226 235 255;
-  --cc-border-rgb: 114 144 196;
-  --cc-overlay-rgb: 180 200 240;
-  --cc-card-border: 90 120 180;
-  --cc-card-overlay: 24 37 68;
-  --cc-card-shadow: 20 30 72;
+:root[data-theme='whatsapp'] {
+  color-scheme: light;
+  --cc-background: 242 250 245;
+  --cc-surface: 255 255 255;
+  --cc-surface-muted: 230 245 236;
+  --cc-surface-alt: 214 238 225;
+  --cc-muted: 96 114 100;
+  --cc-text-primary: 26 40 30;
+  --cc-text-secondary: 73 94 81;
+  --cc-white-rgb: 26 40 30;
+  --cc-border: 196 214 201;
+  --cc-border-rgb: 196 214 201;
+  --cc-overlay-rgb: 60 94 78;
+  --cc-accent: 37 211 102;
+  --cc-accent-soft: 111 227 171;
+  --cc-accent-muted: 24 136 94;
+  --cc-card-border: 203 221 209;
+  --cc-card-overlay: 240 249 244;
+  --cc-card-shadow: 64 102 82;
 }
 
-:root[data-theme='ocean'] {
+:root[data-theme='whatsappDark'] {
   color-scheme: dark;
-  --cc-background: 5 16 20;
-  --cc-surface: 12 32 40;
-  --cc-muted: 140 178 186;
-  --cc-text-primary: 220 245 247;
-  --cc-text-secondary: 186 214 219;
-  --cc-white-rgb: 220 245 247;
-  --cc-border-rgb: 96 140 150;
-  --cc-overlay-rgb: 180 220 226;
-  --cc-card-border: 64 115 124;
-  --cc-card-overlay: 18 42 50;
-  --cc-card-shadow: 14 32 44;
+  --cc-background: 9 17 14;
+  --cc-surface: 16 27 23;
+  --cc-surface-muted: 20 36 30;
+  --cc-surface-alt: 25 43 35;
+  --cc-muted: 146 168 153;
+  --cc-text-primary: 226 240 228;
+  --cc-text-secondary: 172 194 182;
+  --cc-white-rgb: 226 240 228;
+  --cc-border: 32 52 43;
+  --cc-border-rgb: 32 52 43;
+  --cc-overlay-rgb: 16 34 26;
+  --cc-accent: 37 211 102;
+  --cc-accent-soft: 103 233 164;
+  --cc-accent-muted: 24 136 94;
+  --cc-card-border: 38 60 49;
+  --cc-card-overlay: 13 24 19;
+  --cc-card-shadow: 4 12 9;
+}
+
+:root[data-theme='telegram'] {
+  color-scheme: light;
+  --cc-background: 243 247 252;
+  --cc-surface: 255 255 255;
+  --cc-surface-muted: 229 236 247;
+  --cc-surface-alt: 217 229 245;
+  --cc-muted: 110 124 145;
+  --cc-text-primary: 20 35 57;
+  --cc-text-secondary: 70 90 118;
+  --cc-white-rgb: 20 35 57;
+  --cc-border: 188 200 219;
+  --cc-border-rgb: 188 200 219;
+  --cc-overlay-rgb: 64 82 114;
+  --cc-accent: 42 157 244;
+  --cc-accent-soft: 123 191 255;
+  --cc-accent-muted: 32 103 168;
+  --cc-card-border: 196 206 225;
+  --cc-card-overlay: 236 242 251;
+  --cc-card-shadow: 70 86 118;
+}
+
+:root[data-theme='linkedinLight'] {
+  color-scheme: light;
+  --cc-background: 245 247 250;
+  --cc-surface: 255 255 255;
+  --cc-surface-muted: 233 238 245;
+  --cc-surface-alt: 221 228 239;
+  --cc-muted: 120 132 153;
+  --cc-text-primary: 23 33 54;
+  --cc-text-secondary: 73 85 109;
+  --cc-white-rgb: 23 33 54;
+  --cc-border: 196 205 220;
+  --cc-border-rgb: 196 205 220;
+  --cc-overlay-rgb: 70 98 142;
+  --cc-accent: 10 102 194;
+  --cc-accent-soft: 66 137 210;
+  --cc-accent-muted: 9 76 150;
+  --cc-card-border: 205 214 228;
+  --cc-card-overlay: 241 245 252;
+  --cc-card-shadow: 62 85 125;
+}
+
+:root[data-theme='linkedinDark'] {
+  color-scheme: dark;
+  --cc-background: 12 18 26;
+  --cc-surface: 18 27 38;
+  --cc-surface-muted: 23 35 49;
+  --cc-surface-alt: 28 42 60;
+  --cc-muted: 145 161 185;
+  --cc-text-primary: 227 236 247;
+  --cc-text-secondary: 181 195 214;
+  --cc-white-rgb: 227 236 247;
+  --cc-border: 39 57 79;
+  --cc-border-rgb: 39 57 79;
+  --cc-overlay-rgb: 20 32 48;
+  --cc-accent: 63 143 220;
+  --cc-accent-soft: 120 183 255;
+  --cc-accent-muted: 42 95 150;
+  --cc-card-border: 45 66 92;
+  --cc-card-overlay: 16 24 35;
+  --cc-card-shadow: 6 12 20;
+}
+
+:root[data-theme='vvitu'] {
+  color-scheme: light;
+  --cc-background: 255 247 244;
+  --cc-surface: 255 255 255;
+  --cc-surface-muted: 255 235 230;
+  --cc-surface-alt: 255 223 214;
+  --cc-muted: 157 110 98;
+  --cc-text-primary: 61 38 31;
+  --cc-text-secondary: 110 74 65;
+  --cc-white-rgb: 61 38 31;
+  --cc-border: 248 205 195;
+  --cc-border-rgb: 248 205 195;
+  --cc-overlay-rgb: 173 114 102;
+  --cc-accent: 240 128 108;
+  --cc-accent-soft: 255 179 159;
+  --cc-accent-muted: 200 98 84;
+  --cc-card-border: 250 214 206;
+  --cc-card-overlay: 255 245 241;
+  --cc-card-shadow: 168 112 101;
 }
 
 :root[data-theme='light'] {
   color-scheme: light;
-  --cc-background: 244 247 252;
-  --cc-surface: 255 255 255;
-  --cc-muted: 100 116 139;
-  --cc-text-primary: 17 24 39;
-  --cc-text-secondary: 55 65 81;
-  --cc-white-rgb: 17 24 39;
-  --cc-border-rgb: 148 163 184;
-  --cc-overlay-rgb: 15 23 42;
-  --cc-card-border: 188 198 212;
-  --cc-card-overlay: 244 247 252;
-  --cc-card-shadow: 15 23 42;
+  --cc-background: 236 241 247;
+  --cc-surface: 248 250 255;
+  --cc-surface-muted: 228 235 246;
+  --cc-surface-alt: 220 230 245;
+  --cc-muted: 104 118 140;
+  --cc-text-primary: 24 32 51;
+  --cc-text-secondary: 67 79 106;
+  --cc-white-rgb: 24 32 51;
+  --cc-border: 174 185 205;
+  --cc-border-rgb: 174 185 205;
+  --cc-overlay-rgb: 60 74 102;
+  --cc-accent: 49 94 201;
+  --cc-accent-soft: 88 131 214;
+  --cc-accent-muted: 81 103 146;
+  --cc-card-border: 190 202 220;
+  --cc-card-overlay: 238 243 252;
+  --cc-card-shadow: 60 74 102;
 }
 
 body {
   @apply font-sans antialiased;
+  min-height: 100vh;
   background-color: rgb(var(--cc-background));
   color: rgb(var(--cc-text-primary));
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.neon-border {
+.night-panel {
   position: relative;
   isolation: isolate;
-  border: 1px solid transparent;
-  border-image: linear-gradient(135deg, rgba(var(--cc-neon-cyan) / 0.7), rgba(var(--cc-neon-magenta) / 0.65)) 1;
+  border: 1px solid rgba(var(--cc-border-rgb) / 0.65);
+  background: linear-gradient(160deg, rgba(var(--cc-surface) / 0.96), rgba(var(--cc-surface-alt) / 0.92));
   box-shadow:
-    0 20px 55px -24px rgba(var(--cc-card-shadow) / 0.7),
-    0 0 0 1px rgba(var(--cc-card-border) / 0.28),
-    0 12px 32px -18px rgba(var(--cc-neon-magenta) / 0.22),
-    0 0 24px -10px rgba(var(--cc-neon-cyan) / 0.48);
-  transition: box-shadow 0.22s ease, transform 0.16s ease, border-image 0.22s ease;
-  backdrop-filter: blur(18px);
+    0 18px 50px -28px rgba(var(--cc-card-shadow) / 0.8),
+    0 0 0 1px rgba(var(--cc-border-rgb) / 0.25);
+  transition: box-shadow 0.25s ease, transform 0.18s ease, border-color 0.25s ease;
 }
 
-.neon-border::before {
+.night-panel::before {
   content: "";
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  border: 1px solid rgba(var(--cc-card-border) / 0.25);
+  border: 1px solid rgba(var(--cc-border-rgb) / 0.25);
   pointer-events: none;
-  mix-blend-mode: screen;
+  mix-blend-mode: normal;
   z-index: -1;
 }
 
-.neon-border:hover {
+.night-panel:hover {
   box-shadow:
-    0 28px 72px -22px rgba(var(--cc-card-shadow) / 0.82),
-    0 0 0 1px rgba(var(--cc-neon-cyan) / 0.55),
-    0 18px 40px -18px rgba(var(--cc-neon-magenta) / 0.32),
-    0 0 30px -6px rgba(var(--cc-neon-cyan) / 0.58);
+    0 24px 65px -32px rgba(var(--cc-card-shadow) / 0.9),
+    0 0 0 1px rgba(var(--cc-accent) / 0.4);
   transform: translateY(-2px);
+  border-color: rgba(var(--cc-accent) / 0.65);
 }
 
 .glass-panel {
-  border: 1px solid rgba(var(--cc-card-border) / 0.22);
-  background: rgba(var(--cc-card-overlay) / 0.62);
-  box-shadow: 0 35px 80px -32px rgba(var(--cc-card-shadow) / 0.6);
-  backdrop-filter: blur(18px);
+  border: 1px solid rgba(var(--cc-border-rgb) / 0.35);
+  background: linear-gradient(145deg, rgba(var(--cc-surface-muted) / 0.9), rgba(var(--cc-surface-alt) / 0.85));
+  box-shadow: 0 25px 70px -30px rgba(var(--cc-card-shadow) / 0.75);
+  backdrop-filter: blur(10px);
 }
 
 .text-white {

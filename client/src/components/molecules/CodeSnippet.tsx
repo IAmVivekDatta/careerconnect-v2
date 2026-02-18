@@ -56,11 +56,16 @@ const aliasMap: Record<string, (typeof supportedLanguages)[number]> = {
 };
 
 const codeThemeImports = {
-  atomDark: () => import("react-syntax-highlighter/dist/esm/styles/prism/atom-dark"),
-  dracula: () => import("react-syntax-highlighter/dist/esm/styles/prism/dracula"),
-  duotoneSea: () => import("react-syntax-highlighter/dist/esm/styles/prism/duotone-sea"),
-  oneLight: () => import("react-syntax-highlighter/dist/esm/styles/prism/one-light")
+  light: () => import("react-syntax-highlighter/dist/esm/styles/prism/material-light"),
+  dark: () => import("react-syntax-highlighter/dist/esm/styles/prism/material-dark")
 } as const;
+
+type CodeStyleKey = keyof typeof codeThemeImports;
+const UI_THEME_TO_CODE_STYLE: Record<string, CodeStyleKey> = {
+  whatsapp: "light",
+  telegram: "light",
+  light: "light"
+};
 
 const loadPrismLight = async () => {
   if (!prismLightPromise) {
@@ -103,7 +108,7 @@ const mapLanguage = (value?: string) => {
 };
 
 const CodeSnippet = ({ code, language, className }: CodeSnippetProps) => {
-  const codeTheme = useThemeStore((state) => state.codeTheme);
+  const uiTheme = useThemeStore((state) => state.uiTheme);
   const [Highlighter, setHighlighter] = useState<any | null>(null);
   const [style, setStyle] = useState<Record<string, unknown> | null>(null);
 
@@ -124,6 +129,7 @@ const CodeSnippet = ({ code, language, className }: CodeSnippetProps) => {
   useEffect(() => {
     let isMounted = true;
 
+    const codeTheme = UI_THEME_TO_CODE_STYLE[uiTheme] ?? "light";
     const loadStyle = codeThemeImports[codeTheme];
     loadStyle().then((module) => {
       if (isMounted) {
@@ -134,7 +140,7 @@ const CodeSnippet = ({ code, language, className }: CodeSnippetProps) => {
     return () => {
       isMounted = false;
     };
-  }, [codeTheme]);
+  }, [uiTheme]);
 
   const resolvedLanguage = useMemo(() => mapLanguage(language), [language]);
 

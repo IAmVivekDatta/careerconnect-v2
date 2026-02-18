@@ -1,11 +1,11 @@
-const EditProfilePage = () => {
+﻿const EditProfilePage = () => {
   return (
     <section className="space-y-6">
       <header>
         <h2 className="text-xl font-semibold">Edit Profile</h2>
         <p className="text-sm text-muted">Update your resume, links, and skills.</p>
       </header>
-      <form className="neon-border space-y-4 rounded-lg bg-surface/80 p-6">
+      <form className="night-panel space-y-4 rounded-lg bg-surface/80 p-6">
         <div className="space-y-2">
           <label htmlFor="profile-bio" className="text-sm font-medium">Bio</label>
           <textarea
@@ -23,7 +23,7 @@ const EditProfilePage = () => {
             placeholder="React, Node.js"
           />
         </div>
-        <button type="submit" className="neon-border rounded px-4 py-2 text-sm font-semibold text-white">
+        <button type="submit" className="night-panel rounded px-4 py-2 text-sm font-semibold text-white">
           Save Changes
         </button>
       </form>
@@ -32,3 +32,4 @@ const EditProfilePage = () => {
 };
 
 export default EditProfilePage;
+

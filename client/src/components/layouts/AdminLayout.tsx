@@ -1,10 +1,10 @@
-import { Outlet } from "react-router-dom";
+﻿import { Outlet } from "react-router-dom";
 import AdminSidebar from "../organisms/AdminSidebar";
 import AdminTopNav from "../organisms/AdminTopNav";
 
 const AdminLayout = () => {
   return (
-    <div className="min-h-screen bg-bgDark text-white">
+    <div className="min-h-screen bg-night text-white">
       <AdminTopNav />
       <div className="flex">
         <AdminSidebar />
@@ -17,3 +17,4 @@ const AdminLayout = () => {
 };
 
 export default AdminLayout;
+

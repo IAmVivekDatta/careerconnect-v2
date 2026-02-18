@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+﻿import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient, type InfiniteData } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
 import {
@@ -32,7 +32,7 @@ const quickReplies = [
   'Thanks for the update! I will review it shortly.',
   'Sharing the code block below. Let me know if you have questions.',
   "Let's hop on a quick call to align our next steps.",
-  'Awesome progress—keep it up!'
+  'Awesome progressâ€”keep it up!'
 ];
 
 const codeBlockRegex = /```(\w+)?\s*([\s\S]*?)```/m;
@@ -501,7 +501,7 @@ const MessagesPage = () => {
   if (!user) {
     return (
       <section className="flex h-full items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-neonCyan" aria-label="Loading user" />
+        <Loader2 className="h-6 w-6 animate-spin text-accent" aria-label="Loading user" />
       </section>
     );
   }
@@ -516,17 +516,17 @@ const MessagesPage = () => {
               Share updates, snippets, and files with your network in real time.
             </p>
             <div className="grid gap-3 sm:grid-cols-3">
-              <article className="neon-border rounded-lg bg-surface/80 p-3 text-sm text-white/70">
+              <article className="night-panel rounded-lg bg-surface/80 p-3 text-sm text-white/70">
                 <p className="text-xs uppercase tracking-[0.2em] text-white/50">Conversations</p>
                 <p className="mt-1 text-2xl font-semibold text-white">{conversations.length}</p>
               </article>
-              <article className="neon-border rounded-lg bg-surface/80 p-3 text-sm text-white/70">
+              <article className="night-panel rounded-lg bg-surface/80 p-3 text-sm text-white/70">
                 <p className="text-xs uppercase tracking-[0.2em] text-white/50">Unread</p>
-                <p className="mt-1 text-2xl font-semibold text-neonCyan">{unreadTotal}</p>
+                <p className="mt-1 text-2xl font-semibold text-accent">{unreadTotal}</p>
               </article>
-              <article className="neon-border rounded-lg bg-surface/80 p-3 text-sm text-white/70">
+              <article className="night-panel rounded-lg bg-surface/80 p-3 text-sm text-white/70">
                 <p className="text-xs uppercase tracking-[0.2em] text-white/50">Attachments</p>
-                <p className="mt-1 text-2xl font-semibold text-neonMagenta">{attachmentConversations}</p>
+                <p className="mt-1 text-2xl font-semibold text-accentSoft">{attachmentConversations}</p>
               </article>
             </div>
           </>
@@ -535,7 +535,7 @@ const MessagesPage = () => {
 
       <div className={`grid gap-4 ${!isMobile ? 'lg:grid-cols-[320px_minmax(0,1fr)]' : ''}`}>
         {(!isMobile || showConversationList) && (
-          <aside className={`neon-border flex ${panelHeightClass} flex-col rounded-xl bg-surface/80 p-4 ${isMobile ? 'relative' : ''}`}>
+          <aside className={`night-panel flex ${panelHeightClass} flex-col rounded-xl bg-surface/80 p-4 ${isMobile ? 'relative' : ''}`}>
           <div className="mb-4 space-y-3">
             <div className="relative">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" />
@@ -543,7 +543,7 @@ const MessagesPage = () => {
                 value={searchValue}
                 onChange={(event) => setSearchValue(event.target.value)}
                 placeholder="Search teammates"
-                className="w-full rounded-lg border border-white/10 bg-white/5 py-2 pl-9 pr-3 text-sm text-white placeholder:text-white/40 focus:border-neonCyan focus:outline-none"
+                className="w-full rounded-lg border border-white/10 bg-white/5 py-2 pl-9 pr-3 text-sm text-white placeholder:text-white/40 focus:border-accent focus:outline-none"
               />
             </div>
             <div className="flex gap-2 text-xs">
@@ -558,8 +558,8 @@ const MessagesPage = () => {
                   onClick={() => setFilter(option.key)}
                   className={`rounded-full px-3 py-1 font-medium transition ${
                     filter === option.key
-                      ? 'bg-neonCyan text-black'
-                      : 'border border-white/10 bg-white/5 text-white/70 hover:border-neonCyan/40'
+                      ? 'bg-accent text-black'
+                      : 'border border-white/10 bg-white/5 text-white/70 hover:border-accent/40'
                   }`}
                 >
                   {option.label}
@@ -571,7 +571,7 @@ const MessagesPage = () => {
           <div className="flex-1 overflow-y-auto pr-1">
             {conversationsLoading ? (
               <div className="flex h-full items-center justify-center text-sm text-white/60">
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Loading conversations…
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Loading conversationsâ€¦
               </div>
             ) : sortedConversations.length === 0 ? (
               <div className="flex h-full flex-col items-center justify-center gap-2 text-center text-sm text-white/60">
@@ -584,7 +584,7 @@ const MessagesPage = () => {
                   const unread = conversation.unreadCount?.[user._id] ?? 0;
                   const isActive = selectedConversation === conversation._id;
                   const title = getConversationTitle(conversation, user._id);
-                  const preview = conversation.lastMessage?.content ?? 'Say hello 👋';
+                  const preview = conversation.lastMessage?.content ?? 'Say hello ðŸ‘‹';
 
                   return (
                     <li key={conversation._id}>
@@ -593,8 +593,8 @@ const MessagesPage = () => {
                         onClick={() => handleSelectConversation(conversation._id)}
                         className={`w-full rounded-lg border p-3 text-left transition ${
                           isActive
-                            ? 'border-neonCyan bg-neonCyan/20'
-                            : 'border-white/10 bg-white/5 hover:border-neonCyan/30 hover:bg-white/10'
+                            ? 'border-accent bg-accent/20'
+                            : 'border-white/10 bg-white/5 hover:border-accent/30 hover:bg-white/10'
                         }`}
                       >
                         <p className="flex items-center justify-between text-sm font-semibold text-white">
@@ -605,7 +605,7 @@ const MessagesPage = () => {
                         </p>
                         <p className="mt-1 truncate text-xs text-white/60">{preview}</p>
                         {unread > 0 && (
-                          <span className="mt-2 inline-flex items-center rounded-full bg-neonCyan/90 px-2 py-0.5 text-[10px] font-semibold text-black">
+                          <span className="mt-2 inline-flex items-center rounded-full bg-accent/90 px-2 py-0.5 text-[10px] font-semibold text-black">
                             {unread} unread
                           </span>
                         )}
@@ -620,7 +620,7 @@ const MessagesPage = () => {
         )}
 
         {(!isMobile || !showConversationList) && (
-          <main className={`neon-border flex ${panelHeightClass} flex-col rounded-xl bg-surface/80`}>
+          <main className={`night-panel flex ${panelHeightClass} flex-col rounded-xl bg-surface/80`}>
           {selectedConversation ? (
             <>
               <header className="flex items-center justify-between border-b border-white/5 px-5 py-3">
@@ -629,7 +629,7 @@ const MessagesPage = () => {
                     <button
                       type="button"
                       onClick={handleBackToConversations}
-                      className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/80 transition hover:border-neonCyan/60 hover:text-white"
+                      className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/80 transition hover:border-accent/60 hover:text-white"
                     >
                       <ArrowLeft className="h-3 w-3" />
                       Inbox
@@ -645,7 +645,7 @@ const MessagesPage = () => {
                   </p>
                 </div>
                 <div className="flex items-center gap-2 text-xs text-white/60">
-                  {isFetchingNextPage && <Loader2 className="h-4 w-4 animate-spin text-neonCyan" />}
+                  {isFetchingNextPage && <Loader2 className="h-4 w-4 animate-spin text-accent" />}
                   <span>{messages.length} messages</span>
                 </div>
               </header>
@@ -657,7 +657,7 @@ const MessagesPage = () => {
               >
                 {messagesLoading ? (
                   <div className="flex h-full items-center justify-center text-sm text-white/60">
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Loading thread…
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Loading threadâ€¦
                   </div>
                 ) : messages.length === 0 ? (
                   <div className="flex h-full flex-col items-center justify-center gap-3 text-center text-white/60">
@@ -675,7 +675,7 @@ const MessagesPage = () => {
                         <div
                           className={`max-w-xl space-y-3 rounded-2xl border px-4 py-3 text-sm shadow-lg transition ${
                             isOwn
-                              ? 'border-neonCyan/40 bg-neonCyan/20 text-white'
+                              ? 'border-accent/40 bg-accent/20 text-white'
                               : 'border-white/10 bg-white/5 text-white/80'
                           }`}
                         >
@@ -708,7 +708,7 @@ const MessagesPage = () => {
                                     href={message.attachmentUrl!}
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="flex items-center gap-1 text-xs text-neonCyan hover:text-neonCyan/80"
+                                    className="flex items-center gap-1 text-xs text-accent hover:text-accent/80"
                                   >
                                     Open attachment
                                     <ExternalLink className="h-3 w-3" />
@@ -719,7 +719,7 @@ const MessagesPage = () => {
                           )}
 
                           {!message.isRead && !isOwn && (
-                            <p className="text-xs text-neonCyan/80">Delivered · awaiting read</p>
+                            <p className="text-xs text-accent/80">Delivered Â· awaiting read</p>
                           )}
                         </div>
                       </div>
@@ -735,7 +735,7 @@ const MessagesPage = () => {
                       key={reply}
                       type="button"
                       onClick={() => setComposerValue((prev) => (prev ? `${prev}\n${reply}` : reply))}
-                      className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70 transition hover:border-neonCyan/40 hover:text-white"
+                      className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70 transition hover:border-accent/40 hover:text-white"
                     >
                       {reply}
                     </button>
@@ -754,7 +754,7 @@ const MessagesPage = () => {
                     <button
                       type="button"
                       onClick={handleClearAttachment}
-                      className="rounded-full border border-white/10 p-1 text-white/50 transition hover:border-neonMagenta/60 hover:text-neonMagenta"
+                      className="rounded-full border border-white/10 p-1 text-white/50 transition hover:border-accentSoft/60 hover:text-accentSoft"
                     >
                       <X className="h-3 w-3" />
                     </button>
@@ -773,7 +773,7 @@ const MessagesPage = () => {
                       <button
                         type="button"
                         onClick={handleFilePick}
-                        className="flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs transition hover:border-neonCyan/40 hover:text-white"
+                        className="flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs transition hover:border-accent/40 hover:text-white"
                       >
                         <Paperclip className="h-3 w-3" /> Attach file
                       </button>
@@ -782,15 +782,15 @@ const MessagesPage = () => {
                         onClick={() => setComposerMode((prev) => (prev === 'text' ? 'code' : 'text'))}
                         className={`flex items-center gap-1 rounded-full border px-3 py-1 transition ${
                           composerMode === 'code'
-                            ? 'border-neonMagenta/60 bg-neonMagenta/20 text-white'
-                            : 'border-white/10 bg-white/5 text-white/70 hover:border-neonMagenta/40'
+                            ? 'border-accentSoft/60 bg-accentSoft/20 text-white'
+                            : 'border-white/10 bg-white/5 text-white/70 hover:border-accentSoft/40'
                         }`}
                       >
                         <Code2 className="h-3 w-3" /> {composerMode === 'code' ? 'Code mode' : 'Plain text'}
                       </button>
                     </div>
                     <span className="text-center text-[11px] text-white/50 sm:text-right">
-                      Max 5MB · markdown code fences supported
+                      Max 5MB Â· markdown code fences supported
                     </span>
                   </div>
 
@@ -801,9 +801,9 @@ const MessagesPage = () => {
                     placeholder={
                       composerMode === 'code'
                         ? 'Share code using ```language\n// snippet```'
-                        : 'Write a message… markdown code fences supported'
+                        : 'Write a messageâ€¦ markdown code fences supported'
                     }
-                    className={`h-28 w-full resize-none rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-white placeholder:text-white/40 focus:border-neonCyan focus:outline-none ${
+                    className={`h-28 w-full resize-none rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-white placeholder:text-white/40 focus:border-accent focus:outline-none ${
                       composerMode === 'code' ? 'font-mono' : ''
                     }`}
                   />
@@ -816,7 +816,7 @@ const MessagesPage = () => {
                     <button
                       type="submit"
                       disabled={sendMessageMutation.isPending || uploadMutation.isPending}
-                      className="inline-flex items-center gap-2 rounded-full bg-neonCyan px-5 py-2 text-sm font-semibold text-black transition hover:bg-neonCyan/80 disabled:cursor-not-allowed disabled:opacity-60"
+                      className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2 text-sm font-semibold text-black transition hover:bg-accent/80 disabled:cursor-not-allowed disabled:opacity-60"
                     >
                       {(sendMessageMutation.isPending || uploadMutation.isPending) && (
                         <Loader2 className="h-4 w-4 animate-spin" />
@@ -851,3 +851,4 @@ const MessagesPage = () => {
 };
 
 export default MessagesPage;
+

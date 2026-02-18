@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+﻿import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import api from "../../lib/axios";
 import { AdminStats } from "../../types";
@@ -50,11 +50,11 @@ const AdminReportsPage = () => {
       <section className="space-y-6">
         <header>
           <h2 className="text-xl font-semibold text-white">Platform Reports</h2>
-          <p className="text-sm text-muted">Loading insights…</p>
+          <p className="text-sm text-muted">Loading insightsâ€¦</p>
         </header>
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {[...Array(6)].map((_, index) => (
-            <div key={index} className="neon-border h-32 animate-pulse rounded-lg bg-surface/60" />
+            <div key={index} className="night-panel h-32 animate-pulse rounded-lg bg-surface/60" />
           ))}
         </div>
       </section>
@@ -83,23 +83,23 @@ const AdminReportsPage = () => {
   return (
     <section className="space-y-6 text-white">
       <header className="space-y-2">
-        <h2 className="text-2xl font-bold text-neonMagenta">Platform Reports</h2>
+        <h2 className="text-2xl font-bold text-accentSoft">Platform Reports</h2>
         <p className="text-sm text-muted">A deeper look into user engagement, content activity, and opportunity pipeline.</p>
       </header>
 
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {reportCards.map((card) => (
-          <article key={card.title} className="neon-border rounded-lg bg-surface/80 p-5">
+          <article key={card.title} className="night-panel rounded-lg bg-surface/80 p-5">
             <h3 className="text-sm font-semibold text-white/60">{card.title}</h3>
-            <p className="mt-4 text-3xl font-bold text-neonCyan">{card.value}</p>
+            <p className="mt-4 text-3xl font-bold text-accent">{card.value}</p>
             <p className="mt-2 text-xs text-white/60">{card.caption}</p>
           </article>
         ))}
       </section>
 
       <section className="space-y-3">
-        <h3 className="text-lg font-semibold text-neonCyan">User Composition</h3>
-        <div className="neon-border rounded-lg bg-surface/80 p-5">
+        <h3 className="text-lg font-semibold text-accent">User Composition</h3>
+        <div className="night-panel rounded-lg bg-surface/80 p-5">
           <div className="space-y-4 text-sm text-white/70">
             <div>
               <div className="flex justify-between">
@@ -108,7 +108,7 @@ const AdminReportsPage = () => {
               </div>
               <div className="mt-2 h-2 rounded bg-white/10">
                 <div
-                  className="h-full rounded bg-neonCyan/70"
+                  className="h-full rounded bg-accent/70"
                   style={{ width: `${studentShare}%` }}
                 />
               </div>
@@ -120,7 +120,7 @@ const AdminReportsPage = () => {
               </div>
               <div className="mt-2 h-2 rounded bg-white/10">
                 <div
-                  className="h-full rounded bg-neonMagenta/70"
+                  className="h-full rounded bg-accentSoft/70"
                   style={{ width: `${alumniShare}%` }}
                 />
               </div>
@@ -130,8 +130,8 @@ const AdminReportsPage = () => {
       </section>
 
       <section className="space-y-3">
-        <h3 className="text-lg font-semibold text-neonCyan">Opportunity Pipeline</h3>
-        <div className="neon-border rounded-lg bg-surface/80 p-5">
+        <h3 className="text-lg font-semibold text-accent">Opportunity Pipeline</h3>
+        <div className="night-panel rounded-lg bg-surface/80 p-5">
           <div className="grid gap-3 md:grid-cols-3">
             <div>
               <h4 className="text-sm font-semibold text-white/60">Total Submitted</h4>
@@ -153,11 +153,11 @@ const AdminReportsPage = () => {
       </section>
 
       <section className="space-y-3">
-        <h3 className="text-lg font-semibold text-neonCyan">Operational Insights</h3>
-        <div className="neon-border rounded-lg bg-surface/80 p-5 text-sm text-white/70">
+        <h3 className="text-lg font-semibold text-accent">Operational Insights</h3>
+        <div className="night-panel rounded-lg bg-surface/80 p-5 text-sm text-white/70">
           <ul className="space-y-2 list-disc pl-5">
             <li>
-              Focus on re-engaging inactive users — {stats.users.total - stats.users.active30d} members have not interacted in the last 30 days.
+              Focus on re-engaging inactive users â€” {stats.users.total - stats.users.active30d} members have not interacted in the last 30 days.
             </li>
             <li>
               With {stats.posts.today.toLocaleString()} posts today, content moderation should prioritise high-traffic windows.
@@ -173,3 +173,4 @@ const AdminReportsPage = () => {
 };
 
 export default AdminReportsPage;
+

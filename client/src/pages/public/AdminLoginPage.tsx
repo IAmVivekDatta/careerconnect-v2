@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+﻿import { useForm } from "react-hook-form";
 import NeonButton from "../../components/atoms/NeonButton";
 import api from "../../lib/axios";
 import useAuthStore from "../../store/useAuthStore";
@@ -24,10 +24,10 @@ const AdminLoginPage = () => {
   });
 
   return (
-    <main className="grid min-h-screen place-items-center bg-bgDark px-6 py-12 text-white">
-      <form onSubmit={onSubmit} className="w-full max-w-md space-y-6 rounded-lg bg-surface/80 p-8 shadow-neon">
+    <main className="grid min-h-screen place-items-center bg-night px-6 py-12 text-white">
+      <form onSubmit={onSubmit} className="w-full max-w-md space-y-6 rounded-lg bg-surface/80 p-8 shadow-depth">
         <header className="space-y-2 text-center">
-          <h1 className="text-2xl font-semibold text-neonMagenta">Admin Login</h1>
+          <h1 className="text-2xl font-semibold text-accentSoft">Admin Login</h1>
           <p className="text-sm text-muted">Secure access to moderation and analytics.</p>
         </header>
         <div className="space-y-2">
@@ -48,7 +48,7 @@ const AdminLoginPage = () => {
             required
           />
         </div>
-        <NeonButton type="submit" className="w-full justify-center bg-neonMagenta/20">
+        <NeonButton type="submit" className="w-full justify-center bg-accentSoft/20">
           Enter Console
         </NeonButton>
       </form>
@@ -57,3 +57,5 @@ const AdminLoginPage = () => {
 };
 
 export default AdminLoginPage;
+
+

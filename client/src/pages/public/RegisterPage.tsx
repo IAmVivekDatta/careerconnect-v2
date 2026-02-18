@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+﻿import { useForm } from "react-hook-form";
 import NeonButton from "../../components/atoms/NeonButton";
 import api from "../../lib/axios";
 import { useNavigate } from "react-router-dom";
@@ -33,8 +33,8 @@ const RegisterPage = () => {
   });
 
   return (
-    <main className="grid min-h-screen place-items-center bg-bgDark px-6 py-12 text-white">
-      <form onSubmit={onSubmit} className="w-full max-w-xl space-y-6 rounded-lg bg-surface/80 p-8 shadow-neon">
+    <main className="grid min-h-screen place-items-center bg-night px-6 py-12 text-white">
+      <form onSubmit={onSubmit} className="w-full max-w-xl space-y-6 rounded-lg bg-surface/80 p-8 shadow-depth">
         <header className="space-y-2 text-center">
           <h1 className="text-2xl font-semibold">Create your account</h1>
           <p className="text-sm text-muted">Choose your role to personalize the experience.</p>
@@ -98,3 +98,5 @@ const RegisterPage = () => {
 };
 
 export default RegisterPage;
+
+

@@ -1,4 +1,4 @@
-import { Link, isRouteErrorResponse, useRouteError } from "react-router-dom";
+﻿import { Link, isRouteErrorResponse, useRouteError } from "react-router-dom";
 import { AlertTriangle, Home, RefreshCcw } from "lucide-react";
 
 const RouteError = () => {
@@ -26,10 +26,10 @@ const RouteError = () => {
   const stackTrace = import.meta.env.DEV && error instanceof Error ? error.stack : undefined;
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-10 bg-gradient-to-b from-surface/80 to-bgDark px-6 py-16 text-white">
+    <main className="flex min-h-screen flex-col items-center justify-center gap-10 bg-gradient-to-b from-surface/80 to-night px-6 py-16 text-white">
       <section className="flex max-w-xl flex-col items-center gap-6 text-center">
-        <div className="rounded-full border border-neonMagenta/30 bg-neonMagenta/10 p-4">
-          <AlertTriangle className="h-12 w-12 text-neonMagenta" />
+        <div className="rounded-full border border-accentSoft/30 bg-accentSoft/10 p-4">
+          <AlertTriangle className="h-12 w-12 text-accentSoft" />
         </div>
         <div className="space-y-2">
           <p className="text-xs uppercase tracking-[0.35em] text-white/60">Error {status}</p>
@@ -40,14 +40,14 @@ const RouteError = () => {
           <button
             type="button"
             onClick={() => window.location.reload()}
-            className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white transition hover:border-neonCyan hover:bg-neonCyan/10"
+            className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white transition hover:border-accent hover:bg-accent/10"
           >
             <RefreshCcw className="h-4 w-4" />
             Try again
           </button>
           <Link
             to="/feed"
-            className="flex items-center gap-2 rounded-full bg-neonCyan px-4 py-2 text-sm font-semibold text-black transition hover:bg-neonCyan/80"
+            className="flex items-center gap-2 rounded-full bg-accent px-4 py-2 text-sm font-semibold text-black transition hover:bg-accent/80"
           >
             <Home className="h-4 w-4" />
             Go to dashboard
@@ -68,3 +68,5 @@ const RouteError = () => {
 };
 
 export default RouteError;
+
+

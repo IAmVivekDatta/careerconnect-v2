@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+﻿import { useForm } from "react-hook-form";
 import NeonButton from "../atoms/NeonButton";
 import useAuthStore from "../../store/useAuthStore";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -36,7 +36,7 @@ const PostComposer = () => {
   });
 
   return (
-    <form onSubmit={onSubmit} className="neon-border space-y-4 rounded-lg bg-surface/80 p-4">
+    <form onSubmit={onSubmit} className="night-panel space-y-4 rounded-lg bg-surface/80 p-4">
       <textarea
         {...register("content", { required: 'Content is required' })}
         rows={3}
@@ -54,3 +54,4 @@ const PostComposer = () => {
 };
 
 export default PostComposer;
+
