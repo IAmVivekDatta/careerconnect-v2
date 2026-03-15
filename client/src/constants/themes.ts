@@ -52,14 +52,13 @@ export const UI_THEME_OPTIONS: UIThemeOption[] = [
   {
     id: 'vvit',
     label: 'VVIT',
-    description:
-      'Signature academic palette inspired by VVIT branding with modern SaaS polish.',
-    mode: 'light',
+    description: 'VVIT orange-on-dark identity with high-contrast UI surfaces.',
+    mode: 'dark',
     preview: {
-      background: 'linear-gradient(135deg, #f3f6fb, #e9f0f8)',
+      background: 'linear-gradient(135deg, #0b0b0b, #111111)',
       surface:
-        'linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(236, 242, 248, 0.84))',
-      accent: 'linear-gradient(135deg, #0c5cad, #c4912f)'
+        'linear-gradient(135deg, rgba(26, 26, 26, 0.98), rgba(20, 20, 20, 0.9))',
+      accent: 'linear-gradient(135deg, #ff7a59, #ff6b4a)'
     }
   }
 ];

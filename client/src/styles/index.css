@@ -155,38 +155,38 @@
 }
 
 :root[data-theme='vvit'] {
-  color-scheme: light;
-  --cc-bg: 243 246 251;
-  --cc-surface: 255 255 255;
-  --cc-primary: 9 76 145;
-  --cc-accent: 196 146 47;
-  --cc-border: 189 204 221;
-  --cc-text: 19 35 55;
-  --cc-muted: 86 105 127;
-  --cc-shadow-base: 18 36 62;
-  --cc-chat-sent: 12 92 173;
-  --cc-chat-received: 234 239 247;
-  --cc-sidebar-bg: 235 241 248;
-  --cc-sidebar-active: 12 92 173;
-  --cc-card: 255 255 255;
+  color-scheme: dark;
+  --cc-bg: 11 11 11;
+  --cc-surface: 17 17 17;
+  --cc-primary: 255 122 89;
+  --cc-accent: 255 140 107;
+  --cc-border: 42 42 42;
+  --cc-text: 255 255 255;
+  --cc-muted: 176 176 176;
+  --cc-shadow-base: 11 11 11;
+  --cc-chat-sent: 255 122 89;
+  --cc-chat-received: 26 26 26;
+  --cc-sidebar-bg: 20 20 20;
+  --cc-sidebar-active: 255 107 74;
+  --cc-card: 26 26 26;
 
-  --cc-hsl-background: 214 39% 97%;
-  --cc-hsl-foreground: 214 49% 15%;
-  --cc-hsl-card: 0 0% 100%;
-  --cc-hsl-card-foreground: 214 49% 15%;
-  --cc-hsl-popover: 0 0% 100%;
-  --cc-hsl-popover-foreground: 214 49% 15%;
-  --cc-hsl-primary: 212 88% 30%;
-  --cc-hsl-primary-foreground: 0 0% 100%;
-  --cc-hsl-secondary: 212 39% 95%;
-  --cc-hsl-secondary-foreground: 214 43% 27%;
-  --cc-hsl-muted: 212 31% 92%;
-  --cc-hsl-muted-foreground: 213 19% 42%;
-  --cc-hsl-accent: 42 61% 48%;
-  --cc-hsl-accent-foreground: 0 0% 100%;
-  --cc-hsl-border: 211 33% 80%;
-  --cc-hsl-input: 211 33% 80%;
-  --cc-hsl-ring: 212 88% 30%;
+  --cc-hsl-background: 0 0% 4%;
+  --cc-hsl-foreground: 0 0% 100%;
+  --cc-hsl-card: 0 0% 10%;
+  --cc-hsl-card-foreground: 0 0% 100%;
+  --cc-hsl-popover: 0 0% 8%;
+  --cc-hsl-popover-foreground: 0 0% 100%;
+  --cc-hsl-primary: 12 100% 67%;
+  --cc-hsl-primary-foreground: 0 0% 7%;
+  --cc-hsl-secondary: 0 0% 7%;
+  --cc-hsl-secondary-foreground: 0 0% 69%;
+  --cc-hsl-muted: 0 0% 13%;
+  --cc-hsl-muted-foreground: 0 0% 54%;
+  --cc-hsl-accent: 12 100% 65%;
+  --cc-hsl-accent-foreground: 0 0% 7%;
+  --cc-hsl-border: 0 0% 16%;
+  --cc-hsl-input: 0 0% 16%;
+  --cc-hsl-ring: 14 100% 71%;
 }
 
 :root[data-theme='whatsapp'][data-theme-mode='dark'] {
@@ -296,37 +296,37 @@
 
 :root[data-theme='vvit'][data-theme-mode='dark'] {
   color-scheme: dark;
-  --cc-bg: 16 24 37;
-  --cc-surface: 24 35 52;
-  --cc-primary: 86 167 242;
-  --cc-accent: 214 170 76;
-  --cc-border: 69 88 111;
-  --cc-text: 235 242 250;
-  --cc-muted: 171 188 206;
-  --cc-shadow-base: 8 14 24;
-  --cc-chat-sent: 23 89 151;
-  --cc-chat-received: 34 48 68;
-  --cc-sidebar-bg: 20 31 47;
-  --cc-sidebar-active: 86 167 242;
-  --cc-card: 28 41 60;
+  --cc-bg: 11 11 11;
+  --cc-surface: 17 17 17;
+  --cc-primary: 255 122 89;
+  --cc-accent: 255 140 107;
+  --cc-border: 42 42 42;
+  --cc-text: 255 255 255;
+  --cc-muted: 176 176 176;
+  --cc-shadow-base: 11 11 11;
+  --cc-chat-sent: 255 122 89;
+  --cc-chat-received: 26 26 26;
+  --cc-sidebar-bg: 20 20 20;
+  --cc-sidebar-active: 255 107 74;
+  --cc-card: 26 26 26;
 
-  --cc-hsl-background: 214 40% 10%;
-  --cc-hsl-foreground: 210 52% 95%;
-  --cc-hsl-card: 214 36% 17%;
-  --cc-hsl-card-foreground: 210 52% 95%;
-  --cc-hsl-popover: 214 36% 15%;
-  --cc-hsl-popover-foreground: 210 52% 95%;
-  --cc-hsl-primary: 210 84% 64%;
-  --cc-hsl-primary-foreground: 214 45% 12%;
-  --cc-hsl-secondary: 214 30% 22%;
-  --cc-hsl-secondary-foreground: 211 42% 84%;
-  --cc-hsl-muted: 214 25% 25%;
-  --cc-hsl-muted-foreground: 212 24% 73%;
-  --cc-hsl-accent: 42 56% 57%;
-  --cc-hsl-accent-foreground: 214 45% 12%;
-  --cc-hsl-border: 213 23% 35%;
-  --cc-hsl-input: 213 23% 35%;
-  --cc-hsl-ring: 210 84% 64%;
+  --cc-hsl-background: 0 0% 4%;
+  --cc-hsl-foreground: 0 0% 100%;
+  --cc-hsl-card: 0 0% 10%;
+  --cc-hsl-card-foreground: 0 0% 100%;
+  --cc-hsl-popover: 0 0% 8%;
+  --cc-hsl-popover-foreground: 0 0% 100%;
+  --cc-hsl-primary: 12 100% 67%;
+  --cc-hsl-primary-foreground: 0 0% 7%;
+  --cc-hsl-secondary: 0 0% 7%;
+  --cc-hsl-secondary-foreground: 0 0% 69%;
+  --cc-hsl-muted: 0 0% 13%;
+  --cc-hsl-muted-foreground: 0 0% 54%;
+  --cc-hsl-accent: 12 100% 65%;
+  --cc-hsl-accent-foreground: 0 0% 7%;
+  --cc-hsl-border: 0 0% 16%;
+  --cc-hsl-input: 0 0% 16%;
+  --cc-hsl-ring: 14 100% 71%;
 }
 
 body {

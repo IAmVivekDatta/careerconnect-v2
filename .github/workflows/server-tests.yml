@@ -2,20 +2,14 @@ name: Server integration tests
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   integration-tests:
     name: Run server integration tests
     runs-on: ubuntu-latest
-    services:
-      mongo:
-        image: mongo:6.0
-        ports: ['27017:27017']
-        options: >-
-          --health-cmd="mongo --eval 'db.adminCommand({ ping: 1 })'" --health-interval=10s --health-timeout=5s --health-retries=5
     env:
       MONGO_URI: mongodb://localhost:27017/careerconnect_ci
       CI: true
@@ -27,14 +21,59 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: "18"
+
+      - name: Cleanup old Docker resources
+        run: |
+          docker ps -a || true
+          docker rm -f mongo-ci || true
+          docker volume prune -f || true
+
+      - name: Start MongoDB (pinned image + health check)
+        run: |
+          docker run -d \
+            --name mongo-ci \
+            -p 27017:27017 \
+            --health-cmd="mongo --eval 'db.runCommand({ ping: 1 })'" \
+            --health-interval=10s \
+            --health-timeout=5s \
+            --health-retries=12 \
+            --health-start-period=30s \
+            mongo:6.0.27 \
+            --wiredTigerCacheSizeGB 1
+
+      - name: Wait for MongoDB health
+        run: |
+          for i in {1..60}; do
+            status=$(docker inspect --format='{{.State.Health.Status}}' mongo-ci)
+            if [ "$status" = "healthy" ]; then
+              echo "MongoDB is healthy"
+              break
+            fi
+            if [ "$status" = "unhealthy" ]; then
+              echo "MongoDB became unhealthy"
+              docker logs mongo-ci
+              exit 1
+            fi
+            sleep 2
+          done
+          final_status=$(docker inspect --format='{{.State.Health.Status}}' mongo-ci)
+          if [ "$final_status" != "healthy" ]; then
+            echo "MongoDB did not become healthy in time"
+            docker logs mongo-ci
+            exit 1
+          fi
 
       - name: Install server dependencies
         run: npm ci --prefix server
 
-      - name: Wait for MongoDB
-        run: |
-          for i in {1..30}; do nc -z localhost 27017 && echo "MongoDB is available" && break || sleep 1; done
-
       - name: Run server integration tests
         run: npm --prefix server run test:int
+
+      - name: Dump Mongo logs on failure
+        if: failure()
+        run: docker logs mongo-ci || true
+
+      - name: Stop MongoDB container
+        if: always()
+        run: docker rm -f mongo-ci || true
