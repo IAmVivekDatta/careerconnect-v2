@@ -1,10 +1,10 @@
-import type { CodeTheme, UITheme } from "../store/useThemeStore";
+import type { UITheme } from '../store/useThemeStore';
 
 export interface UIThemeOption {
   id: UITheme;
   label: string;
   description: string;
-  mode: "dark" | "light";
+  mode: 'dark' | 'light';
   preview: {
     background: string;
     surface: string;
@@ -12,89 +12,57 @@ export interface UIThemeOption {
   };
 }
 
-export interface CodeThemeOption {
-  id: CodeTheme;
-  label: string;
-  description: string;
-  previewCode: string;
-}
-
 export const UI_THEME_OPTIONS: UIThemeOption[] = [
   {
-    id: "cyber",
-    label: "Cyber Dark",
-    description: "Neon gradients on charcoal — the original CareerConnect vibe.",
-    mode: "dark",
+    id: 'whatsapp',
+    label: 'WhatsApp',
+    description: 'Friendly green messaging surfaces with soft contrast.',
+    mode: 'light',
     preview: {
-      background: "linear-gradient(135deg, #050505, #0f172a)",
-      surface: "linear-gradient(135deg, rgba(15, 23, 42, 0.85), rgba(17, 24, 39, 0.6))",
-      accent: "linear-gradient(135deg, #00f5ff, #ff00d6)"
+      background: 'linear-gradient(135deg, #ece5dd, #f5f2ee)',
+      surface:
+        'linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(241, 247, 244, 0.82))',
+      accent: 'linear-gradient(135deg, #25d366, #128c7e)'
     }
   },
   {
-    id: "midnight",
-    label: "Midnight",
-    description: "Deep navy panels with glassy cyan highlights.",
-    mode: "dark",
+    id: 'mono',
+    label: 'Mono',
+    description: 'Monochrome minimal theme with sharp readability.',
+    mode: 'light',
     preview: {
-      background: "linear-gradient(135deg, #040a1a, #0f172a)",
-      surface: "linear-gradient(135deg, rgba(15, 23, 42, 0.92), rgba(30, 64, 175, 0.65))",
-      accent: "linear-gradient(135deg, #38bdf8, #6366f1)"
+      background: 'linear-gradient(135deg, #ffffff, #f7f7f7)',
+      surface:
+        'linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(245, 245, 245, 0.82))',
+      accent: 'linear-gradient(135deg, #111111, #5f5f5f)'
     }
   },
   {
-    id: "ocean",
-    label: "Ocean Mist",
-    description: "Teal waves with soft aqua glows and gentle contrast.",
-    mode: "dark",
+    id: 'deepdark',
+    label: 'DeepDark',
+    description: 'Modern developer dark UI with emerald and teal accents.',
+    mode: 'dark',
     preview: {
-      background: "linear-gradient(135deg, #031520, #0f3b46)",
-      surface: "linear-gradient(135deg, rgba(12, 32, 40, 0.92), rgba(14, 116, 144, 0.55))",
-      accent: "linear-gradient(135deg, #34d399, #22d3ee)"
+      background: 'linear-gradient(135deg, #0f0f0f, #151515)',
+      surface:
+        'linear-gradient(135deg, rgba(32, 32, 32, 0.95), rgba(20, 20, 20, 0.82))',
+      accent: 'linear-gradient(135deg, #4caf50, #00adb5)'
     }
   },
   {
-    id: "light",
-    label: "Daylight",
-    description: "Crisp whites, soft shadows, and slate typography.",
-    mode: "light",
+    id: 'vvit',
+    label: 'VVIT',
+    description:
+      'Signature academic palette inspired by VVIT branding with modern SaaS polish.',
+    mode: 'light',
     preview: {
-      background: "linear-gradient(135deg, #f8fafc, #eef2ff)",
-      surface: "linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(226, 232, 240, 0.6))",
-      accent: "linear-gradient(135deg, #38bdf8, #f472b6)"
+      background: 'linear-gradient(135deg, #f3f6fb, #e9f0f8)',
+      surface:
+        'linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(236, 242, 248, 0.84))',
+      accent: 'linear-gradient(135deg, #0c5cad, #c4912f)'
     }
-  }
-];
-
-export const CODE_THEME_OPTIONS: CodeThemeOption[] = [
-  {
-    id: "atomDark",
-    label: "Atom Dark",
-    description: "High-contrast dark syntax with teal accents.",
-    previewCode: "const status = 'online';"
-  },
-  {
-    id: "dracula",
-    label: "Dracula",
-    description: "Vibrant purples and greens on a deep background.",
-    previewCode: "function ping() { return 'pong'; }"
-  },
-  {
-    id: "duotoneSea",
-    label: "Duotone Sea",
-    description: "Seafoam blue keywords with warm string tones.",
-    previewCode: "const waves = [1, 2, 3].map(Math.sqrt);"
-  },
-  {
-    id: "oneLight",
-    label: "One Light",
-    description: "Lightweight theme ideal for bright environments.",
-    previewCode: "export const theme = 'one-light';"
   }
 ];
 
 export const getUIThemeOption = (id: UITheme) =>
   UI_THEME_OPTIONS.find((option) => option.id === id) ?? UI_THEME_OPTIONS[0];
-
-export const getCodeThemeOption = (id: CodeTheme) =>
-  CODE_THEME_OPTIONS.find((option) => option.id === id) ?? CODE_THEME_OPTIONS[0];

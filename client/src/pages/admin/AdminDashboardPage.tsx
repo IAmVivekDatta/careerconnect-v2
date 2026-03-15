@@ -5,10 +5,20 @@ import RecommendedAlumniCarousel from '../../components/organisms/RecommendedAlu
 import { TrainingOpportunitiesCarousel } from '../../components/organisms/TrainingOpportunitiesCarousel';
 import { AdminStats } from '../../types';
 
-const StatCard = ({ label, value, color }: { label: string; value: number; color: string }) => (
-  <article className={`neon-border rounded-lg bg-gradient-to-br ${color} p-6 shadow-lg`}>
+const StatCard = ({
+  label,
+  value,
+  tone
+}: {
+  label: string;
+  value: number;
+  tone: string;
+}) => (
+  <article className="neon-border rounded-lg bg-card/95 p-6 shadow-lg">
     <h3 className="text-sm font-semibold text-white/70">{label}</h3>
-    <p className="mt-3 text-3xl font-bold text-neonCyan">{value.toLocaleString()}</p>
+    <p className={`mt-3 text-3xl font-bold ${tone}`}>
+      {value.toLocaleString()}
+    </p>
   </article>
 );
 
@@ -26,7 +36,10 @@ const AdminDashboardPage = () => {
     return (
       <div className="grid gap-4 p-8 md:grid-cols-2 xl:grid-cols-4">
         {[...Array(8)].map((_, i) => (
-          <div key={i} className="neon-border h-24 animate-pulse rounded-lg bg-surface/50" />
+          <div
+            key={i}
+            className="neon-border h-24 animate-pulse rounded-lg bg-card/60"
+          />
         ))}
       </div>
     );
@@ -38,17 +51,35 @@ const AdminDashboardPage = () => {
     <main className="space-y-8 p-8 text-white">
       <header className="space-y-2">
         <h2 className="text-3xl font-bold text-neonMagenta">Admin Dashboard</h2>
-        <p className="text-sm text-muted">Real-time platform metrics and health indicators.</p>
+        <p className="text-sm text-muted">
+          Real-time platform metrics and health indicators.
+        </p>
       </header>
 
       {/* Users Section */}
       <section className="space-y-4">
         <h3 className="text-lg font-semibold text-neonCyan">Users Overview</h3>
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          <StatCard label="Total Users" value={stats.users.total} color="from-blue-900/50 to-blue-800/50" />
-          <StatCard label="Students" value={stats.users.students} color="from-green-900/50 to-green-800/50" />
-          <StatCard label="Alumni" value={stats.users.alumni} color="from-purple-900/50 to-purple-800/50" />
-          <StatCard label="Active (30d)" value={stats.users.active30d} color="from-orange-900/50 to-orange-800/50" />
+          <StatCard
+            label="Total Users"
+            value={stats.users.total}
+            tone="text-neonCyan"
+          />
+          <StatCard
+            label="Students"
+            value={stats.users.students}
+            tone="text-emerald-300"
+          />
+          <StatCard
+            label="Alumni"
+            value={stats.users.alumni}
+            tone="text-violet-300"
+          />
+          <StatCard
+            label="Active (30d)"
+            value={stats.users.active30d}
+            tone="text-amber-200"
+          />
         </div>
       </section>
 
@@ -56,8 +87,16 @@ const AdminDashboardPage = () => {
       <section className="space-y-4">
         <h3 className="text-lg font-semibold text-neonCyan">Feed Activity</h3>
         <div className="grid gap-4 md:grid-cols-2">
-          <StatCard label="Total Posts" value={stats.posts.total} color="from-indigo-900/50 to-indigo-800/50" />
-          <StatCard label="Posts (Today)" value={stats.posts.today} color="from-pink-900/50 to-pink-800/50" />
+          <StatCard
+            label="Total Posts"
+            value={stats.posts.total}
+            tone="text-indigo-300"
+          />
+          <StatCard
+            label="Posts (Today)"
+            value={stats.posts.today}
+            tone="text-pink-300"
+          />
         </div>
       </section>
 
@@ -65,9 +104,21 @@ const AdminDashboardPage = () => {
       <section className="space-y-4">
         <h3 className="text-lg font-semibold text-neonCyan">Opportunities</h3>
         <div className="grid gap-4 md:grid-cols-3">
-          <StatCard label="Total Listings" value={stats.opportunities.total} color="from-teal-900/50 to-teal-800/50" />
-          <StatCard label="Pending Approval" value={stats.opportunities.pending} color="from-red-900/50 to-red-800/50" />
-          <StatCard label="Approved" value={stats.opportunities.approved} color="from-green-900/50 to-green-800/50" />
+          <StatCard
+            label="Total Listings"
+            value={stats.opportunities.total}
+            tone="text-teal-300"
+          />
+          <StatCard
+            label="Pending Approval"
+            value={stats.opportunities.pending}
+            tone="text-rose-300"
+          />
+          <StatCard
+            label="Approved"
+            value={stats.opportunities.approved}
+            tone="text-green-300"
+          />
         </div>
       </section>
 
@@ -76,14 +127,14 @@ const AdminDashboardPage = () => {
         <h3 className="text-lg font-semibold text-neonCyan">Quick Actions</h3>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {[
-            { label: 'Manage Users', color: 'from-blue-600 to-blue-700', to: '/admin/users' },
-            { label: 'Review Posts', color: 'from-purple-600 to-purple-700', to: '/admin/posts' },
-            { label: 'Approve Jobs', color: 'from-green-600 to-green-700', to: '/admin/opportunities' },
-            { label: 'View Reports', color: 'from-orange-600 to-orange-700', to: '/admin/reports' }
+            { label: 'Manage Users', to: '/admin/users' },
+            { label: 'Review Posts', to: '/admin/posts' },
+            { label: 'Approve Jobs', to: '/admin/opportunities' },
+            { label: 'View Reports', to: '/admin/reports' }
           ].map((action) => (
             <button
               key={action.label}
-              className={`neon-border rounded-lg bg-gradient-to-r ${action.color} px-4 py-3 font-medium text-white transition hover:shadow-lg hover:shadow-neonCyan/50`}
+              className="neon-border rounded-lg bg-card/95 px-4 py-3 font-medium text-white transition hover:border-sidebar-active/60 hover:bg-sidebar-active/15"
               type="button"
               onClick={() => navigate(action.to)}
             >
@@ -95,7 +146,9 @@ const AdminDashboardPage = () => {
 
       {/* Recommended Alumni Preview */}
       <section className="space-y-4">
-        <h3 className="text-lg font-semibold text-neonCyan">Featured Alumni Network</h3>
+        <h3 className="text-lg font-semibold text-neonCyan">
+          Featured Alumni Network
+        </h3>
         <RecommendedAlumniCarousel />
       </section>
 

@@ -107,13 +107,13 @@ const AdminUsersPage = () => {
         </div>
         <div className="flex flex-wrap items-center gap-3">
           <input
-            className="w-64 rounded bg-white/5 px-3 py-2 text-sm text-white placeholder:text-white/40"
+            className="w-64 rounded border border-border/70 bg-card/80 px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-sidebar-active focus:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-active/50"
             placeholder="Search by email or name"
             value={search}
             onChange={(event) => setSearch(event.target.value)}
           />
           <select
-            className="rounded bg-white/5 px-3 py-2 text-sm text-white"
+            className="rounded border border-border/70 bg-card/80 px-3 py-2 text-sm text-foreground focus:border-sidebar-active focus:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-active/50"
             value={role}
             onChange={(event) => setRole(event.target.value as typeof role)}
           >
@@ -124,7 +124,7 @@ const AdminUsersPage = () => {
             ))}
           </select>
           <select
-            className="rounded bg-white/5 px-3 py-2 text-sm text-white"
+            className="rounded border border-border/70 bg-card/80 px-3 py-2 text-sm text-foreground focus:border-sidebar-active focus:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-active/50"
             value={status}
             onChange={(event) => setStatus(event.target.value as typeof status)}
           >
@@ -137,17 +137,17 @@ const AdminUsersPage = () => {
         </div>
       </header>
 
-      <div className="neon-border overflow-hidden rounded-lg bg-surface/80">
+      <div className="neon-border overflow-hidden rounded-lg bg-card/90">
         {(feedback || errorMessage) && (
-          <div className="border-b border-white/10 bg-black/40 px-4 py-2 text-xs text-white/70">
+          <div className="border-b border-border/70 bg-card/70 px-4 py-2 text-xs text-muted-foreground">
             {feedback && <span className="text-green-300">{feedback}</span>}
             {errorMessage && (
               <span className="text-red-300">{errorMessage}</span>
             )}
           </div>
         )}
-        <table className="min-w-full divide-y divide-white/5 text-sm">
-          <thead className="bg-white/5 text-left text-xs uppercase tracking-wide text-white/60">
+        <table className="min-w-full divide-y divide-border/50 text-sm">
+          <thead className="bg-card/70 text-left text-xs uppercase tracking-wide text-muted-foreground">
             <tr>
               <th className="px-4 py-3">User</th>
               <th className="px-4 py-3">Email</th>
@@ -157,11 +157,11 @@ const AdminUsersPage = () => {
               <th className="px-4 py-3 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/5">
+          <tbody className="divide-y divide-border/40">
             {isLoading || isFetching ? (
               [...Array(6)].map((_, index) => (
                 <tr key={index} className="animate-pulse">
-                  <td className="px-4 py-3 text-white/40" colSpan={6}>
+                  <td className="px-4 py-3 text-muted-foreground" colSpan={6}>
                     Loading users…
                   </td>
                 </tr>
@@ -169,7 +169,7 @@ const AdminUsersPage = () => {
             ) : users.length === 0 ? (
               <tr>
                 <td
-                  className="px-4 py-6 text-center text-sm text-white/60"
+                  className="px-4 py-6 text-center text-sm text-muted-foreground"
                   colSpan={6}
                 >
                   No users match the current filters.
@@ -177,15 +177,19 @@ const AdminUsersPage = () => {
               </tr>
             ) : (
               users.map((user) => (
-                <tr key={user._id} className="text-white/90">
+                <tr key={user._id} className="text-foreground/95">
                   <td className="px-4 py-3">
-                    <div className="font-medium text-white">{user.name}</div>
-                    <div className="text-xs text-white/50">{user._id}</div>
+                    <div className="font-medium text-foreground">
+                      {user.name}
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      {user._id}
+                    </div>
                   </td>
                   <td className="px-4 py-3">{user.email}</td>
                   <td className="px-4 py-3">
                     <select
-                      className="rounded bg-white/10 px-2 py-1 text-xs"
+                      className="rounded border border-border/70 bg-card/80 px-2 py-1 text-xs text-foreground focus:border-sidebar-active focus:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-active/50"
                       value={user.role}
                       onChange={(event) =>
                         updateRoleMutation.mutate({
@@ -215,7 +219,7 @@ const AdminUsersPage = () => {
                       {user.isActive ? 'Active' : 'Inactive'}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-white/70">
+                  <td className="px-4 py-3 text-muted-foreground">
                     {new Date(user.createdAt).toLocaleDateString()}
                   </td>
                   <td className="px-4 py-3 text-right">
@@ -225,7 +229,7 @@ const AdminUsersPage = () => {
                         user.isActive
                           ? 'bg-red-500/10 text-red-300 hover:bg-red-500/20'
                           : 'bg-blue-500/10 text-blue-300 hover:bg-blue-500/20'
-                      }`}
+                      } focus-visible:ring-2 focus-visible:ring-sidebar-active/50`}
                       onClick={() =>
                         toggleActiveMutation.mutate({
                           id: user._id,

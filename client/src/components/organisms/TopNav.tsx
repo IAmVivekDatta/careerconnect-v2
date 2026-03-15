@@ -7,12 +7,10 @@ import { useNavMetrics } from '../../hooks/useNavMetrics';
 import { appNavItems } from '../../constants/navItems';
 import type { AppNavItem } from '../../constants/navItems';
 import DynamoHamburger from '../atoms/DynamoHamburger';
-import { useLayoutStore } from '../../store/useLayoutStore';
 import ThemeSwitcher from './ThemeSwitcher';
 
 const TopNav = () => {
   const { user, logout } = useAuthStore();
-  const { isSidebarOpen, toggleSidebar } = useLayoutStore();
   const navigate = useNavigate();
   const location = useLocation();
   const { connectionCounts, unreadCounts } = useNavMetrics();
@@ -120,21 +118,12 @@ const TopNav = () => {
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           {visibleNavItems.length > 0 && (
-            <>
-              <DynamoHamburger
-                open={mobileOpen}
-                onToggle={() => setMobileOpen((open) => !open)}
-                className="md:hidden"
-                label="Toggle quick menu"
-              />
-              <DynamoHamburger
-                open={isSidebarOpen}
-                onToggle={toggleSidebar}
-                className="hidden md:flex"
-                label="Toggle sidebar"
-                size={28}
-              />
-            </>
+            <DynamoHamburger
+              open={mobileOpen}
+              onToggle={() => setMobileOpen((open) => !open)}
+              className="md:hidden"
+              label="Toggle quick menu"
+            />
           )}
           <Link to="/feed" className="text-lg font-semibold text-neonCyan">
             CareerConnect

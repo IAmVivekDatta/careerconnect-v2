@@ -40,7 +40,7 @@ const LoginPage = () => {
     <main className="grid min-h-screen place-items-center bg-bgDark px-6 py-12 text-white">
       <form
         onSubmit={onSubmit}
-        className="w-full max-w-md space-y-6 rounded-lg bg-surface/80 p-8 shadow-neon"
+        className="w-full max-w-md space-y-6 rounded-lg border border-white/10 bg-card/95 p-8 shadow-neon"
       >
         <header className="space-y-2 text-center">
           <h1 className="text-2xl font-semibold">Welcome back</h1>
@@ -59,7 +59,7 @@ const LoginPage = () => {
               }
             })}
             type="email"
-            className="w-full rounded bg-white/5 px-3 py-2 text-sm text-white outline-none"
+            className="w-full rounded border border-white/10 bg-card/80 px-3 py-2 text-sm text-white outline-none"
             required
           />
           {errors.email && (
@@ -74,7 +74,7 @@ const LoginPage = () => {
               minLength: { value: 6, message: 'Minimum 6 characters' }
             })}
             type="password"
-            className="w-full rounded bg-white/5 px-3 py-2 text-sm text-white outline-none"
+            className="w-full rounded border border-white/10 bg-card/80 px-3 py-2 text-sm text-white outline-none"
             required
           />
           {errors.password && (

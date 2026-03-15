@@ -36,7 +36,7 @@ const Sidebar = () => {
   return (
     <aside
       className={clsx(
-        'hidden flex-col border-r border-white/10 bg-surface/90 transition-all duration-300 ease-in-out md:flex',
+        'hidden flex-col border-r border-white/10 bg-sidebar/95 transition-all duration-300 ease-in-out md:flex',
         isSidebarOpen
           ? 'w-64 px-4 py-4 opacity-100'
           : 'pointer-events-none w-0 overflow-hidden px-0 py-0 opacity-0'
@@ -55,8 +55,8 @@ const Sidebar = () => {
               className={({ isActive }) =>
                 `group flex items-center justify-between rounded-lg px-3 py-2 text-sm transition ${
                   isActive
-                    ? 'bg-neonCyan/10 text-white shadow-[0_0_18px_rgba(0,255,255,0.12)]'
-                    : 'text-white/85 hover:bg-white/10 hover:text-white'
+                    ? 'bg-sidebar-active text-primary-foreground shadow-[0_0_18px_rgba(0,255,255,0.12)]'
+                    : 'text-foreground/85 hover:bg-card/80 hover:text-foreground'
                 }`
               }
             >
@@ -66,8 +66,8 @@ const Sidebar = () => {
                     <Icon
                       className={`h-4 w-4 ${
                         isActive
-                          ? 'text-neonCyan'
-                          : 'text-white/70 group-hover:text-neonCyan'
+                          ? 'text-primary-foreground'
+                          : 'text-foreground/70 group-hover:text-sidebar-active'
                       }`}
                     />
                     <span
@@ -80,7 +80,7 @@ const Sidebar = () => {
                     </span>
                   </span>
                   {badge > 0 && isSidebarOpen && (
-                    <span className="rounded-full bg-neonCyan px-2 py-0.5 text-[10px] font-semibold text-black">
+                    <span className="rounded-full bg-sidebar-active px-2 py-0.5 text-[10px] font-semibold text-primary-foreground">
                       {badge}
                     </span>
                   )}

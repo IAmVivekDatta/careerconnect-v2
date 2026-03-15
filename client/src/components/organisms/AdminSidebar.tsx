@@ -19,7 +19,7 @@ const AdminSidebar = () => {
   }
 
   return (
-    <aside className="hidden w-64 border-r border-white/10 bg-surface/90 p-4 md:flex md:flex-col">
+    <aside className="hidden w-64 border-r border-white/10 bg-sidebar/95 p-4 md:flex md:flex-col">
       <nav className="flex flex-col gap-1">
         {links.map((link) => {
           const Icon = link.icon;
@@ -31,8 +31,8 @@ const AdminSidebar = () => {
               className={({ isActive }) =>
                 `group flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition ${
                   isActive
-                    ? 'bg-neonMagenta/15 text-white shadow-[0_0_18px_rgba(255,0,170,0.18)]'
-                    : 'text-white/80 hover:bg-white/10 hover:text-white'
+                    ? 'bg-sidebar-active text-primary-foreground shadow-[0_0_18px_rgba(255,0,170,0.18)]'
+                    : 'text-foreground/80 hover:bg-card/80 hover:text-foreground'
                 }`
               }
             >
@@ -41,8 +41,8 @@ const AdminSidebar = () => {
                   <Icon
                     className={`h-4 w-4 ${
                       isActive
-                        ? 'text-neonMagenta'
-                        : 'text-white/65 group-hover:text-neonMagenta'
+                        ? 'text-primary-foreground'
+                        : 'text-foreground/65 group-hover:text-sidebar-active'
                     }`}
                   />
                   <span>{link.label}</span>

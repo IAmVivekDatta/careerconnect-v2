@@ -18,6 +18,10 @@ module.exports = {
         neonMagenta: withOpacityValue('--cc-neon-magenta'),
         bgDark: withOpacityValue('--cc-background'),
         surface: withOpacityValue('--cc-surface'),
+        'chat-sent': withOpacityValue('--cc-chat-sent'),
+        'chat-received': withOpacityValue('--cc-chat-received'),
+        sidebar: withOpacityValue('--cc-sidebar-bg'),
+        'sidebar-active': withOpacityValue('--cc-sidebar-active'),
         muted: {
           DEFAULT: 'hsl(var(--muted))',
           foreground: 'hsl(var(--muted-foreground))'
@@ -27,7 +31,7 @@ module.exports = {
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {
-          DEFAULT: 'hsl(var(--card))',
+          DEFAULT: withOpacityValue('--cc-card'),
           foreground: 'hsl(var(--card-foreground))'
         },
         popover: {

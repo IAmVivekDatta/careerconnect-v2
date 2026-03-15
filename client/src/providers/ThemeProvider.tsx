@@ -1,21 +1,19 @@
-import { useLayoutEffect, useMemo, type ReactNode } from "react";
-import { useThemeStore } from "../store/useThemeStore";
-import { getCodeThemeOption, getUIThemeOption } from "../constants/themes";
+import { useLayoutEffect, useMemo, type ReactNode } from 'react';
+import { useThemeStore } from '../store/useThemeStore';
+import { getUIThemeOption } from '../constants/themes';
 
 interface ThemeProviderProps {
   children: ReactNode;
 }
 
 const ThemeProvider = ({ children }: ThemeProviderProps) => {
-  const { uiTheme, setUITheme, codeTheme, setCodeTheme } = useThemeStore((state) => ({
+  const { uiTheme, themeMode, setUITheme } = useThemeStore((state) => ({
     uiTheme: state.uiTheme,
-    setUITheme: state.setUITheme,
-    codeTheme: state.codeTheme,
-    setCodeTheme: state.setCodeTheme
+    themeMode: state.themeMode,
+    setUITheme: state.setUITheme
   }));
 
   const safeThemeOption = useMemo(() => getUIThemeOption(uiTheme), [uiTheme]);
-  const safeCodeThemeOption = useMemo(() => getCodeThemeOption(codeTheme), [codeTheme]);
 
   useLayoutEffect(() => {
     const root = document.documentElement;
@@ -26,19 +24,14 @@ const ThemeProvider = ({ children }: ThemeProviderProps) => {
     }
 
     root.dataset.theme = desiredThemeId;
+    root.dataset.themeMode = themeMode;
 
-    if (safeThemeOption.mode === "dark") {
-      root.classList.add("dark");
+    if (themeMode === 'dark') {
+      root.classList.add('dark');
     } else {
-      root.classList.remove("dark");
+      root.classList.remove('dark');
     }
-  }, [safeThemeOption, setUITheme, uiTheme]);
-
-  useLayoutEffect(() => {
-    if (safeCodeThemeOption.id !== codeTheme) {
-      setCodeTheme(safeCodeThemeOption.id);
-    }
-  }, [codeTheme, safeCodeThemeOption, setCodeTheme]);
+  }, [safeThemeOption, setUITheme, themeMode, uiTheme]);
 
   return <>{children}</>;
 };

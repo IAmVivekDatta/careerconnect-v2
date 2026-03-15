@@ -3,90 +3,365 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: dark;
-  --cc-background: 10 10 10;
-  --cc-surface: 17 17 17;
-  --cc-muted: 154 154 154;
-  --cc-text-primary: 255 255 255;
-  --cc-text-secondary: 210 210 210;
-  --cc-white-rgb: 255 255 255;
-  --cc-border-rgb: 255 255 255;
-  --cc-overlay-rgb: 255 255 255;
-  --cc-neon-cyan: 0 245 255;
-  --cc-neon-magenta: 255 0 214;
-  --cc-card-border: 58 90 120;
-  --cc-card-overlay: 20 28 40;
-  --cc-card-shadow: 8 18 38;
-}
-
-:root[data-theme='midnight'] {
-  color-scheme: dark;
-  --cc-background: 6 13 30;
-  --cc-surface: 14 23 45;
-  --cc-muted: 132 154 192;
-  --cc-text-primary: 226 235 255;
-  --cc-text-secondary: 190 205 235;
-  --cc-white-rgb: 226 235 255;
-  --cc-border-rgb: 114 144 196;
-  --cc-overlay-rgb: 180 200 240;
-  --cc-card-border: 90 120 180;
-  --cc-card-overlay: 24 37 68;
-  --cc-card-shadow: 20 30 72;
-}
-
-:root[data-theme='ocean'] {
-  color-scheme: dark;
-  --cc-background: 5 16 20;
-  --cc-surface: 12 32 40;
-  --cc-muted: 140 178 186;
-  --cc-text-primary: 220 245 247;
-  --cc-text-secondary: 186 214 219;
-  --cc-white-rgb: 220 245 247;
-  --cc-border-rgb: 96 140 150;
-  --cc-overlay-rgb: 180 220 226;
-  --cc-card-border: 64 115 124;
-  --cc-card-overlay: 18 42 50;
-  --cc-card-shadow: 14 32 44;
-}
-
-:root[data-theme='light'] {
   color-scheme: light;
-  --cc-background: 244 247 252;
+  --cc-bg: 236 229 221;
   --cc-surface: 255 255 255;
-  --cc-muted: 100 116 139;
-  --cc-text-primary: 17 24 39;
-  --cc-text-secondary: 55 65 81;
-  --cc-white-rgb: 17 24 39;
-  --cc-border-rgb: 148 163 184;
-  --cc-overlay-rgb: 15 23 42;
-  --cc-card-border: 188 198 212;
-  --cc-card-overlay: 244 247 252;
-  --cc-card-shadow: 15 23 42;
+  --cc-primary: 37 211 102;
+  --cc-accent: 18 140 126;
+  --cc-border: 191 210 197;
+  --cc-text: 17 27 33;
+  --cc-muted: 84 101 111;
+  --cc-shadow-base: 20 35 31;
+  --cc-chat-sent: 37 211 102;
+  --cc-chat-received: 255 255 255;
+  --cc-sidebar-bg: 247 247 247;
+  --cc-sidebar-active: 37 211 102;
+  --cc-card: 255 255 255;
+
+  --cc-hsl-background: 34 28% 90%;
+  --cc-hsl-foreground: 198 32% 10%;
+  --cc-hsl-card: 0 0% 100%;
+  --cc-hsl-card-foreground: 198 32% 10%;
+  --cc-hsl-popover: 0 0% 100%;
+  --cc-hsl-popover-foreground: 198 32% 10%;
+  --cc-hsl-primary: 142 68% 49%;
+  --cc-hsl-primary-foreground: 0 0% 100%;
+  --cc-hsl-secondary: 145 22% 95%;
+  --cc-hsl-secondary-foreground: 168 42% 25%;
+  --cc-hsl-muted: 145 18% 93%;
+  --cc-hsl-muted-foreground: 199 14% 35%;
+  --cc-hsl-accent: 173 77% 31%;
+  --cc-hsl-accent-foreground: 0 0% 100%;
+  --cc-hsl-border: 144 18% 79%;
+  --cc-hsl-input: 144 18% 79%;
+  --cc-hsl-ring: 142 68% 49%;
+
+  --cc-background: var(--cc-bg);
+  --cc-text-primary: var(--cc-text);
+  --cc-text-secondary: var(--cc-muted);
+  --cc-white-rgb: var(--cc-text);
+  --cc-border-rgb: var(--cc-border);
+  --cc-overlay-rgb: var(--cc-text);
+  --cc-neon-cyan: var(--cc-primary);
+  --cc-neon-magenta: var(--cc-accent);
+  --cc-card-border: var(--cc-border);
+  --cc-card-overlay: var(--cc-card);
+  --cc-card-shadow: var(--cc-shadow-base);
+}
+
+:root[data-theme='whatsapp'] {
+  color-scheme: light;
+  --cc-bg: 236 229 221;
+  --cc-surface: 255 255 255;
+  --cc-primary: 37 211 102;
+  --cc-accent: 18 140 126;
+  --cc-border: 191 210 197;
+  --cc-text: 17 27 33;
+  --cc-muted: 84 101 111;
+  --cc-shadow-base: 20 35 31;
+  --cc-chat-sent: 37 211 102;
+  --cc-chat-received: 255 255 255;
+  --cc-sidebar-bg: 247 247 247;
+  --cc-sidebar-active: 37 211 102;
+  --cc-card: 255 255 255;
+
+  --cc-hsl-background: 34 28% 90%;
+  --cc-hsl-foreground: 198 32% 10%;
+  --cc-hsl-card: 0 0% 100%;
+  --cc-hsl-card-foreground: 198 32% 10%;
+  --cc-hsl-popover: 0 0% 100%;
+  --cc-hsl-popover-foreground: 198 32% 10%;
+  --cc-hsl-primary: 142 68% 49%;
+  --cc-hsl-primary-foreground: 0 0% 100%;
+  --cc-hsl-secondary: 145 22% 95%;
+  --cc-hsl-secondary-foreground: 168 42% 25%;
+  --cc-hsl-muted: 145 18% 93%;
+  --cc-hsl-muted-foreground: 199 14% 35%;
+  --cc-hsl-accent: 173 77% 31%;
+  --cc-hsl-accent-foreground: 0 0% 100%;
+  --cc-hsl-border: 144 18% 79%;
+  --cc-hsl-input: 144 18% 79%;
+  --cc-hsl-ring: 142 68% 49%;
+}
+
+:root[data-theme='mono'] {
+  color-scheme: light;
+  --cc-bg: 255 255 255;
+  --cc-surface: 249 249 249;
+  --cc-primary: 17 17 17;
+  --cc-accent: 95 95 95;
+  --cc-border: 229 229 229;
+  --cc-text: 17 17 17;
+  --cc-muted: 96 96 96;
+  --cc-shadow-base: 35 35 35;
+  --cc-chat-sent: 24 24 24;
+  --cc-chat-received: 245 245 245;
+  --cc-sidebar-bg: 243 243 243;
+  --cc-sidebar-active: 45 45 45;
+  --cc-card: 255 255 255;
+
+  --cc-hsl-background: 0 0% 100%;
+  --cc-hsl-foreground: 0 0% 7%;
+  --cc-hsl-card: 0 0% 98%;
+  --cc-hsl-card-foreground: 0 0% 7%;
+  --cc-hsl-popover: 0 0% 100%;
+  --cc-hsl-popover-foreground: 0 0% 7%;
+  --cc-hsl-primary: 0 0% 7%;
+  --cc-hsl-primary-foreground: 0 0% 100%;
+  --cc-hsl-secondary: 0 0% 95%;
+  --cc-hsl-secondary-foreground: 0 0% 24%;
+  --cc-hsl-muted: 0 0% 95%;
+  --cc-hsl-muted-foreground: 0 0% 38%;
+  --cc-hsl-accent: 0 0% 37%;
+  --cc-hsl-accent-foreground: 0 0% 100%;
+  --cc-hsl-border: 0 0% 89%;
+  --cc-hsl-input: 0 0% 89%;
+  --cc-hsl-ring: 0 0% 7%;
+}
+
+:root[data-theme='deepdark'] {
+  color-scheme: dark;
+  --cc-bg: 15 15 15;
+  --cc-surface: 26 26 26;
+  --cc-primary: 76 175 80;
+  --cc-accent: 0 173 181;
+  --cc-border: 72 72 72;
+  --cc-text: 236 236 236;
+  --cc-muted: 150 150 150;
+  --cc-shadow-base: 8 14 16;
+  --cc-chat-sent: 41 106 66;
+  --cc-chat-received: 34 34 34;
+  --cc-sidebar-bg: 20 20 20;
+  --cc-sidebar-active: 0 122 129;
+  --cc-card: 30 30 30;
+
+  --cc-hsl-background: 0 0% 6%;
+  --cc-hsl-foreground: 0 0% 93%;
+  --cc-hsl-card: 0 0% 12%;
+  --cc-hsl-card-foreground: 0 0% 93%;
+  --cc-hsl-popover: 0 0% 10%;
+  --cc-hsl-popover-foreground: 0 0% 93%;
+  --cc-hsl-primary: 122 39% 49%;
+  --cc-hsl-primary-foreground: 0 0% 100%;
+  --cc-hsl-secondary: 0 0% 14%;
+  --cc-hsl-secondary-foreground: 0 0% 84%;
+  --cc-hsl-muted: 0 0% 14%;
+  --cc-hsl-muted-foreground: 0 0% 63%;
+  --cc-hsl-accent: 183 100% 35%;
+  --cc-hsl-accent-foreground: 0 0% 100%;
+  --cc-hsl-border: 0 0% 28%;
+  --cc-hsl-input: 0 0% 28%;
+  --cc-hsl-ring: 122 39% 49%;
+}
+
+:root[data-theme='vvit'] {
+  color-scheme: light;
+  --cc-bg: 243 246 251;
+  --cc-surface: 255 255 255;
+  --cc-primary: 9 76 145;
+  --cc-accent: 196 146 47;
+  --cc-border: 189 204 221;
+  --cc-text: 19 35 55;
+  --cc-muted: 86 105 127;
+  --cc-shadow-base: 18 36 62;
+  --cc-chat-sent: 12 92 173;
+  --cc-chat-received: 234 239 247;
+  --cc-sidebar-bg: 235 241 248;
+  --cc-sidebar-active: 12 92 173;
+  --cc-card: 255 255 255;
+
+  --cc-hsl-background: 214 39% 97%;
+  --cc-hsl-foreground: 214 49% 15%;
+  --cc-hsl-card: 0 0% 100%;
+  --cc-hsl-card-foreground: 214 49% 15%;
+  --cc-hsl-popover: 0 0% 100%;
+  --cc-hsl-popover-foreground: 214 49% 15%;
+  --cc-hsl-primary: 212 88% 30%;
+  --cc-hsl-primary-foreground: 0 0% 100%;
+  --cc-hsl-secondary: 212 39% 95%;
+  --cc-hsl-secondary-foreground: 214 43% 27%;
+  --cc-hsl-muted: 212 31% 92%;
+  --cc-hsl-muted-foreground: 213 19% 42%;
+  --cc-hsl-accent: 42 61% 48%;
+  --cc-hsl-accent-foreground: 0 0% 100%;
+  --cc-hsl-border: 211 33% 80%;
+  --cc-hsl-input: 211 33% 80%;
+  --cc-hsl-ring: 212 88% 30%;
+}
+
+:root[data-theme='whatsapp'][data-theme-mode='dark'] {
+  color-scheme: dark;
+  --cc-bg: 17 27 33;
+  --cc-surface: 31 44 51;
+  --cc-primary: 37 211 102;
+  --cc-accent: 18 140 126;
+  --cc-border: 66 84 92;
+  --cc-text: 235 242 247;
+  --cc-muted: 172 188 196;
+  --cc-shadow-base: 7 11 13;
+  --cc-chat-sent: 20 108 67;
+  --cc-chat-received: 42 56 63;
+  --cc-sidebar-bg: 24 35 41;
+  --cc-sidebar-active: 37 211 102;
+  --cc-card: 31 43 49;
+
+  --cc-hsl-background: 199 32% 10%;
+  --cc-hsl-foreground: 198 37% 95%;
+  --cc-hsl-card: 197 22% 16%;
+  --cc-hsl-card-foreground: 198 37% 95%;
+  --cc-hsl-popover: 197 22% 14%;
+  --cc-hsl-popover-foreground: 198 37% 95%;
+  --cc-hsl-primary: 142 68% 49%;
+  --cc-hsl-primary-foreground: 0 0% 100%;
+  --cc-hsl-secondary: 196 20% 20%;
+  --cc-hsl-secondary-foreground: 199 20% 86%;
+  --cc-hsl-muted: 197 18% 24%;
+  --cc-hsl-muted-foreground: 197 16% 73%;
+  --cc-hsl-accent: 173 77% 31%;
+  --cc-hsl-accent-foreground: 0 0% 100%;
+  --cc-hsl-border: 198 15% 34%;
+  --cc-hsl-input: 198 15% 34%;
+  --cc-hsl-ring: 142 68% 49%;
+}
+
+:root[data-theme='mono'][data-theme-mode='dark'] {
+  color-scheme: dark;
+  --cc-bg: 16 16 16;
+  --cc-surface: 25 25 25;
+  --cc-primary: 226 226 226;
+  --cc-accent: 156 156 156;
+  --cc-border: 72 72 72;
+  --cc-text: 238 238 238;
+  --cc-muted: 170 170 170;
+  --cc-shadow-base: 8 8 8;
+  --cc-chat-sent: 64 64 64;
+  --cc-chat-received: 33 33 33;
+  --cc-sidebar-bg: 21 21 21;
+  --cc-sidebar-active: 214 214 214;
+  --cc-card: 29 29 29;
+
+  --cc-hsl-background: 0 0% 7%;
+  --cc-hsl-foreground: 0 0% 93%;
+  --cc-hsl-card: 0 0% 12%;
+  --cc-hsl-card-foreground: 0 0% 93%;
+  --cc-hsl-popover: 0 0% 12%;
+  --cc-hsl-popover-foreground: 0 0% 93%;
+  --cc-hsl-primary: 0 0% 88%;
+  --cc-hsl-primary-foreground: 0 0% 8%;
+  --cc-hsl-secondary: 0 0% 16%;
+  --cc-hsl-secondary-foreground: 0 0% 82%;
+  --cc-hsl-muted: 0 0% 18%;
+  --cc-hsl-muted-foreground: 0 0% 67%;
+  --cc-hsl-accent: 0 0% 61%;
+  --cc-hsl-accent-foreground: 0 0% 8%;
+  --cc-hsl-border: 0 0% 31%;
+  --cc-hsl-input: 0 0% 31%;
+  --cc-hsl-ring: 0 0% 88%;
+}
+
+:root[data-theme='deepdark'][data-theme-mode='light'] {
+  color-scheme: light;
+  --cc-bg: 246 249 247;
+  --cc-surface: 255 255 255;
+  --cc-primary: 33 125 74;
+  --cc-accent: 0 122 129;
+  --cc-border: 188 201 196;
+  --cc-text: 20 36 33;
+  --cc-muted: 96 114 109;
+  --cc-shadow-base: 21 35 32;
+  --cc-chat-sent: 218 244 228;
+  --cc-chat-received: 255 255 255;
+  --cc-sidebar-bg: 239 244 241;
+  --cc-sidebar-active: 33 125 74;
+  --cc-card: 255 255 255;
+
+  --cc-hsl-background: 150 19% 97%;
+  --cc-hsl-foreground: 165 29% 11%;
+  --cc-hsl-card: 0 0% 100%;
+  --cc-hsl-card-foreground: 165 29% 11%;
+  --cc-hsl-popover: 0 0% 100%;
+  --cc-hsl-popover-foreground: 165 29% 11%;
+  --cc-hsl-primary: 147 58% 31%;
+  --cc-hsl-primary-foreground: 0 0% 100%;
+  --cc-hsl-secondary: 150 23% 94%;
+  --cc-hsl-secondary-foreground: 164 29% 24%;
+  --cc-hsl-muted: 152 16% 90%;
+  --cc-hsl-muted-foreground: 164 11% 42%;
+  --cc-hsl-accent: 183 100% 25%;
+  --cc-hsl-accent-foreground: 0 0% 100%;
+  --cc-hsl-border: 151 13% 76%;
+  --cc-hsl-input: 151 13% 76%;
+  --cc-hsl-ring: 147 58% 31%;
+}
+
+:root[data-theme='vvit'][data-theme-mode='dark'] {
+  color-scheme: dark;
+  --cc-bg: 16 24 37;
+  --cc-surface: 24 35 52;
+  --cc-primary: 86 167 242;
+  --cc-accent: 214 170 76;
+  --cc-border: 69 88 111;
+  --cc-text: 235 242 250;
+  --cc-muted: 171 188 206;
+  --cc-shadow-base: 8 14 24;
+  --cc-chat-sent: 23 89 151;
+  --cc-chat-received: 34 48 68;
+  --cc-sidebar-bg: 20 31 47;
+  --cc-sidebar-active: 86 167 242;
+  --cc-card: 28 41 60;
+
+  --cc-hsl-background: 214 40% 10%;
+  --cc-hsl-foreground: 210 52% 95%;
+  --cc-hsl-card: 214 36% 17%;
+  --cc-hsl-card-foreground: 210 52% 95%;
+  --cc-hsl-popover: 214 36% 15%;
+  --cc-hsl-popover-foreground: 210 52% 95%;
+  --cc-hsl-primary: 210 84% 64%;
+  --cc-hsl-primary-foreground: 214 45% 12%;
+  --cc-hsl-secondary: 214 30% 22%;
+  --cc-hsl-secondary-foreground: 211 42% 84%;
+  --cc-hsl-muted: 214 25% 25%;
+  --cc-hsl-muted-foreground: 212 24% 73%;
+  --cc-hsl-accent: 42 56% 57%;
+  --cc-hsl-accent-foreground: 214 45% 12%;
+  --cc-hsl-border: 213 23% 35%;
+  --cc-hsl-input: 213 23% 35%;
+  --cc-hsl-ring: 210 84% 64%;
 }
 
 body {
   @apply font-sans antialiased;
   background-color: rgb(var(--cc-background));
   color: rgb(var(--cc-text-primary));
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 .neon-border {
   position: relative;
   isolation: isolate;
   border: 1px solid transparent;
-  border-image: linear-gradient(135deg, rgba(var(--cc-neon-cyan) / 0.7), rgba(var(--cc-neon-magenta) / 0.65)) 1;
+  border-image: linear-gradient(
+      135deg,
+      rgba(var(--cc-neon-cyan) / 0.7),
+      rgba(var(--cc-neon-magenta) / 0.65)
+    )
+    1;
   box-shadow:
     0 20px 55px -24px rgba(var(--cc-card-shadow) / 0.7),
     0 0 0 1px rgba(var(--cc-card-border) / 0.28),
     0 12px 32px -18px rgba(var(--cc-neon-magenta) / 0.22),
     0 0 24px -10px rgba(var(--cc-neon-cyan) / 0.48);
-  transition: box-shadow 0.22s ease, transform 0.16s ease, border-image 0.22s ease;
+  transition:
+    box-shadow 0.22s ease,
+    transform 0.16s ease,
+    border-image 0.22s ease;
   backdrop-filter: blur(18px);
 }
 
 .neon-border::before {
-  content: "";
+  content: '';
   position: absolute;
   inset: 0;
   border-radius: inherit;
@@ -180,29 +455,27 @@ body {
   color: rgba(var(--cc-white-rgb) / 0.6) !important;
 }
 
-
-
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 20 14.3% 4.1%;
-    --card: 0 0% 100%;
-    --card-foreground: 20 14.3% 4.1%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 20 14.3% 4.1%;
-    --primary: 24 9.8% 10%;
-    --primary-foreground: 60 9.1% 97.8%;
-    --secondary: 60 4.8% 95.9%;
-    --secondary-foreground: 24 9.8% 10%;
-    --muted: 60 4.8% 95.9%;
-    --muted-foreground: 25 5.3% 44.7%;
-    --accent: 60 4.8% 95.9%;
-    --accent-foreground: 24 9.8% 10%;
+    --background: var(--cc-hsl-background);
+    --foreground: var(--cc-hsl-foreground);
+    --card: var(--cc-hsl-card);
+    --card-foreground: var(--cc-hsl-card-foreground);
+    --popover: var(--cc-hsl-popover);
+    --popover-foreground: var(--cc-hsl-popover-foreground);
+    --primary: var(--cc-hsl-primary);
+    --primary-foreground: var(--cc-hsl-primary-foreground);
+    --secondary: var(--cc-hsl-secondary);
+    --secondary-foreground: var(--cc-hsl-secondary-foreground);
+    --muted: var(--cc-hsl-muted);
+    --muted-foreground: var(--cc-hsl-muted-foreground);
+    --accent: var(--cc-hsl-accent);
+    --accent-foreground: var(--cc-hsl-accent-foreground);
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 60 9.1% 97.8%;
-    --border: 20 5.9% 90%;
-    --input: 20 5.9% 90%;
-    --ring: 20 14.3% 4.1%;
+    --border: var(--cc-hsl-border);
+    --input: var(--cc-hsl-input);
+    --ring: var(--cc-hsl-ring);
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;
@@ -211,25 +484,25 @@ body {
     --radius: 0.5rem;
   }
   .dark {
-    --background: 20 14.3% 4.1%;
-    --foreground: 60 9.1% 97.8%;
-    --card: 20 14.3% 4.1%;
-    --card-foreground: 60 9.1% 97.8%;
-    --popover: 20 14.3% 4.1%;
-    --popover-foreground: 60 9.1% 97.8%;
-    --primary: 60 9.1% 97.8%;
-    --primary-foreground: 24 9.8% 10%;
-    --secondary: 12 6.5% 15.1%;
-    --secondary-foreground: 60 9.1% 97.8%;
-    --muted: 12 6.5% 15.1%;
-    --muted-foreground: 24 5.4% 63.9%;
-    --accent: 12 6.5% 15.1%;
-    --accent-foreground: 60 9.1% 97.8%;
+    --background: var(--cc-hsl-background);
+    --foreground: var(--cc-hsl-foreground);
+    --card: var(--cc-hsl-card);
+    --card-foreground: var(--cc-hsl-card-foreground);
+    --popover: var(--cc-hsl-popover);
+    --popover-foreground: var(--cc-hsl-popover-foreground);
+    --primary: var(--cc-hsl-primary);
+    --primary-foreground: var(--cc-hsl-primary-foreground);
+    --secondary: var(--cc-hsl-secondary);
+    --secondary-foreground: var(--cc-hsl-secondary-foreground);
+    --muted: var(--cc-hsl-muted);
+    --muted-foreground: var(--cc-hsl-muted-foreground);
+    --accent: var(--cc-hsl-accent);
+    --accent-foreground: var(--cc-hsl-accent-foreground);
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 60 9.1% 97.8%;
-    --border: 12 6.5% 15.1%;
-    --input: 12 6.5% 15.1%;
-    --ring: 24 5.7% 82.9%;
+    --border: var(--cc-hsl-border);
+    --input: var(--cc-hsl-input);
+    --ring: var(--cc-hsl-ring);
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
@@ -238,13 +511,24 @@ body {
   }
 }
 
-
-
 @layer base {
   * {
     @apply border-border;
   }
   body {
     @apply bg-background text-foreground;
+  }
+
+  :where(
+    button,
+    [href],
+    input,
+    select,
+    textarea,
+    [role='button']
+  ):focus-visible {
+    outline: 2px solid rgba(var(--cc-sidebar-active) / 0.95);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 3px rgba(var(--cc-sidebar-active) / 0.24);
   }
 }

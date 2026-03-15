@@ -65,7 +65,7 @@ const RegisterPage = () => {
       </div>
       <form
         onSubmit={onSubmit}
-        className="relative z-10 w-full max-w-xl space-y-6 rounded-lg bg-surface/80/90 p-8 shadow-neon backdrop-blur"
+        className="relative z-10 w-full max-w-xl space-y-6 rounded-lg border border-white/10 bg-card/95 p-8 shadow-neon backdrop-blur"
       >
         <header className="space-y-2 text-center">
           <h1 className="text-2xl font-semibold">Create your account</h1>
@@ -78,7 +78,7 @@ const RegisterPage = () => {
             <label className="text-sm font-medium">Full Name</label>
             <input
               {...register('name', { required: 'Name is required' })}
-              className="w-full rounded bg-white/5 px-3 py-2 text-sm text-white"
+              className="w-full rounded border border-white/10 bg-card/80 px-3 py-2 text-sm text-white"
               required
             />
             {errors.name && (
@@ -96,7 +96,7 @@ const RegisterPage = () => {
                 }
               })}
               type="email"
-              className="w-full rounded bg-white/5 px-3 py-2 text-sm text-white"
+              className="w-full rounded border border-white/10 bg-card/80 px-3 py-2 text-sm text-white"
               required
             />
             {errors.email && (
@@ -112,7 +112,7 @@ const RegisterPage = () => {
               minLength: { value: 6, message: 'Minimum 6 characters' }
             })}
             type="password"
-            className="w-full rounded bg-white/5 px-3 py-2 text-sm text-white"
+            className="w-full rounded border border-white/10 bg-card/80 px-3 py-2 text-sm text-white"
             required
           />
           {errors.password && (
@@ -124,7 +124,7 @@ const RegisterPage = () => {
             <label className="text-sm font-medium">Role</label>
             <select
               {...register('role')}
-              className="w-full rounded bg-white/5 px-3 py-2 text-sm text-white"
+              className="w-full rounded border border-white/10 bg-card/80 px-3 py-2 text-sm text-white"
             >
               <option value="student">Student</option>
               <option value="alumni">Alumni</option>
@@ -136,7 +136,7 @@ const RegisterPage = () => {
             </label>
             <input
               {...register('inviteCode')}
-              className="w-full rounded bg-white/5 px-3 py-2 text-sm text-white"
+              className="w-full rounded border border-white/10 bg-card/80 px-3 py-2 text-sm text-white"
             />
           </div>
         </div>

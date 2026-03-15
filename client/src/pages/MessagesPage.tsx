@@ -1,5 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient, type InfiniteData } from '@tanstack/react-query';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+  type InfiniteData
+} from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
 import {
   AlertTriangle,
@@ -64,7 +70,11 @@ const formatRelativeTime = (value: string) => {
 const parseMessageContent = (content: string) => {
   const match = content.match(codeBlockRegex);
   if (!match) {
-    return { plainText: content, code: null as string | null, language: undefined as string | undefined };
+    return {
+      plainText: content,
+      code: null as string | null,
+      language: undefined as string | undefined
+    };
   }
 
   const [, language, rawCode] = match;
@@ -80,10 +90,15 @@ const parseMessageContent = (content: string) => {
 
 const isImageUrl = (url: string) => {
   const clean = url.split('?')[0].toLowerCase();
-  return ['.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg'].some((ext) => clean.endsWith(ext));
+  return ['.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg'].some((ext) =>
+    clean.endsWith(ext)
+  );
 };
 
-const getConversationTitle = (conversation: ConversationSummary, currentUserId?: string) =>
+const getConversationTitle = (
+  conversation: ConversationSummary,
+  currentUserId?: string
+) =>
   conversation.participants
     .filter((participant) => participant._id !== currentUserId)
     .map((participant) => participant.name)
@@ -92,7 +107,9 @@ const getConversationTitle = (conversation: ConversationSummary, currentUserId?:
 const MessagesPage = () => {
   const { user } = useAuthStore();
   const { push } = useToast();
-  const [selectedConversation, setSelectedConversation] = useState<string | null>(null);
+  const [selectedConversation, setSelectedConversation] = useState<
+    string | null
+  >(null);
   const [composerValue, setComposerValue] = useState('');
   const [composerMode, setComposerMode] = useState<'text' | 'code'>('text');
   const [pendingFile, setPendingFile] = useState<File | null>(null);
@@ -106,12 +123,17 @@ const MessagesPage = () => {
   const shouldStickToBottom = useRef(true);
   const queryClient = useQueryClient();
   const socket = useSocket();
-  const getIsMobile = useCallback(() => (typeof window !== 'undefined' ? window.innerWidth < 1024 : false), []);
+  const getIsMobile = useCallback(
+    () => (typeof window !== 'undefined' ? window.innerWidth < 1024 : false),
+    []
+  );
   const [isMobile, setIsMobile] = useState(getIsMobile);
-  const [showConversationList, setShowConversationList] = useState(() => !getIsMobile());
+  const [showConversationList, setShowConversationList] = useState(
+    () => !getIsMobile()
+  );
 
-  const { data: conversations = [], isLoading: conversationsLoading } = useQuery<ConversationSummary[]>(
-    {
+  const { data: conversations = [], isLoading: conversationsLoading } =
+    useQuery<ConversationSummary[]>({
       queryKey: ['conversations'],
       queryFn: async () => {
         const res = await api.get('/messaging/conversations');
@@ -119,10 +141,14 @@ const MessagesPage = () => {
       },
       staleTime: 60_000,
       refetchInterval: 90_000
-    }
-  );
+    });
 
-  type MessagePageResponse = { data: ChatMessage[]; page: number; limit: number; total: number };
+  type MessagePageResponse = {
+    data: ChatMessage[];
+    page: number;
+    limit: number;
+    total: number;
+  };
 
   const {
     data: messagePages,
@@ -137,9 +163,12 @@ const MessagesPage = () => {
       if (!selectedConversation) {
         return { data: [], page: 1, limit: 20, total: 0 };
       }
-      const res = await api.get(`/messaging/conversations/${selectedConversation}/messages`, {
-        params: { page: pageParam, limit: 30 }
-      });
+      const res = await api.get(
+        `/messaging/conversations/${selectedConversation}/messages`,
+        {
+          params: { page: pageParam, limit: 30 }
+        }
+      );
       return res.data as MessagePageResponse;
     },
     getNextPageParam: (lastPage) => {
@@ -175,20 +204,26 @@ const MessagesPage = () => {
 
   const attachmentConversations = useMemo(
     () =>
-      conversations.filter((conversation) =>
-        (conversation.lastMessage?.content ?? '').toLowerCase() === 'attachment'
+      conversations.filter(
+        (conversation) =>
+          (conversation.lastMessage?.content ?? '').toLowerCase() ===
+          'attachment'
       ).length,
     [conversations]
   );
 
   const activeConversation = useMemo(
-    () => conversations.find((conversation) => conversation._id === selectedConversation) ?? null,
+    () =>
+      conversations.find(
+        (conversation) => conversation._id === selectedConversation
+      ) ?? null,
     [conversations, selectedConversation]
   );
 
   const sortedConversations = useMemo(() => {
     const byRecent = [...conversations].sort(
-      (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+      (a, b) =>
+        new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
     );
 
     const filtered = byRecent.filter((conversation) => {
@@ -201,7 +236,10 @@ const MessagesPage = () => {
       }
 
       if (filter === 'attachments') {
-        return (conversation.lastMessage?.content ?? '').toLowerCase() === 'attachment';
+        return (
+          (conversation.lastMessage?.content ?? '').toLowerCase() ===
+          'attachment'
+        );
       }
 
       return true;
@@ -224,7 +262,11 @@ const MessagesPage = () => {
       });
       return res.data as { url: string };
     },
-    onError: () => push({ message: 'Failed to upload file. Please try again.', type: 'error' })
+    onError: () =>
+      push({
+        message: 'Failed to upload file. Please try again.',
+        type: 'error'
+      })
   });
 
   const sendMessageMutation = useMutation({
@@ -238,7 +280,10 @@ const MessagesPage = () => {
       attachmentUrl?: string;
     }) => {
       const payload = { content, attachmentUrl };
-      const res = await api.post(`/messaging/conversations/${conversationId}/messages`, payload);
+      const res = await api.post(
+        `/messaging/conversations/${conversationId}/messages`,
+        payload
+      );
       return res.data as ChatMessage;
     },
     onSuccess: () => {
@@ -246,7 +291,9 @@ const MessagesPage = () => {
       setPendingFile(null);
       setFilePreview(null);
       shouldStickToBottom.current = true;
-      queryClient.invalidateQueries({ queryKey: ['messages', selectedConversation] });
+      queryClient.invalidateQueries({
+        queryKey: ['messages', selectedConversation]
+      });
       queryClient.invalidateQueries({ queryKey: ['conversations'] });
       push({ message: 'Message sent', type: 'success' });
     },
@@ -277,7 +324,9 @@ const MessagesPage = () => {
 
     if (queryConversation) {
       if (selectedConversation !== queryConversation) {
-        const exists = sortedConversations.some((conversation) => conversation._id === queryConversation);
+        const exists = sortedConversations.some(
+          (conversation) => conversation._id === queryConversation
+        );
         if (exists) {
           handleSelectConversation(queryConversation);
         } else if (available) {
@@ -290,7 +339,12 @@ const MessagesPage = () => {
     if (!selectedConversation && available) {
       handleSelectConversation(sortedConversations[0]._id);
     }
-  }, [handleSelectConversation, searchParams, selectedConversation, sortedConversations]);
+  }, [
+    handleSelectConversation,
+    searchParams,
+    selectedConversation,
+    sortedConversations
+  ]);
 
   useEffect(() => {
     if (!messagesContainerRef.current || !shouldStickToBottom.current) return;
@@ -371,7 +425,8 @@ const MessagesPage = () => {
             if (index === 0) {
               const ordered = [...page.data, message].sort(
                 (a: ChatMessage, b: ChatMessage) =>
-                  new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+                  new Date(a.createdAt).getTime() -
+                  new Date(b.createdAt).getTime()
               );
               return {
                 ...page,
@@ -405,7 +460,13 @@ const MessagesPage = () => {
     return () => {
       socket.off(SOCKET_EVENTS.CONVERSATION_NEW_MESSAGE, handleNewMessage);
     };
-  }, [socket, queryClient, selectedConversation, user?._id, markAsReadMutation]);
+  }, [
+    socket,
+    queryClient,
+    selectedConversation,
+    user?._id,
+    markAsReadMutation
+  ]);
 
   const panelHeightClass = isMobile ? 'h-[calc(100vh-220px)]' : 'h-[70vh]';
 
@@ -438,17 +499,30 @@ const MessagesPage = () => {
         });
 
         if (!result.sent && !pendingFile && !composerValue.trim()) {
-          push({ message: 'Add text or attach a file before sending.', type: 'error' });
+          push({
+            message: 'Add text or attach a file before sending.',
+            type: 'error'
+          });
         }
       } catch (error) {
         if (error instanceof Error) {
           push({ message: error.message, type: 'error' });
         } else {
-          push({ message: 'Unable to send message. Please try again.', type: 'error' });
+          push({
+            message: 'Unable to send message. Please try again.',
+            type: 'error'
+          });
         }
       }
     },
-    [composerValue, pendingFile, push, selectedConversation, sendMessageMutation, uploadMutation]
+    [
+      composerValue,
+      pendingFile,
+      push,
+      selectedConversation,
+      sendMessageMutation,
+      uploadMutation
+    ]
   );
 
   const handleScroll = useCallback(
@@ -501,7 +575,10 @@ const MessagesPage = () => {
   if (!user) {
     return (
       <section className="flex h-full items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-neonCyan" aria-label="Loading user" />
+        <Loader2
+          className="h-6 w-6 animate-spin text-neonCyan"
+          aria-label="Loading user"
+        />
       </section>
     );
   }
@@ -509,341 +586,427 @@ const MessagesPage = () => {
   return (
     <section className="space-y-6">
       <header className="space-y-2">
-        <h2 className="text-2xl font-semibold text-white">Inbox</h2>
+        <h2 className="text-2xl font-semibold text-foreground">Inbox</h2>
         {!isMobile && (
           <>
-            <p className="text-sm text-white/70">
+            <p className="text-sm text-muted-foreground">
               Share updates, snippets, and files with your network in real time.
             </p>
             <div className="grid gap-3 sm:grid-cols-3">
-              <article className="neon-border rounded-lg bg-surface/80 p-3 text-sm text-white/70">
-                <p className="text-xs uppercase tracking-[0.2em] text-white/50">Conversations</p>
-                <p className="mt-1 text-2xl font-semibold text-white">{conversations.length}</p>
+              <article className="neon-border rounded-lg bg-card/90 p-3 text-sm text-muted-foreground">
+                <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                  Conversations
+                </p>
+                <p className="mt-1 text-2xl font-semibold text-foreground">
+                  {conversations.length}
+                </p>
               </article>
-              <article className="neon-border rounded-lg bg-surface/80 p-3 text-sm text-white/70">
-                <p className="text-xs uppercase tracking-[0.2em] text-white/50">Unread</p>
-                <p className="mt-1 text-2xl font-semibold text-neonCyan">{unreadTotal}</p>
+              <article className="neon-border rounded-lg bg-card/90 p-3 text-sm text-muted-foreground">
+                <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                  Unread
+                </p>
+                <p className="mt-1 text-2xl font-semibold text-neonCyan">
+                  {unreadTotal}
+                </p>
               </article>
-              <article className="neon-border rounded-lg bg-surface/80 p-3 text-sm text-white/70">
-                <p className="text-xs uppercase tracking-[0.2em] text-white/50">Attachments</p>
-                <p className="mt-1 text-2xl font-semibold text-neonMagenta">{attachmentConversations}</p>
+              <article className="neon-border rounded-lg bg-card/90 p-3 text-sm text-muted-foreground">
+                <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                  Attachments
+                </p>
+                <p className="mt-1 text-2xl font-semibold text-neonMagenta">
+                  {attachmentConversations}
+                </p>
               </article>
             </div>
           </>
         )}
       </header>
 
-      <div className={`grid gap-4 ${!isMobile ? 'lg:grid-cols-[320px_minmax(0,1fr)]' : ''}`}>
+      <div
+        className={`grid gap-4 ${!isMobile ? 'lg:grid-cols-[320px_minmax(0,1fr)]' : ''}`}
+      >
         {(!isMobile || showConversationList) && (
-          <aside className={`neon-border flex ${panelHeightClass} flex-col rounded-xl bg-surface/80 p-4 ${isMobile ? 'relative' : ''}`}>
-          <div className="mb-4 space-y-3">
-            <div className="relative">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" />
-              <input
-                value={searchValue}
-                onChange={(event) => setSearchValue(event.target.value)}
-                placeholder="Search teammates"
-                className="w-full rounded-lg border border-white/10 bg-white/5 py-2 pl-9 pr-3 text-sm text-white placeholder:text-white/40 focus:border-neonCyan focus:outline-none"
-              />
-            </div>
-            <div className="flex gap-2 text-xs">
-              {([
-                { key: 'all', label: 'All' },
-                { key: 'unread', label: 'Unread' },
-                { key: 'attachments', label: 'Attachments' }
-              ] as const).map((option) => (
-                <button
-                  key={option.key}
-                  type="button"
-                  onClick={() => setFilter(option.key)}
-                  className={`rounded-full px-3 py-1 font-medium transition ${
-                    filter === option.key
-                      ? 'bg-neonCyan text-black'
-                      : 'border border-white/10 bg-white/5 text-white/70 hover:border-neonCyan/40'
-                  }`}
-                >
-                  {option.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="flex-1 overflow-y-auto pr-1">
-            {conversationsLoading ? (
-              <div className="flex h-full items-center justify-center text-sm text-white/60">
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Loading conversations…
+          <aside
+            className={`neon-border flex ${panelHeightClass} flex-col rounded-xl bg-sidebar/95 p-4 ${isMobile ? 'relative' : ''}`}
+          >
+            <div className="mb-4 space-y-3">
+              <div className="relative">
+                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <input
+                  value={searchValue}
+                  onChange={(event) => setSearchValue(event.target.value)}
+                  placeholder="Search teammates"
+                  className="w-full rounded-lg border border-border/70 bg-card/75 py-2 pl-9 pr-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-sidebar-active focus:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-active/50"
+                />
               </div>
-            ) : sortedConversations.length === 0 ? (
-              <div className="flex h-full flex-col items-center justify-center gap-2 text-center text-sm text-white/60">
-                <MessageCircle className="h-6 w-6" />
-                <p>No conversations yet. Start by reaching out from a profile.</p>
+              <div className="flex gap-2 text-xs">
+                {(
+                  [
+                    { key: 'all', label: 'All' },
+                    { key: 'unread', label: 'Unread' },
+                    { key: 'attachments', label: 'Attachments' }
+                  ] as const
+                ).map((option) => (
+                  <button
+                    key={option.key}
+                    type="button"
+                    onClick={() => setFilter(option.key)}
+                    className={`rounded-full px-3 py-1 font-medium transition ${
+                      filter === option.key
+                        ? 'bg-sidebar-active text-primary-foreground'
+                        : 'border border-border/70 bg-card/70 text-foreground/85 hover:border-sidebar-active/40'
+                    }`}
+                  >
+                    {option.label}
+                  </button>
+                ))}
               </div>
-            ) : (
-              <ul className="space-y-2">
-                {sortedConversations.map((conversation) => {
-                  const unread = conversation.unreadCount?.[user._id] ?? 0;
-                  const isActive = selectedConversation === conversation._id;
-                  const title = getConversationTitle(conversation, user._id);
-                  const preview = conversation.lastMessage?.content ?? 'Say hello 👋';
+            </div>
 
-                  return (
-                    <li key={conversation._id}>
-                      <button
-                        type="button"
-                        onClick={() => handleSelectConversation(conversation._id)}
-                        className={`w-full rounded-lg border p-3 text-left transition ${
-                          isActive
-                            ? 'border-neonCyan bg-neonCyan/20'
-                            : 'border-white/10 bg-white/5 hover:border-neonCyan/30 hover:bg-white/10'
-                        }`}
-                      >
-                        <p className="flex items-center justify-between text-sm font-semibold text-white">
-                          <span className="truncate">{title}</span>
-                          <span className="text-xs font-normal text-white/50">
-                            {formatRelativeTime(conversation.updatedAt)}
-                          </span>
-                        </p>
-                        <p className="mt-1 truncate text-xs text-white/60">{preview}</p>
-                        {unread > 0 && (
-                          <span className="mt-2 inline-flex items-center rounded-full bg-neonCyan/90 px-2 py-0.5 text-[10px] font-semibold text-black">
-                            {unread} unread
-                          </span>
-                        )}
-                      </button>
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
-          </div>
+            <div className="flex-1 overflow-y-auto pr-1">
+              {conversationsLoading ? (
+                <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Loading
+                  conversations…
+                </div>
+              ) : sortedConversations.length === 0 ? (
+                <div className="flex h-full flex-col items-center justify-center gap-2 text-center text-sm text-muted-foreground">
+                  <MessageCircle className="h-6 w-6" />
+                  <p>
+                    No conversations yet. Start by reaching out from a profile.
+                  </p>
+                </div>
+              ) : (
+                <ul className="space-y-2">
+                  {sortedConversations.map((conversation) => {
+                    const unread = conversation.unreadCount?.[user._id] ?? 0;
+                    const isActive = selectedConversation === conversation._id;
+                    const title = getConversationTitle(conversation, user._id);
+                    const preview =
+                      conversation.lastMessage?.content ?? 'Say hello 👋';
+
+                    return (
+                      <li key={conversation._id}>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            handleSelectConversation(conversation._id)
+                          }
+                          className={`w-full rounded-lg border p-3 text-left transition ${
+                            isActive
+                              ? 'border-sidebar-active/70 bg-sidebar-active/20'
+                              : 'border-border/70 bg-card/70 hover:border-sidebar-active/30 hover:bg-card/90'
+                          }`}
+                        >
+                          <p className="flex items-center justify-between text-sm font-semibold text-foreground">
+                            <span className="truncate">{title}</span>
+                            <span className="text-xs font-normal text-muted-foreground">
+                              {formatRelativeTime(conversation.updatedAt)}
+                            </span>
+                          </p>
+                          <p className="mt-1 truncate text-xs text-muted-foreground">
+                            {preview}
+                          </p>
+                          {unread > 0 && (
+                            <span className="mt-2 inline-flex items-center rounded-full bg-sidebar-active px-2 py-0.5 text-[10px] font-semibold text-primary-foreground">
+                              {unread} unread
+                            </span>
+                          )}
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </div>
           </aside>
         )}
 
         {(!isMobile || !showConversationList) && (
-          <main className={`neon-border flex ${panelHeightClass} flex-col rounded-xl bg-surface/80`}>
-          {selectedConversation ? (
-            <>
-              <header className="flex items-center justify-between border-b border-white/5 px-5 py-3">
-                <div className="flex items-center gap-3">
-                  {isMobile && (
-                    <button
-                      type="button"
-                      onClick={handleBackToConversations}
-                      className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/80 transition hover:border-neonCyan/60 hover:text-white"
-                    >
-                      <ArrowLeft className="h-3 w-3" />
-                      Inbox
-                    </button>
-                  )}
-                  <h3 className="text-lg font-semibold text-white">
-                    {activeConversation
-                      ? getConversationTitle(activeConversation, user._id)
-                      : 'Conversation'}
-                  </h3>
-                  <p className="text-xs text-white/60">
-                    Attach images, documents, or code blocks using <code className="rounded bg-black/40 px-1">```language</code>
-                  </p>
-                </div>
-                <div className="flex items-center gap-2 text-xs text-white/60">
-                  {isFetchingNextPage && <Loader2 className="h-4 w-4 animate-spin text-neonCyan" />}
-                  <span>{messages.length} messages</span>
-                </div>
-              </header>
-
-              <div
-                ref={messagesContainerRef}
-                onScroll={handleScroll}
-                className="flex-1 space-y-4 overflow-y-auto px-5 py-4"
-              >
-                {messagesLoading ? (
-                  <div className="flex h-full items-center justify-center text-sm text-white/60">
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Loading thread…
+          <main
+            className={`neon-border flex ${panelHeightClass} flex-col rounded-xl bg-card/95`}
+          >
+            {selectedConversation ? (
+              <>
+                <header className="flex items-center justify-between border-b border-white/5 px-5 py-3">
+                  <div className="flex items-center gap-3">
+                    {isMobile && (
+                      <button
+                        type="button"
+                        onClick={handleBackToConversations}
+                        className="inline-flex items-center gap-1 rounded-full border border-border/70 bg-card/75 px-3 py-1 text-xs text-foreground/85 transition hover:border-sidebar-active/60 hover:text-foreground"
+                      >
+                        <ArrowLeft className="h-3 w-3" />
+                        Inbox
+                      </button>
+                    )}
+                    <h3 className="text-lg font-semibold text-foreground">
+                      {activeConversation
+                        ? getConversationTitle(activeConversation, user._id)
+                        : 'Conversation'}
+                    </h3>
+                    <p className="text-xs text-muted-foreground">
+                      Attach images, documents, or code blocks using{' '}
+                      <code className="rounded bg-black/40 px-1">
+                        ```language
+                      </code>
+                    </p>
                   </div>
-                ) : messages.length === 0 ? (
-                  <div className="flex h-full flex-col items-center justify-center gap-3 text-center text-white/60">
-                    <MessageCircle className="h-8 w-8" />
-                    <p>Kick off the conversation with a quick note or paste a code snippet.</p>
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    {isFetchingNextPage && (
+                      <Loader2 className="h-4 w-4 animate-spin text-neonCyan" />
+                    )}
+                    <span>{messages.length} messages</span>
                   </div>
-                ) : (
-                  messages.map((message: ChatMessage) => {
-                    const isOwn = message.sender._id === user._id;
-                    const { plainText, code, language } = parseMessageContent(message.content);
-                    const showAttachment = Boolean(message.attachmentUrl);
+                </header>
 
-                    return (
-                      <div key={message._id} className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}>
+                <div
+                  ref={messagesContainerRef}
+                  onScroll={handleScroll}
+                  className="flex-1 space-y-4 overflow-y-auto px-5 py-4"
+                >
+                  {messagesLoading ? (
+                    <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Loading
+                      thread…
+                    </div>
+                  ) : messages.length === 0 ? (
+                    <div className="flex h-full flex-col items-center justify-center gap-3 text-center text-muted-foreground">
+                      <MessageCircle className="h-8 w-8" />
+                      <p>
+                        Kick off the conversation with a quick note or paste a
+                        code snippet.
+                      </p>
+                    </div>
+                  ) : (
+                    messages.map((message: ChatMessage) => {
+                      const isOwn = message.sender._id === user._id;
+                      const { plainText, code, language } = parseMessageContent(
+                        message.content
+                      );
+                      const showAttachment = Boolean(message.attachmentUrl);
+
+                      return (
                         <div
-                          className={`max-w-xl space-y-3 rounded-2xl border px-4 py-3 text-sm shadow-lg transition ${
-                            isOwn
-                              ? 'border-neonCyan/40 bg-neonCyan/20 text-white'
-                              : 'border-white/10 bg-white/5 text-white/80'
-                          }`}
+                          key={message._id}
+                          className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}
                         >
-                          <div className="flex items-center justify-between text-xs text-white/50">
-                            <span>{isOwn ? 'You' : message.sender.name}</span>
-                            <span>{formatRelativeTime(message.createdAt)}</span>
+                          <div
+                            className={`max-w-xl space-y-3 rounded-2xl border px-4 py-3 text-sm shadow-lg transition ${
+                              isOwn
+                                ? 'border-sidebar-active/35 bg-chat-sent text-primary-foreground'
+                                : 'border-border/70 bg-chat-received text-foreground'
+                            }`}
+                          >
+                            <div
+                              className={`flex items-center justify-between text-xs ${
+                                isOwn
+                                  ? 'text-primary-foreground/70'
+                                  : 'text-muted-foreground'
+                              }`}
+                            >
+                              <span>{isOwn ? 'You' : message.sender.name}</span>
+                              <span>
+                                {formatRelativeTime(message.createdAt)}
+                              </span>
+                            </div>
+
+                            {plainText && (
+                              <p
+                                className={`whitespace-pre-line text-sm ${
+                                  isOwn
+                                    ? 'text-primary-foreground'
+                                    : 'text-foreground'
+                                }`}
+                              >
+                                {plainText}
+                              </p>
+                            )}
+
+                            {code && (
+                              <div className="overflow-hidden rounded-lg border border-border/70">
+                                <CodeSnippet code={code} language={language} />
+                              </div>
+                            )}
+
+                            {showAttachment && (
+                              <div className="rounded-lg border border-border/70 bg-card/75 p-3 text-sm">
+                                {isImageUrl(message.attachmentUrl!) ? (
+                                  <img
+                                    src={message.attachmentUrl!}
+                                    alt="Attachment"
+                                    className="max-h-60 w-full rounded-md object-contain"
+                                    loading="lazy"
+                                  />
+                                ) : (
+                                  <div className="flex items-center gap-2 text-foreground/85">
+                                    <FileText className="h-4 w-4" />
+                                    <a
+                                      href={message.attachmentUrl!}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                      className="flex items-center gap-1 text-xs text-sidebar-active hover:text-sidebar-active/80"
+                                    >
+                                      Open attachment
+                                      <ExternalLink className="h-3 w-3" />
+                                    </a>
+                                  </div>
+                                )}
+                              </div>
+                            )}
+
+                            {!message.isRead && !isOwn && (
+                              <p className="text-xs text-sidebar-active/90">
+                                Delivered · awaiting read
+                              </p>
+                            )}
                           </div>
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
 
-                          {plainText && <p className="whitespace-pre-line text-sm text-white/90">{plainText}</p>}
+                <footer className="border-t border-border/60 px-5 py-4">
+                  <div className="mb-3 hidden flex-wrap gap-2 sm:flex">
+                    {quickReplies.map((reply) => (
+                      <button
+                        key={reply}
+                        type="button"
+                        onClick={() =>
+                          setComposerValue((prev) =>
+                            prev ? `${prev}\n${reply}` : reply
+                          )
+                        }
+                        className="rounded-full border border-border/70 bg-card/70 px-3 py-1 text-xs text-foreground/80 transition hover:border-sidebar-active/40 hover:text-foreground"
+                      >
+                        {reply}
+                      </button>
+                    ))}
+                  </div>
 
-                          {code && (
-                            <div className="overflow-hidden rounded-lg border border-white/10">
-                              <CodeSnippet code={code} language={language} />
-                            </div>
-                          )}
-
-                          {showAttachment && (
-                            <div className="rounded-lg border border-white/10 bg-black/30 p-3 text-sm">
-                              {isImageUrl(message.attachmentUrl!) ? (
-                                <img
-                                  src={message.attachmentUrl!}
-                                  alt="Attachment"
-                                  className="max-h-60 w-full rounded-md object-contain"
-                                  loading="lazy"
-                                />
-                              ) : (
-                                <div className="flex items-center gap-2 text-white/80">
-                                  <FileText className="h-4 w-4" />
-                                  <a
-                                    href={message.attachmentUrl!}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="flex items-center gap-1 text-xs text-neonCyan hover:text-neonCyan/80"
-                                  >
-                                    Open attachment
-                                    <ExternalLink className="h-3 w-3" />
-                                  </a>
-                                </div>
-                              )}
-                            </div>
-                          )}
-
-                          {!message.isRead && !isOwn && (
-                            <p className="text-xs text-neonCyan/80">Delivered · awaiting read</p>
-                          )}
+                  {pendingFile && (
+                    <div className="mb-3 flex items-center justify-between rounded-lg border border-border/70 bg-card/75 p-3 text-xs text-foreground/85">
+                      <div className="flex items-center gap-3">
+                        <Paperclip className="h-4 w-4" />
+                        <div>
+                          <p className="font-medium text-foreground">
+                            {pendingFile.name}
+                          </p>
+                          <p>{(pendingFile.size / 1024).toFixed(0)} KB</p>
                         </div>
                       </div>
-                    );
-                  })
-                )}
-              </div>
+                      <button
+                        type="button"
+                        onClick={handleClearAttachment}
+                        className="rounded-full border border-border/70 p-1 text-muted-foreground transition hover:border-neonMagenta/60 hover:text-neonMagenta"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  )}
 
-              <footer className="border-t border-white/5 px-5 py-4">
-                <div className="mb-3 hidden flex-wrap gap-2 sm:flex">
-                  {quickReplies.map((reply) => (
-                    <button
-                      key={reply}
-                      type="button"
-                      onClick={() => setComposerValue((prev) => (prev ? `${prev}\n${reply}` : reply))}
-                      className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70 transition hover:border-neonCyan/40 hover:text-white"
-                    >
-                      {reply}
-                    </button>
-                  ))}
-                </div>
+                  {filePreview && (
+                    <div className="mb-3 overflow-hidden rounded-lg border border-white/10">
+                      <img
+                        src={filePreview}
+                        alt="Attachment preview"
+                        className="max-h-48 w-full object-cover"
+                      />
+                    </div>
+                  )}
 
-                {pendingFile && (
-                  <div className="mb-3 flex items-center justify-between rounded-lg border border-white/10 bg-white/5 p-3 text-xs text-white/80">
-                    <div className="flex items-center gap-3">
-                      <Paperclip className="h-4 w-4" />
-                      <div>
-                        <p className="font-medium text-white">{pendingFile.name}</p>
-                        <p>{(pendingFile.size / 1024).toFixed(0)} KB</p>
+                  <form onSubmit={handleComposerSubmit} className="space-y-3">
+                    <div className="flex flex-col gap-3 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={handleFilePick}
+                          className="flex items-center gap-1 rounded-full border border-border/70 bg-card/70 px-3 py-1 text-xs transition hover:border-sidebar-active/40 hover:text-foreground"
+                        >
+                          <Paperclip className="h-3 w-3" /> Attach file
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setComposerMode((prev) =>
+                              prev === 'text' ? 'code' : 'text'
+                            )
+                          }
+                          className={`flex items-center gap-1 rounded-full border px-3 py-1 transition ${
+                            composerMode === 'code'
+                              ? 'border-neonMagenta/60 bg-neonMagenta/20 text-foreground'
+                              : 'border-border/70 bg-card/70 text-foreground/80 hover:border-neonMagenta/40'
+                          }`}
+                        >
+                          <Code2 className="h-3 w-3" />{' '}
+                          {composerMode === 'code' ? 'Code mode' : 'Plain text'}
+                        </button>
                       </div>
+                      <span className="text-center text-[11px] text-muted-foreground sm:text-right">
+                        Max 5MB · markdown code fences supported
+                      </span>
                     </div>
-                    <button
-                      type="button"
-                      onClick={handleClearAttachment}
-                      className="rounded-full border border-white/10 p-1 text-white/50 transition hover:border-neonMagenta/60 hover:text-neonMagenta"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
-                  </div>
-                )}
 
-                {filePreview && (
-                  <div className="mb-3 overflow-hidden rounded-lg border border-white/10">
-                    <img src={filePreview} alt="Attachment preview" className="max-h-48 w-full object-cover" />
-                  </div>
-                )}
+                    <textarea
+                      name="messageContent"
+                      value={composerValue}
+                      onChange={(event) => setComposerValue(event.target.value)}
+                      placeholder={
+                        composerMode === 'code'
+                          ? 'Share code using ```language\n// snippet```'
+                          : 'Write a message… markdown code fences supported'
+                      }
+                      className={`h-28 w-full resize-none rounded-xl border border-border/70 bg-card/80 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-sidebar-active focus:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-active/50 ${
+                        composerMode === 'code' ? 'font-mono' : ''
+                      }`}
+                    />
 
-                <form onSubmit={handleComposerSubmit} className="space-y-3">
-                  <div className="flex flex-col gap-3 text-xs text-white/60 sm:flex-row sm:items-center sm:justify-between">
-                    <div className="flex flex-wrap items-center gap-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <AlertTriangle className="h-3 w-3" />
+                        <span>
+                          Sending without text? Attachments alone are fine.
+                        </span>
+                      </div>
                       <button
-                        type="button"
-                        onClick={handleFilePick}
-                        className="flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs transition hover:border-neonCyan/40 hover:text-white"
+                        type="submit"
+                        disabled={
+                          sendMessageMutation.isPending ||
+                          uploadMutation.isPending
+                        }
+                        className="inline-flex items-center gap-2 rounded-full bg-neonCyan px-5 py-2 text-sm font-semibold text-black transition hover:bg-neonCyan/80 focus-visible:ring-2 focus-visible:ring-sidebar-active/60 disabled:cursor-not-allowed disabled:opacity-60"
                       >
-                        <Paperclip className="h-3 w-3" /> Attach file
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setComposerMode((prev) => (prev === 'text' ? 'code' : 'text'))}
-                        className={`flex items-center gap-1 rounded-full border px-3 py-1 transition ${
-                          composerMode === 'code'
-                            ? 'border-neonMagenta/60 bg-neonMagenta/20 text-white'
-                            : 'border-white/10 bg-white/5 text-white/70 hover:border-neonMagenta/40'
-                        }`}
-                      >
-                        <Code2 className="h-3 w-3" /> {composerMode === 'code' ? 'Code mode' : 'Plain text'}
+                        {(sendMessageMutation.isPending ||
+                          uploadMutation.isPending) && (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        )}
+                        <Send className="h-4 w-4" />
+                        Send
                       </button>
                     </div>
-                    <span className="text-center text-[11px] text-white/50 sm:text-right">
-                      Max 5MB · markdown code fences supported
-                    </span>
-                  </div>
+                  </form>
 
-                  <textarea
-                    name="messageContent"
-                    value={composerValue}
-                    onChange={(event) => setComposerValue(event.target.value)}
-                    placeholder={
-                      composerMode === 'code'
-                        ? 'Share code using ```language\n// snippet```'
-                        : 'Write a message… markdown code fences supported'
-                    }
-                    className={`h-28 w-full resize-none rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-white placeholder:text-white/40 focus:border-neonCyan focus:outline-none ${
-                      composerMode === 'code' ? 'font-mono' : ''
-                    }`}
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    name="messageAttachment"
+                    className="hidden"
+                    onChange={handleFileChange}
+                    accept=".png,.jpg,.jpeg,.gif,.webp,.pdf,.zip,.json,.txt,.css,.html,.js,.ts,.tsx,.py,.java,.c,.cpp"
                   />
-
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-xs text-white/50">
-                      <AlertTriangle className="h-3 w-3" />
-                      <span>Sending without text? Attachments alone are fine.</span>
-                    </div>
-                    <button
-                      type="submit"
-                      disabled={sendMessageMutation.isPending || uploadMutation.isPending}
-                      className="inline-flex items-center gap-2 rounded-full bg-neonCyan px-5 py-2 text-sm font-semibold text-black transition hover:bg-neonCyan/80 disabled:cursor-not-allowed disabled:opacity-60"
-                    >
-                      {(sendMessageMutation.isPending || uploadMutation.isPending) && (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      )}
-                      <Send className="h-4 w-4" />
-                      Send
-                    </button>
-                  </div>
-                </form>
-
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  name="messageAttachment"
-                  className="hidden"
-                  onChange={handleFileChange}
-                  accept=".png,.jpg,.jpeg,.gif,.webp,.pdf,.zip,.json,.txt,.css,.html,.js,.ts,.tsx,.py,.java,.c,.cpp"
-                />
-              </footer>
-            </>
-          ) : (
-            <div className="flex h-full flex-col items-center justify-center gap-3 text-center text-white/60">
-              <MessageCircle className="h-10 w-10" />
-              <p>Select a conversation from the left to view the message history.</p>
-            </div>
-          )}
-        </main>
+                </footer>
+              </>
+            ) : (
+              <div className="flex h-full flex-col items-center justify-center gap-3 text-center text-muted-foreground">
+                <MessageCircle className="h-10 w-10" />
+                <p>
+                  Select a conversation from the left to view the message
+                  history.
+                </p>
+              </div>
+            )}
+          </main>
         )}
       </div>
     </section>
