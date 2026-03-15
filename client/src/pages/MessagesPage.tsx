@@ -250,7 +250,11 @@ const MessagesPage = () => {
 
   const markAsReadMutation = useMutation({
     mutationFn: (conversationId: string) =>
-      api.post(`/messaging/conversations/${conversationId}/read`)
+      api.post(`/messaging/conversations/${conversationId}/read`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['conversations'] });
+      queryClient.invalidateQueries({ queryKey: ['messaging', 'unread'] });
+    }
   });
 
   const uploadMutation = useMutation({

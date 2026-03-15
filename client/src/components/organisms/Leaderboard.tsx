@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../lib/axios';
 import Avatar from '../atoms/Avatar';
@@ -19,6 +20,7 @@ interface LeaderboardUser {
 }
 
 export const Leaderboard = () => {
+  const [visibleCount, setVisibleCount] = useState(5);
   const { data, isLoading } = useQuery({
     queryKey: ['leaderboard'],
     queryFn: async () => {
@@ -51,23 +53,30 @@ export const Leaderboard = () => {
     );
   }
 
+  const visibleUsers = data.slice(0, visibleCount);
+  const canLoadMore = data.length > visibleCount;
+
   return (
     <div className="space-y-2">
-      <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-        <Trophy className="w-5 h-5 text-yellow-400" />
-        Leaderboard
-      </h3>
+      <div className="mb-4 flex items-center justify-between gap-2">
+        <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+          <Trophy className="w-5 h-5 text-yellow-400" />
+          Leaderboard
+        </h3>
+        <span className="text-xs text-white/60">
+          Showing {Math.min(visibleCount, data.length)} of {data.length}
+        </span>
+      </div>
 
-      {data.map((user: LeaderboardUser, idx: number) => (
+      {visibleUsers.map((user: LeaderboardUser, idx: number) => (
         <button
           key={user._id}
           onClick={() => navigate(`/profile/${user._id}`)}
-          className="w-full group relative bg-gradient-to-r from-slate-900 to-slate-800 hover:from-slate-800 hover:to-slate-700 rounded-lg p-4 border border-slate-700/50 hover:border-cyan-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-500/20 text-left"
+          className="w-full group relative bg-gradient-to-r from-slate-900 to-slate-800 hover:from-slate-800 hover:to-slate-700 rounded-lg p-3 border border-slate-700/50 hover:border-cyan-500/50 transition-all duration-300 text-left"
         >
-          <div className="flex items-center gap-4">
-            {/* Rank Badge */}
+          <div className="flex items-center gap-3">
             <div
-              className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${
+              className={`flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs ${
                 idx === 0
                   ? 'bg-gradient-to-r from-yellow-500 to-amber-500 text-white'
                   : idx === 1
@@ -81,14 +90,12 @@ export const Leaderboard = () => {
               {idx >= 3 && `#${idx + 1}`}
             </div>
 
-            {/* Avatar & Name */}
+            <Avatar
+              src={user.profilePicture ?? user.googlePhotoUrl}
+              alt={user.name}
+            />
+
             <div className="flex-1 min-w-0">
-              <Avatar
-                src={user.profilePicture ?? user.googlePhotoUrl}
-                alt={user.name}
-              />
-            </div>
-            <div className="flex-1">
               <p className="text-sm font-semibold text-white truncate group-hover:text-cyan-400 transition-colors">
                 {user.name}
               </p>
@@ -97,9 +104,8 @@ export const Leaderboard = () => {
               </p>
             </div>
 
-            {/* Points */}
             <div className="flex-shrink-0 text-right">
-              <div className="flex items-center gap-1 text-cyan-400 font-bold">
+              <div className="flex items-center gap-1 text-cyan-400 font-bold text-sm">
                 <Flame className="w-4 h-4" />
                 {user.points}
               </div>
@@ -107,6 +113,26 @@ export const Leaderboard = () => {
           </div>
         </button>
       ))}
+
+      {canLoadMore && (
+        <button
+          type="button"
+          onClick={() => setVisibleCount((count) => count + 5)}
+          className="mt-2 rounded-full border border-cyan-500/40 px-4 py-1.5 text-xs font-semibold text-cyan-300 transition hover:border-cyan-400"
+        >
+          Load more rankings
+        </button>
+      )}
+
+      {visibleCount > 5 && (
+        <button
+          type="button"
+          onClick={() => setVisibleCount(5)}
+          className="ml-2 mt-2 rounded-full border border-white/20 px-4 py-1.5 text-xs font-semibold text-white/70 transition hover:text-white"
+        >
+          Show less
+        </button>
+      )}
     </div>
   );
 };

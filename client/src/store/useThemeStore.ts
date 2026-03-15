@@ -17,8 +17,8 @@ interface ThemeState {
 export const useThemeStore = create<ThemeState>()(
   persist(
     (set) => ({
-      uiTheme: 'whatsapp',
-      themeMode: 'light',
+      uiTheme: 'vvit',
+      themeMode: 'dark',
       codeTheme: 'atomDark',
       setUITheme: (uiTheme) => set({ uiTheme }),
       setThemeMode: (themeMode) => set({ themeMode }),

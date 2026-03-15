@@ -21,7 +21,21 @@ export interface Opportunity {
   location?: string;
   salary?: string;
   applyUrl?: string;
+  applicants?: string[];
+  hasApplied?: boolean;
   createdAt?: string;
+}
+
+export interface FeedbackItem {
+  _id: string;
+  name: string;
+  email?: string;
+  kind: 'review' | 'suggestion';
+  rating?: number;
+  message: string;
+  status?: 'pending' | 'published' | 'archived';
+  adminNote?: string;
+  createdAt: string;
 }
 
 export interface PostComment {

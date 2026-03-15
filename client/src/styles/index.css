@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -39,7 +41,7 @@
   --cc-background: var(--cc-bg);
   --cc-text-primary: var(--cc-text);
   --cc-text-secondary: var(--cc-muted);
-  --cc-white-rgb: var(--cc-text);
+  --cc-white-rgb: 255 255 255;
   --cc-border-rgb: var(--cc-border);
   --cc-overlay-rgb: var(--cc-text);
   --cc-neon-cyan: var(--cc-primary);
@@ -155,38 +157,38 @@
 }
 
 :root[data-theme='vvit'] {
-  color-scheme: light;
-  --cc-bg: 243 246 251;
-  --cc-surface: 255 255 255;
-  --cc-primary: 9 76 145;
-  --cc-accent: 196 146 47;
-  --cc-border: 189 204 221;
-  --cc-text: 19 35 55;
-  --cc-muted: 86 105 127;
-  --cc-shadow-base: 18 36 62;
-  --cc-chat-sent: 12 92 173;
-  --cc-chat-received: 234 239 247;
-  --cc-sidebar-bg: 235 241 248;
-  --cc-sidebar-active: 12 92 173;
-  --cc-card: 255 255 255;
+  color-scheme: dark;
+  --cc-bg: 11 11 11;
+  --cc-surface: 17 17 17;
+  --cc-primary: 255 122 89;
+  --cc-accent: 255 107 74;
+  --cc-border: 42 42 42;
+  --cc-text: 255 255 255;
+  --cc-muted: 176 176 176;
+  --cc-shadow-base: 8 8 8;
+  --cc-chat-sent: 255 122 89;
+  --cc-chat-received: 26 26 26;
+  --cc-sidebar-bg: 11 11 11;
+  --cc-sidebar-active: 255 122 89;
+  --cc-card: 26 26 26;
 
-  --cc-hsl-background: 214 39% 97%;
-  --cc-hsl-foreground: 214 49% 15%;
-  --cc-hsl-card: 0 0% 100%;
-  --cc-hsl-card-foreground: 214 49% 15%;
-  --cc-hsl-popover: 0 0% 100%;
-  --cc-hsl-popover-foreground: 214 49% 15%;
-  --cc-hsl-primary: 212 88% 30%;
+  --cc-hsl-background: 0 0% 4%;
+  --cc-hsl-foreground: 0 0% 100%;
+  --cc-hsl-card: 0 0% 10%;
+  --cc-hsl-card-foreground: 0 0% 100%;
+  --cc-hsl-popover: 0 0% 10%;
+  --cc-hsl-popover-foreground: 0 0% 100%;
+  --cc-hsl-primary: 13 100% 67%;
   --cc-hsl-primary-foreground: 0 0% 100%;
-  --cc-hsl-secondary: 212 39% 95%;
-  --cc-hsl-secondary-foreground: 214 43% 27%;
-  --cc-hsl-muted: 212 31% 92%;
-  --cc-hsl-muted-foreground: 213 19% 42%;
-  --cc-hsl-accent: 42 61% 48%;
+  --cc-hsl-secondary: 0 0% 7%;
+  --cc-hsl-secondary-foreground: 0 0% 100%;
+  --cc-hsl-muted: 0 0% 12%;
+  --cc-hsl-muted-foreground: 0 0% 69%;
+  --cc-hsl-accent: 12 100% 65%;
   --cc-hsl-accent-foreground: 0 0% 100%;
-  --cc-hsl-border: 211 33% 80%;
-  --cc-hsl-input: 211 33% 80%;
-  --cc-hsl-ring: 212 88% 30%;
+  --cc-hsl-border: 0 0% 16%;
+  --cc-hsl-input: 0 0% 16%;
+  --cc-hsl-ring: 13 100% 67%;
 }
 
 :root[data-theme='whatsapp'][data-theme-mode='dark'] {
@@ -296,41 +298,77 @@
 
 :root[data-theme='vvit'][data-theme-mode='dark'] {
   color-scheme: dark;
-  --cc-bg: 16 24 37;
-  --cc-surface: 24 35 52;
-  --cc-primary: 86 167 242;
-  --cc-accent: 214 170 76;
-  --cc-border: 69 88 111;
-  --cc-text: 235 242 250;
-  --cc-muted: 171 188 206;
-  --cc-shadow-base: 8 14 24;
-  --cc-chat-sent: 23 89 151;
-  --cc-chat-received: 34 48 68;
-  --cc-sidebar-bg: 20 31 47;
-  --cc-sidebar-active: 86 167 242;
-  --cc-card: 28 41 60;
+  --cc-bg: 11 11 11;
+  --cc-surface: 17 17 17;
+  --cc-primary: 255 122 89;
+  --cc-accent: 255 107 74;
+  --cc-border: 42 42 42;
+  --cc-text: 255 255 255;
+  --cc-muted: 176 176 176;
+  --cc-shadow-base: 8 8 8;
+  --cc-chat-sent: 255 122 89;
+  --cc-chat-received: 26 26 26;
+  --cc-sidebar-bg: 11 11 11;
+  --cc-sidebar-active: 255 122 89;
+  --cc-card: 26 26 26;
 
-  --cc-hsl-background: 214 40% 10%;
-  --cc-hsl-foreground: 210 52% 95%;
-  --cc-hsl-card: 214 36% 17%;
-  --cc-hsl-card-foreground: 210 52% 95%;
-  --cc-hsl-popover: 214 36% 15%;
-  --cc-hsl-popover-foreground: 210 52% 95%;
-  --cc-hsl-primary: 210 84% 64%;
-  --cc-hsl-primary-foreground: 214 45% 12%;
-  --cc-hsl-secondary: 214 30% 22%;
-  --cc-hsl-secondary-foreground: 211 42% 84%;
-  --cc-hsl-muted: 214 25% 25%;
-  --cc-hsl-muted-foreground: 212 24% 73%;
-  --cc-hsl-accent: 42 56% 57%;
-  --cc-hsl-accent-foreground: 214 45% 12%;
-  --cc-hsl-border: 213 23% 35%;
-  --cc-hsl-input: 213 23% 35%;
-  --cc-hsl-ring: 210 84% 64%;
+  --cc-hsl-background: 0 0% 4%;
+  --cc-hsl-foreground: 0 0% 100%;
+  --cc-hsl-card: 0 0% 10%;
+  --cc-hsl-card-foreground: 0 0% 100%;
+  --cc-hsl-popover: 0 0% 10%;
+  --cc-hsl-popover-foreground: 0 0% 100%;
+  --cc-hsl-primary: 13 100% 67%;
+  --cc-hsl-primary-foreground: 0 0% 100%;
+  --cc-hsl-secondary: 0 0% 7%;
+  --cc-hsl-secondary-foreground: 0 0% 100%;
+  --cc-hsl-muted: 0 0% 12%;
+  --cc-hsl-muted-foreground: 0 0% 69%;
+  --cc-hsl-accent: 12 100% 65%;
+  --cc-hsl-accent-foreground: 0 0% 100%;
+  --cc-hsl-border: 0 0% 16%;
+  --cc-hsl-input: 0 0% 16%;
+  --cc-hsl-ring: 13 100% 67%;
+}
+
+:root[data-theme='vvit'][data-theme-mode='light'] {
+  color-scheme: light;
+  --cc-bg: 247 247 247;
+  --cc-surface: 255 255 255;
+  --cc-primary: 255 122 89;
+  --cc-accent: 255 107 74;
+  --cc-border: 224 224 224;
+  --cc-text: 20 20 20;
+  --cc-muted: 112 112 112;
+  --cc-shadow-base: 26 26 26;
+  --cc-chat-sent: 255 122 89;
+  --cc-chat-received: 255 255 255;
+  --cc-sidebar-bg: 248 248 248;
+  --cc-sidebar-active: 255 122 89;
+  --cc-card: 255 255 255;
+
+  --cc-hsl-background: 0 0% 97%;
+  --cc-hsl-foreground: 0 0% 8%;
+  --cc-hsl-card: 0 0% 100%;
+  --cc-hsl-card-foreground: 0 0% 8%;
+  --cc-hsl-popover: 0 0% 100%;
+  --cc-hsl-popover-foreground: 0 0% 8%;
+  --cc-hsl-primary: 13 100% 67%;
+  --cc-hsl-primary-foreground: 0 0% 100%;
+  --cc-hsl-secondary: 0 0% 96%;
+  --cc-hsl-secondary-foreground: 0 0% 14%;
+  --cc-hsl-muted: 0 0% 95%;
+  --cc-hsl-muted-foreground: 0 0% 44%;
+  --cc-hsl-accent: 12 100% 65%;
+  --cc-hsl-accent-foreground: 0 0% 100%;
+  --cc-hsl-border: 0 0% 88%;
+  --cc-hsl-input: 0 0% 88%;
+  --cc-hsl-ring: 13 100% 67%;
 }
 
 body {
   @apply font-sans antialiased;
+  font-family: 'Poppins', sans-serif;
   background-color: rgb(var(--cc-background));
   color: rgb(var(--cc-text-primary));
   transition:
@@ -339,52 +377,73 @@ body {
 }
 
 .neon-border {
-  position: relative;
-  isolation: isolate;
-  border: 1px solid transparent;
-  border-image: linear-gradient(
-      135deg,
-      rgba(var(--cc-neon-cyan) / 0.7),
-      rgba(var(--cc-neon-magenta) / 0.65)
-    )
-    1;
-  box-shadow:
-    0 20px 55px -24px rgba(var(--cc-card-shadow) / 0.7),
-    0 0 0 1px rgba(var(--cc-card-border) / 0.28),
-    0 12px 32px -18px rgba(var(--cc-neon-magenta) / 0.22),
-    0 0 24px -10px rgba(var(--cc-neon-cyan) / 0.48);
+  border: 1px solid rgb(var(--cc-card-border));
+  border-radius: 16px;
+  background: rgb(var(--cc-card));
+  box-shadow: 0 16px 34px -24px rgba(var(--cc-card-shadow) / 0.7);
   transition:
-    box-shadow 0.22s ease,
-    transform 0.16s ease,
-    border-image 0.22s ease;
-  backdrop-filter: blur(18px);
-}
-
-.neon-border::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  border: 1px solid rgba(var(--cc-card-border) / 0.25);
-  pointer-events: none;
-  mix-blend-mode: screen;
-  z-index: -1;
+    box-shadow 0.3s ease,
+    transform 0.3s ease,
+    border-color 0.3s ease,
+    background-color 0.3s ease;
 }
 
 .neon-border:hover {
-  box-shadow:
-    0 28px 72px -22px rgba(var(--cc-card-shadow) / 0.82),
-    0 0 0 1px rgba(var(--cc-neon-cyan) / 0.55),
-    0 18px 40px -18px rgba(var(--cc-neon-magenta) / 0.32),
-    0 0 30px -6px rgba(var(--cc-neon-cyan) / 0.58);
-  transform: translateY(-2px);
+  border-color: rgba(var(--cc-neon-cyan) / 0.65);
+  box-shadow: 0 22px 40px -22px rgba(var(--cc-card-shadow) / 0.88);
+  transform: translateY(-5px);
 }
 
 .glass-panel {
-  border: 1px solid rgba(var(--cc-card-border) / 0.22);
-  background: rgba(var(--cc-card-overlay) / 0.62);
-  box-shadow: 0 35px 80px -32px rgba(var(--cc-card-shadow) / 0.6);
-  backdrop-filter: blur(18px);
+  border: 1px solid rgba(var(--cc-card-border) / 0.5);
+  background: rgba(var(--cc-card-overlay) / 0.92);
+  box-shadow: 0 18px 36px -22px rgba(var(--cc-card-shadow) / 0.75);
+  backdrop-filter: blur(10px);
+}
+
+.cc-container {
+  width: 100%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cc-section {
+  padding-top: 80px;
+  padding-bottom: 80px;
+}
+
+.cc-grid-cards {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+@keyframes cc-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.cc-fade-up {
+  animation: cc-fade-up 0.7s ease-out both;
+}
+
+.cc-fade-delay-1 {
+  animation-delay: 0.08s;
+}
+
+.cc-fade-delay-2 {
+  animation-delay: 0.16s;
+}
+
+.cc-fade-delay-3 {
+  animation-delay: 0.24s;
 }
 
 .text-white {

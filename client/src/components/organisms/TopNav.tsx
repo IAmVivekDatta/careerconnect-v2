@@ -56,20 +56,20 @@ const TopNav = () => {
         to={item.to}
         className={`group flex items-center gap-2 rounded-full px-3 py-1.5 text-sm transition ${
           isActive
-            ? 'bg-neonCyan/15 text-white shadow-[0_0_18px_rgba(0,255,255,0.15)]'
-            : 'text-white/70 hover:bg-white/10 hover:text-white'
+            ? 'bg-neonCyan/20 text-white shadow-[0_0_14px_rgba(255,122,89,0.35)]'
+            : 'text-white hover:bg-white/10 hover:text-neonCyan'
         }`}
       >
         <Icon
           className={`h-4 w-4 ${
             isActive
               ? 'text-neonCyan'
-              : 'text-white/50 group-hover:text-neonCyan'
+              : 'text-white/70 group-hover:text-neonCyan'
           }`}
         />
         <span>{item.label}</span>
         {badge > 0 && (
-          <span className="ml-1 rounded-full bg-neonCyan px-2 text-[10px] font-semibold text-black">
+          <span className="ml-1 rounded-full bg-neonCyan px-2 text-[10px] font-semibold text-white">
             {badge}
           </span>
         )}
@@ -90,8 +90,8 @@ const TopNav = () => {
         to={item.to}
         className={`group flex items-center justify-between rounded-lg px-3 py-2 text-sm transition ${
           isActive
-            ? 'bg-neonCyan/10 text-white'
-            : 'text-muted hover:bg-white/5 hover:text-white'
+            ? 'bg-neonCyan/15 text-white'
+            : 'text-white hover:bg-white/5 hover:text-neonCyan'
         }`}
       >
         <span className="flex items-center gap-2">
@@ -99,13 +99,13 @@ const TopNav = () => {
             className={`h-4 w-4 ${
               isActive
                 ? 'text-neonCyan'
-                : 'text-white/40 group-hover:text-neonCyan'
+                : 'text-white/60 group-hover:text-neonCyan'
             }`}
           />
           <span>{item.label}</span>
         </span>
         {badge > 0 && (
-          <span className="rounded-full bg-neonCyan px-2 py-0.5 text-[10px] font-semibold text-black">
+          <span className="rounded-full bg-neonCyan px-2 py-0.5 text-[10px] font-semibold text-white">
             {badge}
           </span>
         )}
@@ -114,8 +114,8 @@ const TopNav = () => {
   };
 
   return (
-    <header className="sticky top-0 z-30 border-b border-white/10 bg-surface/80 px-4 py-3 backdrop-blur">
-      <div className="flex items-center justify-between gap-3">
+    <header className="sticky top-0 z-30 border-b border-border bg-[#0b0b0b]/95 px-4 py-3 backdrop-blur">
+      <div className="cc-container flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           {visibleNavItems.length > 0 && (
             <DynamoHamburger
@@ -125,12 +125,15 @@ const TopNav = () => {
               label="Toggle quick menu"
             />
           )}
-          <Link to="/feed" className="text-lg font-semibold text-neonCyan">
+          <Link
+            to="/feed"
+            className="text-lg font-bold text-white transition-colors duration-300 hover:text-neonCyan"
+          >
             CareerConnect
           </Link>
         </div>
 
-        <nav className="hidden items-center gap-1 rounded-full border border-white/5 bg-white/5 px-2 py-1 md:flex">
+        <nav className="hidden items-center gap-1 rounded-full border border-border bg-[#111111] px-2 py-1 md:flex">
           {visibleNavItems.map((item) => renderDesktopLink(item))}
         </nav>
 
@@ -142,7 +145,7 @@ const TopNav = () => {
           {user && (
             <button
               onClick={logout}
-              className="text-xs uppercase tracking-wide text-muted transition hover:text-white"
+              className="rounded-full border border-border/70 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-foreground transition hover:border-neonCyan hover:text-neonCyan"
             >
               Logout
             </button>
@@ -166,8 +169,8 @@ const TopNav = () => {
       </div>
 
       {mobileOpen && visibleNavItems.length > 0 && (
-        <div className="mt-3 md:hidden">
-          <nav className="flex flex-col gap-1 rounded-lg border border-white/10 bg-surface/95 p-2 shadow-xl shadow-black/40">
+        <div className="cc-container mt-3 md:hidden">
+          <nav className="flex flex-col gap-1 rounded-2xl border border-border bg-[#111111] p-2 shadow-xl shadow-black/40">
             {visibleNavItems.map((item) => renderMobileLink(item))}
           </nav>
         </div>

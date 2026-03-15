@@ -24,6 +24,25 @@ interface AdminOpportunityResponse {
   total: number;
 }
 
+interface AdminTraining {
+  _id: string;
+  title: string;
+  description: string;
+  provider: string;
+  duration: number;
+  startDate: string;
+  level: 'beginner' | 'intermediate' | 'advanced';
+  rating?: number;
+  skills?: string[];
+  price?: number;
+  url?: string;
+}
+
+interface AdminTrainingResponse {
+  data: AdminTraining[];
+  total: number;
+}
+
 const statusOptions: Array<{
   label: string;
   value: 'all' | OpportunityStatus;
@@ -42,6 +61,21 @@ const AdminOpportunitiesPage = () => {
     useState<(typeof statusOptions)[number]['value']>('pending');
   const [feedback, setFeedback] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [editingTrainingId, setEditingTrainingId] = useState<string | null>(
+    null
+  );
+  const [trainingForm, setTrainingForm] = useState({
+    title: '',
+    description: '',
+    provider: '',
+    duration: 8,
+    startDate: '',
+    level: 'intermediate' as 'beginner' | 'intermediate' | 'advanced',
+    rating: 4.5,
+    skillsCsv: '',
+    price: '',
+    url: ''
+  });
 
   const { data, isLoading, isFetching } = useQuery<AdminOpportunityResponse>({
     queryKey: ['admin-opportunities', { search: deferredSearch, status }],
@@ -58,6 +92,18 @@ const AdminOpportunitiesPage = () => {
   });
 
   const opportunities = data?.data ?? [];
+
+  const { data: trainingData, isLoading: trainingLoading } =
+    useQuery<AdminTrainingResponse>({
+      queryKey: ['admin-trainings'],
+      queryFn: async () => {
+        const response =
+          await api.get<AdminTrainingResponse>('/trainings/admin');
+        return response.data;
+      }
+    });
+
+  const trainings = trainingData?.data ?? [];
 
   const approveMutation = useMutation({
     mutationFn: (id: string) => api.put(`/admin/opportunities/${id}/approve`),
@@ -86,6 +132,90 @@ const AdminOpportunitiesPage = () => {
   });
 
   const busy = approveMutation.isPending || rejectMutation.isPending;
+
+  const createTrainingMutation = useMutation({
+    mutationFn: (payload: Omit<AdminTraining, '_id'>) =>
+      api.post('/trainings/admin', payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-trainings'] });
+      setFeedback('Training created.');
+      setErrorMessage(null);
+      setEditingTrainingId(null);
+      setTrainingForm({
+        title: '',
+        description: '',
+        provider: '',
+        duration: 8,
+        startDate: '',
+        level: 'intermediate',
+        rating: 4.5,
+        skillsCsv: '',
+        price: '',
+        url: ''
+      });
+    },
+    onError: () => {
+      setErrorMessage('Could not create training.');
+      setFeedback(null);
+    }
+  });
+
+  const updateTrainingMutation = useMutation({
+    mutationFn: ({
+      id,
+      payload
+    }: {
+      id: string;
+      payload: Partial<AdminTraining>;
+    }) => api.put(`/trainings/admin/${id}`, payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-trainings'] });
+      setFeedback('Training updated.');
+      setErrorMessage(null);
+      setEditingTrainingId(null);
+    },
+    onError: () => {
+      setErrorMessage('Could not update training.');
+      setFeedback(null);
+    }
+  });
+
+  const deleteTrainingMutation = useMutation({
+    mutationFn: (id: string) => api.delete(`/trainings/admin/${id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-trainings'] });
+      setFeedback('Training deleted.');
+      setErrorMessage(null);
+      if (editingTrainingId) {
+        setEditingTrainingId(null);
+      }
+    },
+    onError: () => {
+      setErrorMessage('Could not delete training.');
+      setFeedback(null);
+    }
+  });
+
+  const normalizeTrainingPayload = () => {
+    const parsedPrice = trainingForm.price.trim()
+      ? Number(trainingForm.price)
+      : undefined;
+    return {
+      title: trainingForm.title.trim(),
+      description: trainingForm.description.trim(),
+      provider: trainingForm.provider.trim(),
+      duration: Number(trainingForm.duration),
+      startDate: trainingForm.startDate,
+      level: trainingForm.level,
+      rating: Number(trainingForm.rating),
+      skills: trainingForm.skillsCsv
+        .split(',')
+        .map((skill) => skill.trim())
+        .filter(Boolean),
+      ...(parsedPrice !== undefined ? { price: parsedPrice } : {}),
+      ...(trainingForm.url.trim() ? { url: trainingForm.url.trim() } : {})
+    };
+  };
 
   return (
     <section className="space-y-5">
@@ -216,6 +346,291 @@ const AdminOpportunitiesPage = () => {
           ))
         )}
       </div>
+
+      <section className="neon-border rounded-lg bg-card/90 p-5">
+        <header className="mb-4 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h3 className="text-lg font-semibold text-foreground">
+              Trending trainings (CRUD)
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              Create, update, and remove training cards shown in
+              recommendations.
+            </p>
+          </div>
+          <span className="rounded-full bg-card/80 px-3 py-1 text-xs text-muted-foreground">
+            {trainingData?.total ?? trainings.length} total
+          </span>
+        </header>
+
+        <form
+          className="grid gap-2 md:grid-cols-2"
+          onSubmit={(event) => {
+            event.preventDefault();
+            const payload = normalizeTrainingPayload();
+            if (
+              !payload.title ||
+              !payload.description ||
+              !payload.provider ||
+              !payload.startDate
+            ) {
+              setErrorMessage(
+                'Training title, description, provider, and start date are required.'
+              );
+              setFeedback(null);
+              return;
+            }
+
+            if (editingTrainingId) {
+              updateTrainingMutation.mutate({ id: editingTrainingId, payload });
+              return;
+            }
+
+            createTrainingMutation.mutate(payload);
+          }}
+        >
+          <input
+            value={trainingForm.title}
+            onChange={(event) =>
+              setTrainingForm((current) => ({
+                ...current,
+                title: event.target.value
+              }))
+            }
+            placeholder="Training title"
+            className="rounded border border-border/70 bg-card/80 px-3 py-2 text-sm text-foreground"
+          />
+          <input
+            value={trainingForm.provider}
+            onChange={(event) =>
+              setTrainingForm((current) => ({
+                ...current,
+                provider: event.target.value
+              }))
+            }
+            placeholder="Provider (Udemy, Coursera...)"
+            className="rounded border border-border/70 bg-card/80 px-3 py-2 text-sm text-foreground"
+          />
+          <textarea
+            value={trainingForm.description}
+            onChange={(event) =>
+              setTrainingForm((current) => ({
+                ...current,
+                description: event.target.value
+              }))
+            }
+            placeholder="Description"
+            className="md:col-span-2 min-h-[92px] rounded border border-border/70 bg-card/80 px-3 py-2 text-sm text-foreground"
+          />
+          <input
+            type="date"
+            value={trainingForm.startDate}
+            onChange={(event) =>
+              setTrainingForm((current) => ({
+                ...current,
+                startDate: event.target.value
+              }))
+            }
+            className="rounded border border-border/70 bg-card/80 px-3 py-2 text-sm text-foreground"
+          />
+          <input
+            type="number"
+            value={trainingForm.duration}
+            onChange={(event) =>
+              setTrainingForm((current) => ({
+                ...current,
+                duration: Number(event.target.value)
+              }))
+            }
+            min={1}
+            placeholder="Duration (hours)"
+            className="rounded border border-border/70 bg-card/80 px-3 py-2 text-sm text-foreground"
+          />
+          <select
+            value={trainingForm.level}
+            onChange={(event) =>
+              setTrainingForm((current) => ({
+                ...current,
+                level: event.target.value as
+                  | 'beginner'
+                  | 'intermediate'
+                  | 'advanced'
+              }))
+            }
+            className="rounded border border-border/70 bg-card/80 px-3 py-2 text-sm text-foreground"
+          >
+            <option value="beginner">Beginner</option>
+            <option value="intermediate">Intermediate</option>
+            <option value="advanced">Advanced</option>
+          </select>
+          <input
+            type="number"
+            value={trainingForm.rating}
+            onChange={(event) =>
+              setTrainingForm((current) => ({
+                ...current,
+                rating: Number(event.target.value)
+              }))
+            }
+            min={1}
+            max={5}
+            step={0.1}
+            placeholder="Rating (1-5)"
+            className="rounded border border-border/70 bg-card/80 px-3 py-2 text-sm text-foreground"
+          />
+          <input
+            value={trainingForm.skillsCsv}
+            onChange={(event) =>
+              setTrainingForm((current) => ({
+                ...current,
+                skillsCsv: event.target.value
+              }))
+            }
+            placeholder="Skills (comma-separated)"
+            className="rounded border border-border/70 bg-card/80 px-3 py-2 text-sm text-foreground"
+          />
+          <input
+            value={trainingForm.price}
+            onChange={(event) =>
+              setTrainingForm((current) => ({
+                ...current,
+                price: event.target.value
+              }))
+            }
+            placeholder="Price (optional)"
+            className="rounded border border-border/70 bg-card/80 px-3 py-2 text-sm text-foreground"
+          />
+          <input
+            value={trainingForm.url}
+            onChange={(event) =>
+              setTrainingForm((current) => ({
+                ...current,
+                url: event.target.value
+              }))
+            }
+            placeholder="Course URL (optional)"
+            className="md:col-span-2 rounded border border-border/70 bg-card/80 px-3 py-2 text-sm text-foreground"
+          />
+          <div className="md:col-span-2 flex flex-wrap gap-2">
+            <button
+              type="submit"
+              disabled={
+                createTrainingMutation.isPending ||
+                updateTrainingMutation.isPending
+              }
+              className="rounded bg-neonCyan/15 px-4 py-2 text-sm font-semibold text-neonCyan transition hover:bg-neonCyan/25 disabled:opacity-50"
+            >
+              {editingTrainingId ? 'Update training' : 'Create training'}
+            </button>
+            {editingTrainingId && (
+              <button
+                type="button"
+                onClick={() => {
+                  setEditingTrainingId(null);
+                  setTrainingForm({
+                    title: '',
+                    description: '',
+                    provider: '',
+                    duration: 8,
+                    startDate: '',
+                    level: 'intermediate',
+                    rating: 4.5,
+                    skillsCsv: '',
+                    price: '',
+                    url: ''
+                  });
+                }}
+                className="rounded bg-slate-500/20 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:bg-slate-500/30"
+              >
+                Cancel edit
+              </button>
+            )}
+          </div>
+        </form>
+
+        <div className="mt-5 grid gap-3">
+          {trainingLoading ? (
+            <p className="text-sm text-muted-foreground">
+              Loading trainings...
+            </p>
+          ) : trainings.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              No trainings added yet.
+            </p>
+          ) : (
+            trainings.map((training) => (
+              <article
+                key={training._id}
+                className="rounded-lg border border-border/70 bg-card/80 p-4"
+              >
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div>
+                    <h4 className="text-base font-semibold text-neonCyan">
+                      {training.title}
+                    </h4>
+                    <p className="text-xs text-muted-foreground">
+                      {training.provider} • {training.level} •{' '}
+                      {training.duration}h •{' '}
+                      {new Date(training.startDate).toLocaleDateString()}
+                    </p>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setEditingTrainingId(training._id);
+                        setTrainingForm({
+                          title: training.title,
+                          description: training.description,
+                          provider: training.provider,
+                          duration: training.duration,
+                          startDate: training.startDate.slice(0, 10),
+                          level: training.level,
+                          rating: training.rating ?? 4.5,
+                          skillsCsv: (training.skills ?? []).join(', '),
+                          price:
+                            training.price !== undefined
+                              ? String(training.price)
+                              : '',
+                          url: training.url ?? ''
+                        });
+                      }}
+                      className="rounded bg-neonCyan/15 px-3 py-1.5 text-xs font-semibold text-neonCyan transition hover:bg-neonCyan/25"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        deleteTrainingMutation.mutate(training._id)
+                      }
+                      disabled={deleteTrainingMutation.isPending}
+                      className="rounded bg-red-500/10 px-3 py-1.5 text-xs font-semibold text-red-300 transition hover:bg-red-500/20 disabled:opacity-50"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+                <p className="mt-2 text-sm text-foreground/85">
+                  {training.description}
+                </p>
+                {(training.skills ?? []).length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    {(training.skills ?? []).slice(0, 6).map((skill) => (
+                      <span
+                        key={`${training._id}-${skill}`}
+                        className="rounded bg-card/90 px-2 py-1 text-[11px] uppercase tracking-wide text-neonCyan"
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </article>
+            ))
+          )}
+        </div>
+      </section>
     </section>
   );
 };

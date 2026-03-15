@@ -2,17 +2,21 @@ import { Router } from 'express';
 import { authMiddleware } from '../middlewares/authMiddleware';
 import { adminMiddleware } from '../middlewares/adminMiddleware';
 import {
-	getStats,
-	updateUserRole,
-	deactivateUser,
-	approveOpportunity,
-	listAdminUsers,
-	restoreUser,
-	listAdminPosts,
-	listAdminOpportunities,
-	rejectOpportunity
+  getStats,
+  updateUserRole,
+  deactivateUser,
+  approveOpportunity,
+  listAdminUsers,
+  restoreUser,
+  listAdminPosts,
+  listAdminOpportunities,
+  rejectOpportunity
 } from '../controllers/adminController';
 import { awardAchievement } from '../controllers/achievementController';
+import {
+  listAdminFeedback,
+  updateFeedbackStatus
+} from '../controllers/feedbackController';
 
 const router = Router();
 
@@ -27,6 +31,8 @@ router.get('/posts', listAdminPosts);
 router.get('/opportunities', listAdminOpportunities);
 router.put('/opportunities/:id/approve', approveOpportunity);
 router.put('/opportunities/:id/reject', rejectOpportunity);
+router.get('/feedback', listAdminFeedback);
+router.patch('/feedback/:id', updateFeedbackStatus);
 router.post('/achievements/award', awardAchievement);
 
 export default router;

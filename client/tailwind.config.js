@@ -69,6 +69,7 @@ module.exports = {
         neon: '0 0 18px rgba(0,245,255,0.2)'
       },
       fontFamily: {
+        sans: ['Poppins', 'Inter', 'sans-serif'],
         display: ['Orbitron', 'Inter', 'sans-serif']
       },
       borderRadius: {

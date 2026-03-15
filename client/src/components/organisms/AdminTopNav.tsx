@@ -1,12 +1,14 @@
-import useAuthStore from "../../store/useAuthStore";
+import useAuthStore from '../../store/useAuthStore';
 
 const AdminTopNav = () => {
   const { user } = useAuthStore();
 
   return (
-    <header className="flex items-center justify-between border-b border-white/10 bg-surface/80 px-6 py-4">
-      <h1 className="text-lg font-semibold text-neonMagenta">Admin Console</h1>
-      <p className="text-sm text-muted">{user?.email}</p>
+    <header className="border-b border-border bg-[#0b0b0b]/95 px-6 py-4">
+      <div className="cc-container flex items-center justify-between">
+        <h1 className="text-lg font-bold text-neonCyan">Admin Console</h1>
+        <p className="text-sm text-muted">{user?.email}</p>
+      </div>
     </header>
   );
 };

@@ -33,6 +33,16 @@ const RightSidebar = () => {
     }
   });
 
+  const { data: alumniDirectoryData } = useQuery<{
+    data: AlumniRecommendation[];
+  }>({
+    queryKey: ['right-sidebar-alumni-directory'],
+    queryFn: async () => {
+      const { data } = await api.get('/alumni/directory');
+      return data;
+    }
+  });
+
   const { data: opportunitiesData, isLoading: opportunitiesLoading } = useQuery<
     Opportunity[]
   >({
@@ -72,13 +82,19 @@ const RightSidebar = () => {
       push({ message: 'Unable to start conversation', type: 'error' })
   });
 
-  const recommendedAlumni = useMemo(
-    () =>
-      (alumniData?.data ?? [])
-        .filter((alumni) => alumni._id !== user?._id)
-        .slice(0, 3),
-    [alumniData?.data, user?._id]
-  );
+  const recommendedAlumni = useMemo(() => {
+    const personalized = (alumniData?.data ?? []).filter(
+      (alumni) => alumni._id !== user?._id
+    );
+
+    if (personalized.length > 0) {
+      return personalized.slice(0, 3);
+    }
+
+    return (alumniDirectoryData?.data ?? [])
+      .filter((alumni) => alumni._id !== user?._id)
+      .slice(0, 3);
+  }, [alumniData?.data, alumniDirectoryData?.data, user?._id]);
 
   const trendingOpportunities = useMemo(
     () =>

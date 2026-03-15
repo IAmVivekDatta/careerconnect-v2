@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import api from '../../lib/axios';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 interface Alumni {
   _id: string;
@@ -13,6 +14,11 @@ interface Alumni {
   similarity?: number;
 }
 
+interface MeResponse {
+  _id: string;
+  skills?: string[];
+}
+
 const RecommendedAlumniCarousel = () => {
   const { data: alumni, isLoading } = useQuery<{ data: Alumni[] }>({
     queryKey: ['recommended-alumni'],
@@ -22,23 +28,43 @@ const RecommendedAlumniCarousel = () => {
     }
   });
 
+  const { data: directory } = useQuery<{ data: Alumni[] }>({
+    queryKey: ['alumni-directory-lite'],
+    queryFn: async () => {
+      const { data } = await api.get('/alumni/directory');
+      return data;
+    }
+  });
+
+  const { data: me } = useQuery<MeResponse>({
+    queryKey: ['profile-me-skills'],
+    queryFn: async () => {
+      const response = await api.get<MeResponse>('/users/me');
+      return response.data;
+    }
+  });
+
   const [currentIndex, setCurrentIndex] = useState(0);
 
   if (isLoading) {
     return <div className="h-40 animate-pulse rounded-lg bg-white/10" />;
   }
 
-  if (!alumni?.data || alumni.data.length === 0) {
+  const personalized = alumni?.data ?? [];
+  const fallback = directory?.data ?? [];
+  const hasSkills = Boolean((me?.skills ?? []).length > 0);
+  const recommendedList =
+    personalized.length > 0 ? personalized : fallback.slice(0, 8);
+
+  if (recommendedList.length === 0) {
     return (
       <div className="rounded-lg bg-surface/80 p-8 text-center">
         <p className="text-muted">
-          Complete your skills profile to see recommended alumni
+          No alumni recommendations available right now.
         </p>
       </div>
     );
   }
-
-  const recommendedList = alumni.data;
   const currentAlumnus = recommendedList[currentIndex];
 
   const handleNext = () => {
@@ -56,6 +82,17 @@ const RecommendedAlumniCarousel = () => {
       <h3 className="text-lg font-semibold text-neonCyan">
         Recommended Alumni
       </h3>
+      {!hasSkills && (
+        <div className="rounded-lg border border-neonCyan/35 bg-neonCyan/10 px-4 py-3 text-xs text-neonCyan">
+          Complete your skills profile to get personalized alumni matches.
+          <Link
+            to="/profile/edit"
+            className="ml-2 font-semibold underline underline-offset-2"
+          >
+            Update profile
+          </Link>
+        </div>
+      )}
       <div className="neon-border rounded-lg bg-gradient-to-br from-purple-900/30 to-blue-900/30 p-6">
         <div className="space-y-4">
           {/* Alumni Card */}

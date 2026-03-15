@@ -13,7 +13,7 @@ const BadgeIcon = ({ badgeKey }: { badgeKey: string }) => {
     'first-post': <Star className="w-6 h-6" />,
     'community-leader': <Trophy className="w-6 h-6" />,
     'skill-master': <Zap className="w-6 h-6" />,
-    'connector': <Award className="w-6 h-6" />
+    connector: <Award className="w-6 h-6" />
   };
   return icons[badgeKey] || <Award className="w-6 h-6" />;
 };
@@ -21,10 +21,19 @@ const BadgeIcon = ({ badgeKey }: { badgeKey: string }) => {
 export const BadgeGallery = ({ userId }: BadgeGalleryProps) => {
   const [searchTerm, setSearchTerm] = useState('');
 
+  const badgeGuide = [
+    'Post project updates regularly to unlock contribution badges.',
+    'Endorse classmates and alumni skills to grow connector badges.',
+    'Keep your quest streak active to earn momentum-themed badges.',
+    'Collaborate in opportunities and discussions to accumulate points.'
+  ];
+
   const { data, isLoading, isFetching } = useQuery<BadgeResponse>({
     queryKey: ['badges', userId],
     queryFn: async () => {
-      const response = await api.get<BadgeResponse>(`/achievements/${userId}/badges`);
+      const response = await api.get<BadgeResponse>(
+        `/achievements/${userId}/badges`
+      );
       return response.data;
     },
     staleTime: 1000 * 60 * 5
@@ -36,7 +45,8 @@ export const BadgeGallery = ({ userId }: BadgeGalleryProps) => {
     if (!term) return data.badges;
     return data.badges.filter(
       (badge) =>
-        badge.name.toLowerCase().includes(term) || badge.description.toLowerCase().includes(term)
+        badge.name.toLowerCase().includes(term) ||
+        badge.description.toLowerCase().includes(term)
     );
   }, [data?.badges, searchTerm]);
 
@@ -44,7 +54,10 @@ export const BadgeGallery = ({ userId }: BadgeGalleryProps) => {
     return (
       <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="h-24 rounded-lg bg-gradient-to-br from-slate-900 to-slate-800 animate-pulse" />
+          <div
+            key={i}
+            className="h-24 rounded-lg bg-gradient-to-br from-slate-900 to-slate-800 animate-pulse"
+          />
         ))}
       </div>
     );
@@ -63,9 +76,13 @@ export const BadgeGallery = ({ userId }: BadgeGalleryProps) => {
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h3 className="text-lg font-semibold text-white">Badges &amp; Achievements</h3>
+          <h3 className="text-lg font-semibold text-white">
+            Badges &amp; Achievements
+          </h3>
           <p className="text-xs text-white/60">
-            {data?.totalPoints ? `${data.totalPoints.toLocaleString()} lifetime points` : 'Track your impact'}
+            {data?.totalPoints
+              ? `${data.totalPoints.toLocaleString()} lifetime points`
+              : 'Track your impact'}
           </p>
         </div>
         <input
@@ -86,7 +103,9 @@ export const BadgeGallery = ({ userId }: BadgeGalleryProps) => {
               <div className="rounded-lg bg-gradient-to-br from-cyan-500/20 to-blue-500/20 p-2 text-cyan-400 group-hover:text-cyan-300">
                 <BadgeIcon badgeKey={badge.key} />
               </div>
-              <h4 className="text-xs font-bold leading-tight text-white">{badge.name}</h4>
+              <h4 className="text-xs font-bold leading-tight text-white">
+                {badge.name}
+              </h4>
               <p className="text-xs text-slate-400">{badge.points} pts</p>
               <p className="text-[10px] uppercase tracking-wide text-white/40">
                 Awarded {new Date(badge.awardedAt).toLocaleDateString()}
@@ -101,6 +120,15 @@ export const BadgeGallery = ({ userId }: BadgeGalleryProps) => {
           </div>
         ))}
       </div>
+
+      <section className="rounded-lg border border-white/10 bg-white/5 p-4">
+        <h4 className="text-sm font-semibold text-white">How to earn badges</h4>
+        <ul className="mt-2 space-y-2 text-xs text-white/70">
+          {badgeGuide.map((tip) => (
+            <li key={tip}>• {tip}</li>
+          ))}
+        </ul>
+      </section>
     </div>
   );
 };

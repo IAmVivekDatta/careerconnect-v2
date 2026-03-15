@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode } from 'react';
 
 type NeonCardProps = {
   title: string;
@@ -7,9 +7,9 @@ type NeonCardProps = {
 
 const NeonCard = ({ title, children }: NeonCardProps) => {
   return (
-    <section className="neon-border rounded-lg bg-surface/80 p-4">
-      <h3 className="text-sm font-semibold text-neonCyan">{title}</h3>
-      <div className="mt-2 text-sm text-white/80">{children}</div>
+    <section className="neon-border rounded-2xl bg-card/95 p-5 transition-transform duration-300 ease-out hover:-translate-y-[5px]">
+      <h3 className="text-sm font-bold text-neonCyan">{title}</h3>
+      <div className="mt-3 text-sm text-muted-foreground">{children}</div>
     </section>
   );
 };

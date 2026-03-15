@@ -16,6 +16,8 @@ import alumniRoutes from './routes/alumniRoutes';
 import trainingRoutes from './routes/trainingRoutes';
 import messagingRoutes from './routes/messagingRoutes';
 import connectionRoutes from './routes/connectionRoutes';
+import feedbackRoutes from './routes/feedbackRoutes';
+import publicRoutes from './routes/publicRoutes';
 
 const app = express();
 
@@ -57,6 +59,8 @@ app.use('/api/alumni', alumniRoutes);
 app.use('/api/trainings', trainingRoutes);
 app.use('/api/messaging', messagingRoutes);
 app.use('/api/connections', connectionRoutes);
+app.use('/api/feedback', feedbackRoutes);
+app.use('/api/public', publicRoutes);
 
 app.use(errorHandler);
 
