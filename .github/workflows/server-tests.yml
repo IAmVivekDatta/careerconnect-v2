@@ -11,9 +11,11 @@ jobs:
     name: Run server integration tests
     runs-on: ubuntu-latest
     env:
-      MONGO_URI: mongodb://localhost:27017/careerconnect_ci
+      MONGO_URI: mongodb://localhost:27017
       CI: true
       JWT_SECRET: testsecret
+      ADMIN_SEED_EMAIL: admin@careerconnect.local
+      ADMIN_SEED_PASS: StrongPass123!
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -36,18 +38,18 @@ jobs:
           docker run -d \
             --name mongo-ci \
             -p 127.0.0.1:27017:27017 \
-            --health-cmd="mongo --quiet --eval \"db.runCommand({ ping: 1 }).ok\" || mongosh --quiet --eval \"db.runCommand({ ping: 1 }).ok\"" \
-            --health-interval=20s \
-            --health-timeout=15s \
+            --health-cmd="mongo --eval 'db.runCommand({ ping: 1 })' || mongosh --eval 'db.runCommand({ ping: 1 })'" \
+            --health-interval=30s \
+            --health-timeout=20s \
             --health-retries=20 \
-            --health-start-period=90s \
+            --health-start-period=120s \
             mongo:6.0.27 \
             --bind_ip_all \
             --wiredTigerCacheSizeGB 1
 
       - name: Wait for MongoDB health
         run: |
-          for i in {1..120}; do
+          for i in {1..180}; do
             running=$(docker inspect --format='{{.State.Running}}' mongo-ci 2>/dev/null || echo "false")
             status=$(docker inspect --format='{{.State.Health.Status}}' mongo-ci)
 
@@ -79,6 +81,25 @@ jobs:
             exit 1
           fi
 
+      - name: Wait for MongoDB ping readiness
+        run: |
+          for i in {1..60}; do
+            if docker exec mongo-ci sh -c "mongo --eval 'db.runCommand({ ping: 1 })' || mongosh --eval 'db.runCommand({ ping: 1 })'" >/dev/null 2>&1; then
+              echo "MongoDB ping check passed"
+              break
+            fi
+            if [ $((i % 10)) -eq 0 ]; then
+              echo "Ping attempt $i still not ready"
+            fi
+            sleep 2
+          done
+
+          if ! docker exec mongo-ci sh -c "mongo --eval 'db.runCommand({ ping: 1 })' || mongosh --eval 'db.runCommand({ ping: 1 })'" >/dev/null 2>&1; then
+            echo "MongoDB ping check failed after retries"
+            docker logs mongo-ci || true
+            exit 1
+          fi
+
       - name: Verify MongoDB TCP readiness
         run: |
           for i in {1..30}; do
@@ -94,6 +115,13 @@ jobs:
 
       - name: Install server dependencies
         run: npm ci --prefix server
+
+      - name: Reset test database
+        run: |
+          docker exec mongo-ci sh -c "mongo --eval \"db.getSiblingDB('test').dropDatabase()\" || mongosh --eval \"db.getSiblingDB('test').dropDatabase()\""
+
+      - name: Seed admin user for integration tests
+        run: npm run seed --prefix server
 
       - name: Run server integration tests
         run: npm --prefix server run test:int
