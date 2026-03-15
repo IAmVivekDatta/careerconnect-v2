@@ -31,38 +31,66 @@ jobs:
 
       - name: Start MongoDB (pinned image + health check)
         run: |
+          docker pull mongo:6.0.27
+
           docker run -d \
             --name mongo-ci \
-            -p 27017:27017 \
-            --health-cmd="mongo --eval 'db.runCommand({ ping: 1 })'" \
-            --health-interval=10s \
-            --health-timeout=5s \
-            --health-retries=12 \
-            --health-start-period=30s \
+            -p 127.0.0.1:27017:27017 \
+            --health-cmd="mongo --quiet --eval \"db.runCommand({ ping: 1 }).ok\" || mongosh --quiet --eval \"db.runCommand({ ping: 1 }).ok\"" \
+            --health-interval=20s \
+            --health-timeout=15s \
+            --health-retries=20 \
+            --health-start-period=90s \
             mongo:6.0.27 \
+            --bind_ip_all \
             --wiredTigerCacheSizeGB 1
 
       - name: Wait for MongoDB health
         run: |
-          for i in {1..60}; do
+          for i in {1..120}; do
+            running=$(docker inspect --format='{{.State.Running}}' mongo-ci 2>/dev/null || echo "false")
             status=$(docker inspect --format='{{.State.Health.Status}}' mongo-ci)
-            if [ "$status" = "healthy" ]; then
-              echo "MongoDB is healthy"
-              break
-            fi
-            if [ "$status" = "unhealthy" ]; then
-              echo "MongoDB became unhealthy"
-              docker logs mongo-ci
+
+            if [ "$running" != "true" ]; then
+              echo "MongoDB container stopped unexpectedly"
+              docker logs mongo-ci || true
               exit 1
             fi
+
+            if [ "$status" = "healthy" ]; then
+              if docker exec mongo-ci sh -c "mongo --quiet --eval \"db.runCommand({ ping: 1 }).ok\" || mongosh --quiet --eval \"db.runCommand({ ping: 1 }).ok\"" | grep -q "1"; then
+                echo "MongoDB is healthy and responding to ping"
+                break
+              fi
+            fi
+
+            if [ $((i % 20)) -eq 0 ]; then
+              echo "Attempt $i: status=$status"
+              docker logs --tail 30 mongo-ci || true
+            fi
+
             sleep 2
           done
+
           final_status=$(docker inspect --format='{{.State.Health.Status}}' mongo-ci)
           if [ "$final_status" != "healthy" ]; then
             echo "MongoDB did not become healthy in time"
             docker logs mongo-ci
             exit 1
           fi
+
+      - name: Verify MongoDB TCP readiness
+        run: |
+          for i in {1..30}; do
+            if timeout 1 bash -c '</dev/tcp/127.0.0.1/27017' 2>/dev/null; then
+              echo "MongoDB TCP port is reachable"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "MongoDB TCP port 27017 did not open in time"
+          docker logs mongo-ci || true
+          exit 1
 
       - name: Install server dependencies
         run: npm ci --prefix server
