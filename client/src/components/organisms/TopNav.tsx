@@ -8,6 +8,7 @@ import { appNavItems } from '../../constants/navItems';
 import type { AppNavItem } from '../../constants/navItems';
 import DynamoHamburger from '../atoms/DynamoHamburger';
 import ThemeSwitcher from './ThemeSwitcher';
+import { UserCircle2 } from 'lucide-react';
 
 const TopNav = () => {
   const { user, logout } = useAuthStore();
@@ -15,11 +16,10 @@ const TopNav = () => {
   const location = useLocation();
   const { connectionCounts, unreadCounts } = useNavMetrics();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const profilePath = user?._id ? `/profile/${user._id}` : '/feed';
 
   const handleProfileClick = () => {
-    if (user?._id) {
-      navigate(`/profile/${user._id}`);
-    }
+    navigate(profilePath);
   };
 
   useEffect(() => {
@@ -142,6 +142,16 @@ const TopNav = () => {
           <NeonButton asChild>
             <Link to="/opportunities">Find Opportunities</Link>
           </NeonButton>
+          {user && (
+            <Link
+              to={profilePath}
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border/70 text-foreground transition hover:border-neonCyan hover:text-neonCyan"
+              aria-label="Go to profile"
+              title="Profile"
+            >
+              <UserCircle2 className="h-5 w-5" />
+            </Link>
+          )}
           {user && (
             <button
               onClick={logout}

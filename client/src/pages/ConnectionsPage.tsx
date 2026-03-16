@@ -1,4 +1,4 @@
-import { type ChangeEvent, useMemo, useState } from 'react';
+import { type ChangeEvent, useEffect, useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -20,6 +20,8 @@ import Avatar from '../components/atoms/Avatar';
 import type { LucideIcon } from 'lucide-react';
 
 type TabKey = 'pending' | 'connections' | 'suggestions' | 'outgoing';
+
+const PAGE_SIZE = 12;
 
 const tabLabels: Record<TabKey, string> = {
   connections: 'My Network',
@@ -82,6 +84,7 @@ const ConnectionsPage = () => {
   const [sortKey, setSortKey] = useState<
     'relevance' | 'recent' | 'alphabetical'
   >('relevance');
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { push } = useToast();
@@ -243,6 +246,21 @@ const ConnectionsPage = () => {
 
     return sorted;
   }, [activeTab, roleFilter, searchTerm, sortKey, tabData]);
+
+  useEffect(() => {
+    setVisibleCount(PAGE_SIZE);
+  }, [activeTab, roleFilter, searchTerm, sortKey]);
+
+  const visibleList = useMemo(
+    () => displayList.slice(0, visibleCount),
+    [displayList, visibleCount]
+  );
+
+  const hasMoreUsers = displayList.length > visibleList.length;
+
+  const handleLoadMore = () => {
+    setVisibleCount((prev) => prev + PAGE_SIZE);
+  };
 
   const statHighlights = useMemo(() => {
     const suggestionsCount = tabData.suggestions.length;
@@ -463,61 +481,8 @@ const ConnectionsPage = () => {
     ? 'Adjust your search or reset filters to see more of the community.'
     : defaultEmptyDetail;
 
-  const suggestionCount = tabData.suggestions.length;
-
   return (
     <section className="space-y-10 pb-12">
-      <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-cyan-500/15 via-blue-900/25 to-purple-900/20 p-8 shadow-[0_38px_110px_-48px_rgba(6,14,33,0.95)]">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(0,245,255,0.28),_rgba(8,14,36,0))]" />
-        <div className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-cyan-500/20 blur-3xl" />
-        <div className="relative z-10 flex flex-col gap-6 text-white">
-          <div className="flex flex-wrap items-start justify-between gap-6">
-            <div className="max-w-xl space-y-3">
-              <p className="text-xs uppercase tracking-[0.32em] text-white/70">
-                Network HQ
-              </p>
-              <h1 className="text-3xl font-extrabold leading-tight sm:text-4xl">
-                Grow authentic connections
-              </h1>
-              <p className="text-sm text-white/70 sm:text-base">
-                Manage requests, nurture relationships, and discover
-                collaborators aligned with your goals. Your network currently
-                spans <span className="text-white">{totalPeople}</span>{' '}
-                community members.
-              </p>
-            </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-sm">
-                <p className="text-white/60">Pending invites</p>
-                <p className="text-2xl font-bold text-white">
-                  {counts.pending}
-                </p>
-              </div>
-              <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-sm">
-                <p className="text-white/60">Fresh matches</p>
-                <p className="text-2xl font-bold text-white">
-                  {suggestionCount}
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-wrap gap-3 text-xs text-white/70">
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1">
-              <Users className="h-4 w-4" /> {counts.connections} active
-              connections
-            </div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1">
-              <UserPlus className="h-4 w-4" /> {counts.pending} invites awaiting
-              reply
-            </div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1">
-              <Sparkles className="h-4 w-4" /> {suggestionCount} new
-              introductions curated for you
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div className="grid gap-4 md:grid-cols-3">
         {statHighlights.map(
           ({ id, label, value, helper, icon: Icon, gradient }) => (
@@ -666,101 +631,116 @@ const ConnectionsPage = () => {
         ) : displayList.length === 0 ? (
           renderEmptyState(emptyTitle, emptyDetail)
         ) : (
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {displayList.map((person) => {
-              const roleLabel =
-                person.role === 'alumni'
-                  ? 'Alumni'
-                  : person.role === 'student'
-                    ? 'Student'
-                    : 'Admin';
-              const relativeTimestamp = formatRelativeTime(
-                person.requestedAt ?? person.createdAt
-              );
-              const timestampPrefix =
-                activeTab === 'pending'
-                  ? 'Requested'
-                  : activeTab === 'outgoing'
-                    ? 'Sent'
-                    : activeTab === 'connections'
-                      ? 'Connected'
-                      : 'Spotted';
-              const bioCopy =
-                person.bio || 'This member hasn’t added a bio yet.';
+          <>
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {visibleList.map((person) => {
+                const roleLabel =
+                  person.role === 'alumni'
+                    ? 'Alumni'
+                    : person.role === 'student'
+                      ? 'Student'
+                      : 'Admin';
+                const relativeTimestamp = formatRelativeTime(
+                  person.requestedAt ?? person.createdAt
+                );
+                const timestampPrefix =
+                  activeTab === 'pending'
+                    ? 'Requested'
+                    : activeTab === 'outgoing'
+                      ? 'Sent'
+                      : activeTab === 'connections'
+                        ? 'Connected'
+                        : 'Spotted';
+                const bioCopy =
+                  person.bio || 'This member hasn’t added a bio yet.';
 
-              return (
-                <article
-                  key={person._id}
-                  className="neon-border relative overflow-hidden rounded-3xl bg-surface/80 p-6 shadow-[0_32px_80px_-46px_rgba(7,12,31,0.9)] transition hover:-translate-y-1 hover:shadow-[0_40px_90px_-42px_rgba(0,245,255,0.25)]"
-                >
-                  <div className="pointer-events-none absolute -top-20 right-0 h-36 w-36 rounded-full bg-neonCyan/10 blur-3xl" />
-                  <div className="relative flex items-start gap-4">
-                    <Avatar
-                      src={
-                        person.profilePicture ??
-                        person.googlePhotoUrl ??
-                        undefined
-                      }
-                      alt={person.name}
-                      className="h-14 w-14 cursor-pointer border border-white/15"
-                      onClick={() => openProfile(person._id)}
-                    />
-                    <div className="flex-1 space-y-2">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <button
-                          type="button"
-                          onClick={() => openProfile(person._id)}
-                          className="text-left text-base font-semibold text-white hover:text-neonCyan"
-                        >
-                          {person.name}
-                        </button>
-                        <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/10 px-2 py-0.5 text-[11px] uppercase tracking-wider text-white/70">
-                          {roleLabel}
-                        </span>
-                        {person.points ? (
-                          <span className="inline-flex items-center gap-1 rounded-full border border-neonCyan/30 bg-neonCyan/10 px-2 py-0.5 text-[11px] font-semibold text-neonCyan">
-                            <Sparkles className="h-3 w-3" /> {person.points} pts
-                          </span>
-                        ) : null}
-                      </div>
-
-                      <p className="max-h-14 overflow-hidden text-xs text-white/70">
-                        {bioCopy}
-                      </p>
-
-                      <div className="flex flex-wrap gap-2">
-                        {(person.skills ?? []).slice(0, 4).map((skill) => (
-                          <span
-                            key={skill}
-                            className="rounded-full border border-white/10 bg-white/5 px-2 py-1 text-[11px] font-medium uppercase tracking-wide text-white/70"
+                return (
+                  <article
+                    key={person._id}
+                    className="neon-border relative overflow-hidden rounded-3xl bg-surface/80 p-6 shadow-[0_32px_80px_-46px_rgba(7,12,31,0.9)] transition hover:-translate-y-1 hover:shadow-[0_40px_90px_-42px_rgba(0,245,255,0.25)]"
+                  >
+                    <div className="pointer-events-none absolute -top-20 right-0 h-36 w-36 rounded-full bg-neonCyan/10 blur-3xl" />
+                    <div className="relative flex items-start gap-4">
+                      <Avatar
+                        src={
+                          person.profilePicture ??
+                          person.googlePhotoUrl ??
+                          undefined
+                        }
+                        alt={person.name}
+                        className="h-14 w-14 cursor-pointer border border-white/15"
+                        onClick={() => openProfile(person._id)}
+                      />
+                      <div className="flex-1 space-y-2">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => openProfile(person._id)}
+                            className="text-left text-base font-semibold text-white hover:text-neonCyan"
                           >
-                            {skill}
+                            {person.name}
+                          </button>
+                          <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/10 px-2 py-0.5 text-[11px] uppercase tracking-wider text-white/70">
+                            {roleLabel}
                           </span>
-                        ))}
-                        {person.overlap ? (
-                          <span className="inline-flex items-center gap-1 rounded-full border border-neonCyan/40 bg-neonCyan/10 px-2 py-1 text-[11px] font-semibold text-neonCyan">
-                            <Users className="h-3 w-3" /> {person.overlap}{' '}
-                            shared skill
-                          </span>
-                        ) : null}
-                      </div>
+                          {person.points ? (
+                            <span className="inline-flex items-center gap-1 rounded-full border border-neonCyan/30 bg-neonCyan/10 px-2 py-0.5 text-[11px] font-semibold text-neonCyan">
+                              <Sparkles className="h-3 w-3" /> {person.points}{' '}
+                              pts
+                            </span>
+                          ) : null}
+                        </div>
 
-                      {relativeTimestamp && (
-                        <p className="flex items-center gap-1 text-[11px] text-white/60">
-                          <Clock className="h-3.5 w-3.5" /> {timestampPrefix}{' '}
-                          {relativeTimestamp}
+                        <p className="max-h-14 overflow-hidden text-xs text-white/70">
+                          {bioCopy}
                         </p>
-                      )}
-                    </div>
-                  </div>
 
-                  <div className="relative mt-5">
-                    {renderCardActions(activeTab, person._id)}
-                  </div>
-                </article>
-              );
-            })}
-          </div>
+                        <div className="flex flex-wrap gap-2">
+                          {(person.skills ?? []).slice(0, 4).map((skill) => (
+                            <span
+                              key={skill}
+                              className="rounded-full border border-white/10 bg-white/5 px-2 py-1 text-[11px] font-medium uppercase tracking-wide text-white/70"
+                            >
+                              {skill}
+                            </span>
+                          ))}
+                          {person.overlap ? (
+                            <span className="inline-flex items-center gap-1 rounded-full border border-neonCyan/40 bg-neonCyan/10 px-2 py-1 text-[11px] font-semibold text-neonCyan">
+                              <Users className="h-3 w-3" /> {person.overlap}{' '}
+                              shared skill
+                            </span>
+                          ) : null}
+                        </div>
+
+                        {relativeTimestamp && (
+                          <p className="flex items-center gap-1 text-[11px] text-white/60">
+                            <Clock className="h-3.5 w-3.5" /> {timestampPrefix}{' '}
+                            {relativeTimestamp}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="relative mt-5">
+                      {renderCardActions(activeTab, person._id)}
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+
+            {hasMoreUsers && (
+              <div className="flex justify-center">
+                <button
+                  type="button"
+                  onClick={handleLoadMore}
+                  className="inline-flex items-center justify-center rounded-full border border-neonCyan/40 bg-neonCyan/10 px-5 py-2 text-sm font-semibold text-neonCyan transition hover:bg-neonCyan/20"
+                >
+                  Load more users
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </section>

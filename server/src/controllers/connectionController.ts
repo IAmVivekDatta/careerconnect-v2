@@ -131,7 +131,6 @@ export const getConnectionOverview = async (
         new Date(a.summary.createdAt).getTime()
       );
     })
-    .slice(0, 12)
     .map(({ summary, overlap }) => ({ ...summary, overlap }));
 
   res.json({
